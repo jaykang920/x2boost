@@ -21,4 +21,9 @@
 *.app
 
 # Visual Studio files
+*.ilk
+*.pdb
 *.suo
+
+# Project-specific files
+current

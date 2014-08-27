@@ -4,6 +4,7 @@
 #ifndef X2BOOST_XPILER_PRE_HPP_
 #define X2BOOST_XPILER_PRE_HPP_
 
-#include "x2boost/x2boost.hpp"
+#include <iostream>
+#include <string>
 
 #endif  // X2BOOST_XPILER_PRE_HPP_

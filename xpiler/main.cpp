@@ -1,9 +1,15 @@
 // Copyright (c) 2014 Jae-jun Kang
 // See the file COPYING for license details.
 
-#include "pre.hpp"
+#include "options.hpp"
+#include "xpiler.hpp"
 
-int main(int argc, char* argv[]) {
+using namespace x2boost;
+
+int main(int argc, char* argv[])
+{
+	int index = Xpiler::options.Parse(argc, argv);
+
     return 0;
 }
 

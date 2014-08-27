@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 2.8.8) # for per-target include_directories
 # CMake options
 option(BUILD_SHARED_LIBS "Build x2boost as a shared library (DLL)." OFF)
 # x2boost options
+option(BUILD_FORCE_SHARED_CRT "Shared (DLL) version of C runtime library." OFF)
 option(BUILD_XPILER "Build xpiler executable." ON)
 
 if(WIN32)
@@ -20,9 +21,17 @@ project(x2boost CXX C)
 set(CMAKE_THREAD_PREFER_PTHREAD true)
 find_package(Threads REQUIRED)
 
-set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
-find_package(Boost REQUIRED COMPONENTS thread)
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_STATIC_RUNTIME ON)
+unset(Boost_LIBRARIES CACHE)
+find_package(Boost REQUIRED COMPONENTS
+  program_options
+  thread
+)
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+endif()
 
 if(BUILD_SHARED_LIBS)
   string_append(x2boost_CDEFS "X2_AS_SHARED_LIB" ";")
@@ -54,14 +63,6 @@ if(MSVC)
   # Suppress uninteresting warnings.
   add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_DEPRECATE)
   add_definitions(/D_CRT_NONSTDC_NO_DEPRECATE /D_SCL_SECURE_NO_DEPRECATE)
-
-  if(X2_USE_WCHAR)
-    add_definitions(/D_UNICODE /DUNICODE)
-  endif()
-else()
-  if(X2_USE_WCHAR)
-    add_definitions(-D_UNICODE -DUNICODE)
-  endif()
 endif()
 
 set(x2boost_LIB_DIR ${x2boost_SOURCE_DIR}/lib)
@@ -117,6 +118,8 @@ source_group("Source Files" FILES ${x2boost_SRC})
 add_library(x2boost ${x2boost_ALL_SRC} ${x2boost_ALL_INC})
 set_target_properties(x2boost PROPERTIES
   COMPILE_DEFINITIONS "${x2boost_CDEFS}"
+)
+set_property(TARGET x2boost APPEND PROPERTY
   INCLUDE_DIRECTORIES "${x2boost_INCLUDES}"
 )
 if(BUILD_SHARED_LIBS)
@@ -130,21 +133,27 @@ if(BUILD_XPILER)
   set(xpiler_SRC_DIR "${x2boost_SOURCE_DIR}/xpiler")
 
   set(xpiler_INC
+    "${xpiler_SRC_DIR}/options.hpp"
     "${xpiler_SRC_DIR}/pre.hpp"
+    "${xpiler_SRC_DIR}/xpiler.hpp"
   )
 
   set(xpiler_SRC
     "${xpiler_SRC_DIR}/main.cpp"
+    "${xpiler_SRC_DIR}/options.cpp"
+    "${xpiler_SRC_DIR}/xpiler.cpp"
   )
 
   add_executable(xpiler ${xpiler_SRC} ${xpiler_INC})
-  target_link_libraries(xpiler x2boost ${CMAKE_THREAD_LIBS_INIT})
+  target_link_libraries(xpiler ${Boost_LIBRARIES})
 
   set_target_properties(xpiler PROPERTIES
     DEBUG_POSTFIX _d
     MINSIZEREL_POSTFIX _mr
     RELWITHDEBINFO_POSTFIX _rd
     COMPILE_DEFINITIONS "${xpiler_CDEFS}"
+  )
+  set_property(TARGET xpiler APPEND PROPERTY
     INCLUDE_DIRECTORIES "${xpiler_INCLUDES}"
   )
 endif()

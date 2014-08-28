@@ -8,7 +8,17 @@ using namespace x2boost;
 
 int main(int argc, char* argv[])
 {
-	int index = Xpiler::options.Parse(argc, argv);
+    try
+    {
+        int index = Xpiler::options.Parse(argc, argv);
+
+        std::cout << Xpiler::options.input << std::endl;
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Unhandled Exception: " << e.what() << std::endl;
+        return 2;
+    }
 
     return 0;
 }

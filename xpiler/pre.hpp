@@ -6,5 +6,6 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #endif  // X2BOOST_XPILER_PRE_HPP_

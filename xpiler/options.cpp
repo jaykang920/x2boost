@@ -3,7 +3,7 @@
 
 #include "options.hpp"
 
-#include <boost/program_options/option.hpp>
+#include <boost/program_options.hpp>
 
 using namespace std;
 using namespace x2boost;
@@ -24,6 +24,42 @@ void Options::PrintUsage()
 
 int Options::Parse(int argc, char* argv[])
 {
+    namespace po = boost::program_options;
+
+    po::options_description options("Options");
+    options.add_options()
+        ("help", "print this message and quit")
+        ("path", po::value<vector<string>>(), "input path specifications");
+
+    po::positional_options_description positional;
+    positional.add("path", -1);
+
+    po::variables_map vm;
+
+    try
+    {
+        po::store(po::command_line_parser(argc, argv)
+            .options(options)
+            .positional(positional)
+            .run(), vm);
+
+        if (vm.count("help"))
+        {
+            cout << options << endl;
+            return 1;
+        }
+        if (vm.count("path"))
+        {
+            input = vm["path"].as<vector<string>>();
+        }
+
+        po::notify(vm);
+    }
+    catch (po::error& e)
+    {
+        cout << "Error: " << e.what() << endl;
+        return 1;
+    }
 	return 0;
 }
 

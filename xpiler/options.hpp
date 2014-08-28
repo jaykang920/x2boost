@@ -23,6 +23,7 @@ namespace x2boost
         int Parse(int argc, char* argv[]);
 
         bool forced;
+        std::vector<std::string> input;
         std::string outDir;
         bool recursive;
         std::string spec;

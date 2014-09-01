@@ -12,7 +12,10 @@ int main(int argc, char* argv[])
     {
         int index = Xpiler::options.Parse(argc, argv);
 
-        std::cout << Xpiler::options.input << std::endl;
+        std::cout << "forced=" << Xpiler::options.forced << std::endl;
+        std::cout << "outDir=" << Xpiler::options.outDir << std::endl;
+        std::cout << "recursive=" << Xpiler::options.recursive << std::endl;
+        std::cout << "spec=" << Xpiler::options.spec << std::endl;
     }
     catch (std::exception& e)
     {

@@ -28,32 +28,58 @@ int Options::Parse(int argc, char* argv[])
 
     po::options_description options("Options");
     options.add_options()
+        ("force", "force all to be re-xpiled")
         ("help", "print this message and quit")
-        ("path", po::value<vector<string>>(), "input path specifications");
+        ("out-dir", po::value<string>(), "output root directory")
+        ("recursive", "process subdirectories recursively")
+        ("path", po::value<vector<string>>(), "input path specifications")
+        ("spec", po::value<string>(), "specifies the target formatter");
 
     po::positional_options_description positional;
     positional.add("path", -1);
 
-    po::variables_map vm;
-
     try
     {
+        po::variables_map variables;
         po::store(po::command_line_parser(argc, argv)
             .options(options)
             .positional(positional)
-            .run(), vm);
+            .run(), variables);
 
-        if (vm.count("help"))
+        if (variables.count("help"))
         {
             cout << options << endl;
             return 1;
         }
-        if (vm.count("path"))
+
+        if (variables.count("path"))
         {
-            input = vm["path"].as<vector<string>>();
+            input = variables["path"].as<vector<string>>();
+        }
+        else
+        {
+            cout << "Error: at least one input path is required" << endl;
+            return 1;
         }
 
-        po::notify(vm);
+        if (variables.count("force"))
+        {
+            forced = true;
+        }
+        if (variables.count("out-dir"))
+        {
+            outDir = variables["out-dir"].as<string>();
+        }
+        if (variables.count("recursive"))
+        {
+            recursive = true;
+        }
+        if (variables.count("spec"))
+        {
+            spec = variables["spec"].as<string>();
+        }
+
+        po::notify(variables);
     }
     catch (po::error& e)
     {

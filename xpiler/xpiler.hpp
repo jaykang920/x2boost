@@ -17,6 +17,10 @@ namespace x2boost
     public:
         static Options options;
 
+        bool error;
+
+        void Process(std::string& path) {}
+
     private:
     };
 }

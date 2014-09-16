@@ -10,19 +10,7 @@ using namespace x2boost;
 
 const char* Options::kDefaultSpec = "boost";
 
-void Options::PrintUsage()
-{
-    cout << "usage: xpiler (options) [path...]" << endl;
-    cout << " options:" << endl;
-    cout << "  -f (--force)     : force all to be re-xpiled" << endl;
-    cout << "  -h (--help)      : print this message and quit" << endl;
-    cout << "  -o (--out-dir)   : output root directory" << endl;
-    cout << "  -r (--recursive) : process subdirectories recursively" << endl;
-    cout << "  -s (--spec) spec : specifies the target formatter" << endl;
-    // print available spacs
-}
-
-int Options::Parse(int argc, char* argv[])
+bool Options::Parse(int argc, char* argv[])
 {
     namespace po = boost::program_options;
 
@@ -48,8 +36,9 @@ int Options::Parse(int argc, char* argv[])
 
         if (variables.count("help"))
         {
+            cout << "  usage: xpiler [options] path..." << endl;
             cout << options << endl;
-            return 1;
+            return false;
         }
 
         if (variables.count("path"))
@@ -58,8 +47,8 @@ int Options::Parse(int argc, char* argv[])
         }
         else
         {
-            cout << "Error: at least one input path is required" << endl;
-            return 1;
+            cout << "error: at least one input path is required" << endl;
+            return false;
         }
 
         if (variables.count("force"))
@@ -80,13 +69,13 @@ int Options::Parse(int argc, char* argv[])
         }
 
         po::notify(variables);
+        return true;
     }
     catch (po::error& e)
     {
-        cout << "Error: " << e.what() << endl;
-        return 1;
+        cout << "error: " << e.what() << endl;
+        return false;
     }
-	return 0;
 }
 
 // EOF options.cpp

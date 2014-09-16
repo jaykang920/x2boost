@@ -18,9 +18,7 @@ namespace x2boost
             spec(kDefaultSpec)
         {}
 
-        static void PrintUsage();
-
-        int Parse(int argc, char* argv[]);
+        bool Parse(int argc, char* argv[]);
 
         bool forced;
         std::vector<std::string> input;

@@ -1,11 +1,17 @@
 x2boost
 =======
 
-C++ (Boost) port of x2
+x2boost is a C++ port of [x2](https://github.com/jaykang920/x2) based on
+[Boost](http://www.boost.org/) libraries.
 
+Requirements
+------------
+
+* CMake 2.8.8 or newer to build
+* Boost C++ libraries
 
 License
 -------
 
-x2boost is distributed under the MIT license [MIT](http://opensource.org/licenses/MIT).
+x2clr is distributed under [MIT License](http://opensource.org/licenses/MIT).
 See the file COPYING for license details.

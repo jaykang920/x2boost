@@ -22,7 +22,7 @@ namespace x2boost
 
         bool forced;
         std::vector<std::string> input;
-        std::string outDir;
+        std::string out_dir;
         bool recursive;
         std::string spec;
 

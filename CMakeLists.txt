@@ -26,7 +26,9 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_STATIC_RUNTIME ON)
 unset(Boost_LIBRARIES CACHE)
 find_package(Boost REQUIRED COMPONENTS
+  filesystem
   program_options
+  system
   thread
 )
 if(Boost_FOUND)
@@ -133,14 +135,22 @@ if(BUILD_XPILER)
   set(xpiler_SRC_DIR "${x2boost_SOURCE_DIR}/xpiler")
 
   set(xpiler_INC
+    "${xpiler_SRC_DIR}/boost_formatter.hpp"
+    "${xpiler_SRC_DIR}/definition.hpp"
+    "${xpiler_SRC_DIR}/document.hpp"
+    "${xpiler_SRC_DIR}/input_handler.hpp"
     "${xpiler_SRC_DIR}/options.hpp"
+    "${xpiler_SRC_DIR}/output_formatter.hpp"
     "${xpiler_SRC_DIR}/pre.hpp"
+    "${xpiler_SRC_DIR}/xml_handler.hpp"
     "${xpiler_SRC_DIR}/xpiler.hpp"
   )
 
   set(xpiler_SRC
+    "${xpiler_SRC_DIR}/boost_formatter.cpp"
     "${xpiler_SRC_DIR}/main.cpp"
     "${xpiler_SRC_DIR}/options.cpp"
+    "${xpiler_SRC_DIR}/xml_handler.cpp"
     "${xpiler_SRC_DIR}/xpiler.cpp"
   )
 

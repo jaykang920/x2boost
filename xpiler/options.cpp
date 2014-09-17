@@ -57,7 +57,7 @@ bool Options::Parse(int argc, char* argv[])
         }
         if (variables.count("out-dir"))
         {
-            outDir = variables["out-dir"].as<string>();
+            out_dir = variables["out-dir"].as<string>();
         }
         if (variables.count("recursive"))
         {

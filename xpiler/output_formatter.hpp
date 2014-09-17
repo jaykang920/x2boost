@@ -24,6 +24,7 @@ namespace x2boost
 
         Document* doc;
         std::ostream* out;
+        std::string target;
     };
 
     struct OutputFormatter

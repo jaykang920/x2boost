@@ -15,6 +15,26 @@ namespace x2boost
     struct BoostFormatter : public OutputFormatter
     {
         virtual bool Format(Document* doc, const std::string& out_dir);
+
+    private:
+        void FormatHeaderFile(FormatterContext& context);
+        void FormatSourceFile(FormatterContext& context);
+    };
+
+    class BoostHeaderFormatter : public FormatterContext
+    {
+    public:
+        virtual void FormatCell(Cell* def);
+        virtual void FormatConsts(Consts* def);
+        virtual void FormatReference(Reference* def);
+    };
+
+    class BoostSourceFormatter : public FormatterContext
+    {
+    public:
+        virtual void FormatCell(Cell* def);
+        virtual void FormatConsts(Consts* def);
+        virtual void FormatReference(Reference* def);
     };
 }
 

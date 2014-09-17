@@ -109,7 +109,7 @@ void Xpiler::ProcessFile(const string& path)
     }
     InputHandler* handler = it->second;
 
-    cout << filename << endl;
+    cout << filename.string() << endl;
 
     Document* doc;
     if (!handler->Handle(path, &doc))
@@ -132,6 +132,8 @@ void Xpiler::ProcessFile(const string& path)
     {
         error = true;
     }
+
+    delete doc;
 }
 
 // EOF xpiler.cpp

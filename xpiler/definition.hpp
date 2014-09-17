@@ -15,16 +15,8 @@ namespace x2boost
     struct Definition
     {
         virtual void Format(FormatterContext& context) = 0;
-    };
 
-    struct Reference : Definition
-    {
-        std::string target;
-
-        virtual void Format(FormatterContext& context)
-        {
-            context.FormatRefrence(this);
-        }
+        std::string name;
     };
 
     struct Consts : Definition
@@ -35,6 +27,8 @@ namespace x2boost
             std::string value;
         };
 
+        typedef boost::shared_ptr<Const> ConstPtr;
+
         virtual void Format(FormatterContext& context)
         {
             context.FormatConsts(this);
@@ -42,7 +36,7 @@ namespace x2boost
 
         std::string type;
         std::string native_type;
-        std::vector<Const> constants;
+        std::vector<ConstPtr> constants;
     };
 
     struct Cell : Definition
@@ -57,6 +51,8 @@ namespace x2boost
             std::string native_type;
         };
 
+        typedef boost::shared_ptr<Property> PropertyPtr;
+
         virtual void Format(FormatterContext& context)
         {
             context.FormatCell(this);
@@ -68,7 +64,7 @@ namespace x2boost
 
         std::string base;
         std::string base_class;
-        std::vector<Property> properties;
+        std::vector<PropertyPtr> properties;
     };
 
     struct Event : Cell
@@ -76,7 +72,23 @@ namespace x2boost
         virtual bool IsEvent() { return true; }
 
         std::string id;
-    }
+    };
+
+    struct Reference
+    {
+        std::string target;
+
+        void Format(FormatterContext& context)
+        {
+            context.FormatReference(this);
+        }
+    };
+
+    typedef boost::shared_ptr<Definition> DefinitionPtr;
+    typedef boost::shared_ptr<Consts> ConstsPtr;
+    typedef boost::shared_ptr<Cell> CellPtr;
+    typedef boost::shared_ptr<Event> EventPtr;
+    typedef boost::shared_ptr<Reference> ReferencePtr;
 }
 
 #endif  // X2BOOST_XPILER_DEFINITION_HPP_

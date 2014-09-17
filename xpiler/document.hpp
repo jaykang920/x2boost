@@ -18,8 +18,8 @@ namespace x2boost
         std::string basename;
         std::string ns;
 
-        std::vector<Reference*> references;
-        std::vector<Definition*> definitions;
+        std::vector<boost::shared_ptr<Reference>> references;
+        std::vector<boost::shared_ptr<Definition>> definitions;
     };
 }
 

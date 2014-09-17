@@ -8,4 +8,6 @@
 #include <string>
 #include <vector>
 
+#include <boost/shared_ptr.hpp>
+
 #endif  // X2BOOST_XPILER_PRE_HPP_

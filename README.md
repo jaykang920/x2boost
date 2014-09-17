@@ -13,5 +13,5 @@ Requirements
 License
 -------
 
-x2clr is distributed under [MIT License](http://opensource.org/licenses/MIT).
+x2boost is distributed under [MIT License](http://opensource.org/licenses/MIT).
 See the file COPYING for license details.

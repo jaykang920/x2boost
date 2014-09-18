@@ -87,6 +87,8 @@ void BoostFormatter::FormatHeaderFile(FormatterContext& context)
     out << "#define " << include_guard << endl;
 
     out << "#endif  // " << include_guard << endl;
+
+    out.close();
 }
 
 void BoostFormatter::FormatSourceFile(FormatterContext& context)
@@ -97,6 +99,8 @@ void BoostFormatter::FormatSourceFile(FormatterContext& context)
     out << "#include \"" << context.doc->basename + ".hpp\"" << endl;
 
     out << "// end of " << fs::path(context.target).filename().string() << endl;
+
+    out.close();
 }
 
 void BoostHeaderFormatter::FormatCell(Cell* def)

@@ -3,6 +3,7 @@
 
 #include "xml_handler.hpp"
 
+#include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
@@ -56,19 +57,26 @@ bool XmlHandler::Handle(const string& path, Document** doc)
                         Consts::ConstPtr constant(new Consts::Const);
                         constant->name = v2.second.get<string>("<xmlattr>.name");
                         constant->value = v2.second.get_value<string>();
+                        boost::trim(constant->value);
                         def->constants.push_back(constant);
                     }
                 }
                 document->definitions.push_back(def);
             }
-            else if (v.first == "cell")
+            else if (v.first == "cell" || v.first == "event")
             {
-                CellPtr def(new Cell);
+                bool is_event = (v.first == "event");
+                CellPtr def;
+                def.reset(is_event ? new Event : new Cell);
                 BOOST_FOREACH(pt::ptree::value_type const& v2, v.second)
                 {
                     if (v2.first == "<xmlattr>")
                     {
                         def->name = v2.second.get<string>("name");
+                        if (is_event)
+                        {
+                            ((Event*)def.get())->id = v2.second.get<string>("id");
+                        }
                     }
                     else if (v2.first == "property")
                     {
@@ -76,27 +84,7 @@ bool XmlHandler::Handle(const string& path, Document** doc)
                         property->name = v2.second.get<string>("<xmlattr>.name");
                         //property->type = v2.second.get<string>("<xmlattr>.type");
                         property->default_value = v2.second.get_value<string>();
-                        def->properties.push_back(property);
-                    }
-                }
-                document->definitions.push_back(def);
-            }
-            else if (v.first == "event")
-            {
-                EventPtr def(new Event);
-                BOOST_FOREACH(pt::ptree::value_type const& v2, v.second)
-                {
-                    if (v2.first == "<xmlattr>")
-                    {
-                        def->name = v2.second.get<string>("name");
-                        def->id = v2.second.get<string>("id");
-                    }
-                    else if (v2.first == "property")
-                    {
-                        Cell::PropertyPtr property(new Cell::Property);
-                        property->name = v2.second.get<string>("<xmlattr>.name");
-                        //property->type = v2.second.get<string>("<xmlattr>.type");
-                        property->default_value = v2.second.get_value<string>();
+                        boost::trim(property->default_value);
                         def->properties.push_back(property);
                     }
                 }

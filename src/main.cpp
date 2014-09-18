@@ -3,7 +3,7 @@
 
 #include "x2boost/base/pre.hpp"
 
-#if defined(_WIN32) && defined(X2CPP_EXPORTS)
+#if defined(_WIN32) && defined(X2BOOST_EXPORTS)
 
 BOOL APIENTRY DllMain(HMODULE /*hModule*/,
                       DWORD ul_reason_for_call,

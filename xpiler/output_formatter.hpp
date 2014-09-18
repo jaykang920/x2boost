@@ -30,6 +30,8 @@ namespace x2boost
     struct OutputFormatter
     {
         virtual bool Format(Document* doc, const std::string& out_dir) = 0;
+
+        virtual bool IsUpToDate(const std::string& path) = 0;
     };
 }
 

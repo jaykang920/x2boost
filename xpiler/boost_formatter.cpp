@@ -15,6 +15,14 @@ using namespace x2boost;
 
 namespace fs = boost::filesystem;
 
+namespace
+{
+    void PascalCase2camelCase(string& s);
+    string MixedCase2Under_Score(const string& s);
+    string MixedCase2lower_case(const string& s);
+    string MixedCase2UPPER_CASE(const string& s);
+}
+
 bool BoostFormatter::Format(Document* doc, const string& out_dir)
 {
     try
@@ -42,6 +50,22 @@ bool BoostFormatter::Format(Document* doc, const string& out_dir)
     }
 }
 
+bool BoostFormatter::IsUpToDate(const string& path)
+{
+    fs::path p = path;
+    fs::path dirname = p.parent_path();
+    fs::path basename = p.filename().stem();
+    fs::path header_path = basename.string() + ".hpp";
+    fs::path source_path = basename.string() + ".hpp";
+    header_path = dirname / header_path;
+    source_path = dirname / source_path;
+
+    time_t source_write_time = fs::last_write_time(path);
+    return (fs::exists(header_path) && fs::exists(source_path) &&
+        fs::last_write_time(header_path) >= source_write_time &&
+        fs::last_write_time(source_path) >= source_write_time);
+}
+
 void BoostFormatter::FormatHeaderFile(FormatterContext& context)
 {
     ofstream out(context.target);
@@ -54,7 +78,7 @@ void BoostFormatter::FormatHeaderFile(FormatterContext& context)
         boost::replace_all(include_guard, ".", "_");
         include_guard.append("_");
     }
-    include_guard += /*MixedCase2UPPER_CASE*/(context.doc->basename);
+    include_guard += MixedCase2Under_Score(context.doc->basename);
     include_guard += "_HPP_";
     boost::to_upper(include_guard);
 
@@ -104,5 +128,68 @@ void BoostSourceFormatter::FormatReference(Reference* def)
 {
 
 }
+
+namespace
+{
+    void PascalCase2camelCase(string& s) {
+        if (s.empty() || !::isupper(s[0]))
+        {
+            return;
+        }
+        string::iterator it = s.begin(), end = s.end(), next;
+        *it++ = (char)::tolower(*it);
+        next = it;
+        if (next != end) { ++next; }
+        while (it != end)
+        {
+            if (!::isupper(*it) || (next != end && !::isupper(*next)))
+            {
+                break;
+            }
+            *it++ = (char)::tolower(*it);
+            if (next != end) { ++next; }
+        }
+    }
+
+    string MixedCase2Under_Score(const string& s)
+    {
+        string result;
+        if (!s.empty())
+        {
+            back_insert_iterator<string> out = back_inserter(result);
+            string::const_iterator it = s.begin(), end = s.end(), prev, next;
+            prev = it;
+            *out++ = *it++;
+            next = it;
+            if (next != end) { ++next; }
+            while (it != end)
+            {
+                if ((::islower(*prev) && ::isupper(*it)) || (next != end &&
+                    ::isupper(*prev) && ::isupper(*it) && ::islower(*next)))
+                {
+                    *out++ = '_';
+                }
+                *out++ = *it++;
+                ++prev;
+                if (next != end) { ++next; }
+            }
+        }
+        return result;
+    }
+
+    string MixedCase2lower_case(const string& s)
+    {
+        string result = MixedCase2Under_Score(s);
+        boost::to_lower(result);
+        return result;
+    }
+
+    string MixedCase2UPPER_CASE(const string& s)
+    {
+        string result = MixedCase2Under_Score(s);
+        boost::to_upper(result);
+        return result;
+    }
+}  // namespace
 
 // EOF boost_formatter.cpp

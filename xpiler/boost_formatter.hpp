@@ -16,6 +16,8 @@ namespace x2boost
     {
         virtual bool Format(Document* doc, const std::string& out_dir);
 
+        virtual bool IsUpToDate(const std::string& path);
+
     private:
         void FormatHeaderFile(FormatterContext& context);
         void FormatSourceFile(FormatterContext& context);

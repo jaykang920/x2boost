@@ -102,8 +102,8 @@ void Xpiler::ProcessFile(const string& path)
 
     boost::algorithm::to_lower(extension);
     HandlerMapType::iterator it = handlers_.find(extension);
-    if (it == handlers_.end() /*||
-        (!options.forced  and not newer )*/)
+    if (it == handlers_.end() ||
+        (!options.forced && formatter_->IsUpToDate(path)))
     {
         return;
     }

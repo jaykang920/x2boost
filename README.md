@@ -1,14 +1,18 @@
 x2boost
 =======
 
-x2boost is a C++ port of [x2](https://github.com/jaykang920/x2) based on
-[Boost](http://www.boost.org/) libraries.
+x2boost is a C++ port of [x2](https://github.com/jaykang920/x2) based on C++98
+and [Boost](http://www.boost.org/) libraries.
 
 Requirements
 ------------
 
 * CMake 2.8.8 or newer to build
-* Boost C++ libraries
+* Boost C++ libraries with the following modules built:
+** filesystem
+** program_options
+** system
+** thread
 
 License
 -------

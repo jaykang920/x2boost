@@ -8,11 +8,11 @@ Requirements
 ------------
 
 * CMake 2.8.8 or newer to build
-* Boost C++ libraries with the following modules built:
-** filesystem
-** program_options
-** system
-** thread
+* Boost C++ libraries with the following modules built
+ * filesystem
+ * program_options
+ * system
+ * thread
 
 License
 -------

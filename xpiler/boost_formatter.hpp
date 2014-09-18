@@ -8,13 +8,18 @@
 #include "pre.hpp"
 #endif
 
-#include "output_formatter.hpp"
+#include "formatter.hpp"
 
-namespace x2boost
+namespace xpiler
 {
-    struct BoostFormatter : public OutputFormatter
+    struct BoostFormatter : public Formatter
     {
         virtual bool Format(Document* doc, const std::string& out_dir);
+
+        virtual const char* GetDescription()
+        {
+            return "C++ with Boost";
+        }
 
         virtual bool IsUpToDate(const std::string& path);
 

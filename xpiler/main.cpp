@@ -6,7 +6,8 @@
 #include "options.hpp"
 #include "xpiler.hpp"
 
-using namespace x2boost;
+using namespace std;
+using namespace xpiler;
 
 int main(int argc, char* argv[])
 {
@@ -16,7 +17,7 @@ int main(int argc, char* argv[])
     }
 
     Xpiler xpiler;
-    BOOST_FOREACH(std::string& path, Xpiler::options.input)
+    BOOST_FOREACH(const string& path, Xpiler::options.input)
     {
         xpiler.Process(path);
     }

@@ -8,11 +8,11 @@
 #include "pre.hpp"
 #endif
 
-#include "input_handler.hpp"
+#include "handler.hpp"
 
-namespace x2boost
+namespace xpiler
 {
-    struct XmlHandler : public InputHandler
+    struct XmlHandler : public Handler
     {
         virtual bool Handle(const std::string& path, Document** doc);
     };

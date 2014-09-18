@@ -11,7 +11,7 @@
 #include "document.hpp"
 
 using namespace std;
-using namespace x2boost;
+using namespace xpiler;
 
 namespace fs = boost::filesystem;
 

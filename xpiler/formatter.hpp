@@ -8,7 +8,7 @@
 #include "pre.hpp"
 #endif
 
-namespace x2boost
+namespace xpiler
 {
     struct Cell;
     struct Consts;
@@ -27,12 +27,16 @@ namespace x2boost
         std::string target;
     };
 
-    struct OutputFormatter
+    struct Formatter
     {
         virtual bool Format(Document* doc, const std::string& out_dir) = 0;
 
+        virtual const char* GetDescription() = 0;
+
         virtual bool IsUpToDate(const std::string& path) = 0;
     };
+
+    typedef boost::shared_ptr<Formatter> FormatterPtr;
 }
 
 #endif  // X2BOOST_XPILER_OUTPUT_FORMATTER_HPP_

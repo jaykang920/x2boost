@@ -8,14 +8,16 @@
 #include "pre.hpp"
 #endif
 
-namespace x2boost
+namespace xpiler
 {
     struct Document;
 
-    struct InputHandler
+    struct Handler
     {
         virtual bool Handle(const std::string& path, Document** doc) = 0;
     };
+
+    typedef boost::shared_ptr<Handler> HandlerPtr;
 }
 
 #endif  // X2BOOST_XPILER_INPUT_HANDLER_HPP_

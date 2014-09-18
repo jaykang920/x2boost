@@ -10,16 +10,25 @@
 
 #include <map>
 
-namespace x2boost
+#include "formatter.hpp"
+#include "handler.hpp"
+
+namespace xpiler
 {
-    struct InputHandler;
     struct Options;
-    struct OutputFormatter;
 
     class Xpiler
     {
     public:
+        typedef std::map<std::string, HandlerPtr> HandlerMapType;
+        typedef std::map<std::string, FormatterPtr> FormatterMapType;
+
         Xpiler();
+
+        static const FormatterMapType& GetFormatters()
+        {
+            return formatters_;
+        }
 
         void Process(const std::string& path);
 
@@ -28,9 +37,6 @@ namespace x2boost
         bool error;
 
     private:
-        typedef std::map<std::string, InputHandler*> HandlerMapType;
-        typedef std::map<std::string, OutputFormatter*> FormatterMapType;
-
         void ProcessDir(const std::string& path);
         void ProcessFile(const std::string& path);
 
@@ -43,7 +49,7 @@ namespace x2boost
         };
         static StaticInitializer static_init_;
 
-        OutputFormatter* formatter_;
+        FormatterPtr formatter_;
         std::vector<std::string> sub_dirs_;
     };
 }

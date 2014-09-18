@@ -14,7 +14,7 @@
 #include "xml_handler.hpp"
 
 using namespace std;
-using namespace x2boost;
+using namespace xpiler;
 
 namespace fs = boost::filesystem;
 
@@ -27,8 +27,8 @@ Xpiler::StaticInitializer Xpiler::static_init_;
 
 Xpiler::StaticInitializer::StaticInitializer()
 {
-    handlers_[".xml"] = new XmlHandler();
-    formatters_["boost"] = new BoostFormatter();
+    handlers_[".xml"] = HandlerPtr(new XmlHandler());
+    formatters_["boost"] = FormatterPtr(new BoostFormatter());
 }
 
 Xpiler::Xpiler()
@@ -107,7 +107,7 @@ void Xpiler::ProcessFile(const string& path)
     {
         return;
     }
-    InputHandler* handler = it->second;
+    HandlerPtr handler = it->second;
 
     cout << filename.string() << endl;
 

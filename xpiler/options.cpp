@@ -3,10 +3,16 @@
 
 #include "options.hpp"
 
+#include <iomanip>
+
+#include <boost/foreach.hpp>
 #include <boost/program_options.hpp>
 
+#include "xpiler.hpp"
+#include "formatter.hpp"
+
 using namespace std;
-using namespace x2boost;
+using namespace xpiler;
 
 const char* Options::kDefaultSpec = "boost";
 
@@ -38,6 +44,18 @@ bool Options::Parse(int argc, char* argv[])
         {
             cout << "  usage: xpiler [options] path..." << endl;
             cout << options << endl;
+            cout << "Specs:" << endl;
+            BOOST_FOREACH(const Xpiler::FormatterMapType::value_type& pair,
+                Xpiler::GetFormatters())
+            {
+                cout << setw(21) << pair.first << " : "
+                    << pair.second->GetDescription();
+                if (pair.first == kDefaultSpec)
+                {
+                    cout << " (default)";
+                }
+                cout << endl;
+            }
             return false;
         }
 
@@ -66,6 +84,14 @@ bool Options::Parse(int argc, char* argv[])
         if (variables.count("spec"))
         {
             spec = variables["spec"].as<string>();
+            const Xpiler::FormatterMapType& formatters = Xpiler::GetFormatters();
+            Xpiler::FormatterMapType::const_iterator it = formatters.find(spec);
+            if (it == formatters.end())
+            {
+                cout << "error: unknown target formatter specified: "
+                    << spec << endl;
+                return false;
+            }
         }
 
         po::notify(variables);

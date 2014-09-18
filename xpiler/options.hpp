@@ -8,7 +8,7 @@
 #include "pre.hpp"
 #endif
 
-namespace x2boost
+namespace xpiler
 {
     struct Options
     {

@@ -8,9 +8,9 @@
 #include "pre.hpp"
 #endif
 
-#include "output_formatter.hpp"
+#include "formatter.hpp"
 
-namespace x2boost
+namespace xpiler
 {
     struct Definition
     {

@@ -93,14 +93,19 @@ string_append(x2boost_INCLUDES "${x2boost_SOURCE_DIR}" ";")
 set(x2boost_INC_DIR "${x2boost_INCLUDE_DIR}/x2boost")
 
 set(x2boost_INC
+  "${x2boost_INC_DIR}/cell.hpp"
+  "${x2boost_INC_DIR}/event.hpp"
+  "${x2boost_INC_DIR}/flow.hpp"
+  "${x2boost_INC_DIR}/hub.hpp"
+  "${x2boost_INC_DIR}/pre.hpp"
   "${x2boost_INC_DIR}/x2boost.hpp"
 )
-set(x2boost_INC_BASE
-  "${x2boost_INC_DIR}/base/pre.hpp"
+set(x2boost_INC_UTIL
+  "${x2boost_INC_DIR}/util/log.hpp"
 )
 
 list(APPEND x2boost_ALL_INC ${x2boost_INC})
-list(APPEND x2boost_ALL_INC ${x2boost_INC_BASE})
+list(APPEND x2boost_ALL_INC ${x2boost_INC_UTIL})
 
 # x2boost source files
 
@@ -114,7 +119,7 @@ list(APPEND x2boost_ALL_SRC ${x2boost_SRC})
 
 # Source groups
 source_group("Header Files" FILES ${x2boost_INC})
-source_group("Header Files\\base" FILES ${x2boost_INC_BASE})
+source_group("Header Files\\util" FILES ${x2boost_INC_UTIL})
 source_group("Source Files" FILES ${x2boost_SRC})
 
 add_library(x2boost ${x2boost_ALL_SRC} ${x2boost_ALL_INC})
@@ -138,9 +143,9 @@ if(BUILD_XPILER)
     "${xpiler_SRC_DIR}/boost_formatter.hpp"
     "${xpiler_SRC_DIR}/definition.hpp"
     "${xpiler_SRC_DIR}/document.hpp"
-    "${xpiler_SRC_DIR}/input_handler.hpp"
+    "${xpiler_SRC_DIR}/handler.hpp"
     "${xpiler_SRC_DIR}/options.hpp"
-    "${xpiler_SRC_DIR}/output_formatter.hpp"
+    "${xpiler_SRC_DIR}/formatter.hpp"
     "${xpiler_SRC_DIR}/pre.hpp"
     "${xpiler_SRC_DIR}/xml_handler.hpp"
     "${xpiler_SRC_DIR}/xpiler.hpp"

@@ -1,7 +1,7 @@
 // Copyright (c) 2014 Jae-jun Kang
 // See the file COPYING for license details.
 
-#include "x2boost/base/pre.hpp"
+#include "x2boost/pre.hpp"
 
 #if defined(_WIN32) && defined(X2BOOST_EXPORTS)
 

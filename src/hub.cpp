@@ -102,6 +102,10 @@ void hub::subscribe_internal(flow_ptr flow, const char* channel)
     if (it != subscriptions_.end())
     {
         flows = &(it->second);
+        if (std::find(flows->begin(), flows->end(), flow) != flows->end())
+        {
+            return;
+        }
     }
     else
     {
@@ -110,10 +114,7 @@ void hub::subscribe_internal(flow_ptr flow, const char* channel)
             subscriptions_.insert(std::make_pair(channel, v));
         flows = &(result.first->second);
     }
-    if (std::find(flows->begin(), flows->end(), flow) == flows->end())
-    {
-        flows->push_back(flow);
-    }
+    flows->push_back(flow);
 }
 
 void hub::unsubscribe_internal(flow_ptr flow)

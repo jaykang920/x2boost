@@ -75,7 +75,7 @@ namespace x2
 
         static hub instance_;
 
-        // List of all the flows attached to th hub
+        // List of all the flows attached to the hub
         list_type flows_;
         // Explicit (named) channel subscription map
         map_type subscriptions_;

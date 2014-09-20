@@ -20,34 +20,31 @@ namespace xpiler
     class xpiler
     {
     public:
-        typedef std::map<std::string, HandlerPtr> HandlerMapType;
-        typedef std::map<std::string, FormatterPtr> FormatterMapType;
+        typedef std::map<std::string, HandlerPtr> handler_map_type;
+        typedef std::map<std::string, FormatterPtr> formatter_map_type;
 
         xpiler();
 
-        static const FormatterMapType& GetFormatters()
-        {
-            return formatters_;
-        }
+        void process(const std::string& path);
 
-        void Process(const std::string& path);
+        static const formatter_map_type& formatters() { return formatters_; }
 
         static options options;
 
         bool error;
 
     private:
-        void ProcessDir(const std::string& path);
-        void ProcessFile(const std::string& path);
+        void process_dir(const std::string& path);
+        void process_file(const std::string& path);
 
-        static HandlerMapType handlers_;
-        static FormatterMapType formatters_;
+        static handler_map_type handlers_;
+        static formatter_map_type formatters_;
 
-        struct StaticInitializer
+        struct static_initializer
         {
-            StaticInitializer();
+            static_initializer();
         };
-        static StaticInitializer static_init_;
+        static static_initializer static_init_;
 
         FormatterPtr formatter_;
         std::vector<std::string> sub_dirs_;

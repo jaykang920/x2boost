@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     xpiler::xpiler xpiler;
     BOOST_FOREACH(const std::string& path, xpiler::xpiler::options.input)
     {
-        xpiler.Process(path);
+        xpiler.process(path);
     }
     return (xpiler.error ? 1 : 0);
 }

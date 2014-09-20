@@ -21,12 +21,12 @@ namespace xpiler
 {
     options xpiler::options;
 
-    xpiler::HandlerMapType xpiler::handlers_;
-    xpiler::FormatterMapType xpiler::formatters_;
+    xpiler::handler_map_type xpiler::handlers_;
+    xpiler::formatter_map_type xpiler::formatters_;
 
-    xpiler::StaticInitializer xpiler::static_init_;
+    xpiler::static_initializer xpiler::static_init_;
 
-    xpiler::StaticInitializer::StaticInitializer()
+    xpiler::static_initializer::static_initializer()
     {
         handlers_[".xml"] = HandlerPtr(new XmlHandler());
         formatters_["boost"] = FormatterPtr(new BoostFormatter());
@@ -37,15 +37,15 @@ namespace xpiler
         formatter_ = formatters_[options.spec];
     }
 
-    void xpiler::Process(const string& path)
+    void xpiler::process(const string& path)
     {
         if (fs::is_directory(path))
         {
-            ProcessDir(path);
+            process_dir(path);
         }
         else if (fs::exists(path))
         {
-            ProcessFile(path);
+            process_file(path);
         }
         else
         {
@@ -54,7 +54,7 @@ namespace xpiler
         }
     }
 
-    void xpiler::ProcessDir(const string& path)
+    void xpiler::process_dir(const string& path)
     {
         cout << "Directory " << fs::canonical(path).string() << endl;
 
@@ -71,18 +71,18 @@ namespace xpiler
                 if (options.recursive)
                 {
                     sub_dirs_.push_back(filename.string());
-                    ProcessDir(pathname);
+                    process_dir(pathname);
                     sub_dirs_.pop_back();
                 }
             }
             else
             {
-                ProcessFile(pathname);
+                process_file(pathname);
             }
         }
     }
 
-    void xpiler::ProcessFile(const string& path)
+    void xpiler::process_file(const string& path)
     {
         fs::path p(path);
         fs::path filename = p.filename();
@@ -102,7 +102,7 @@ namespace xpiler
         }
 
         boost::algorithm::to_lower(extension);
-        HandlerMapType::iterator it = handlers_.find(extension);
+        handler_map_type::iterator it = handlers_.find(extension);
         if (it == handlers_.end() ||
             (!options.forced && formatter_->IsUpToDate(path)))
         {

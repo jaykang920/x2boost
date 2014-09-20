@@ -45,8 +45,8 @@ bool Options::Parse(int argc, char* argv[])
             cout << "  usage: xpiler [options] path..." << endl;
             cout << options << endl;
             cout << "Specs:" << endl;
-            BOOST_FOREACH(const Xpiler::FormatterMapType::value_type& pair,
-                Xpiler::GetFormatters())
+            BOOST_FOREACH(const xpiler::FormatterMapType::value_type& pair,
+                xpiler::GetFormatters())
             {
                 cout << setw(21) << pair.first << " : "
                     << pair.second->GetDescription();
@@ -84,8 +84,8 @@ bool Options::Parse(int argc, char* argv[])
         if (variables.count("spec"))
         {
             spec = variables["spec"].as<string>();
-            const Xpiler::FormatterMapType& formatters = Xpiler::GetFormatters();
-            Xpiler::FormatterMapType::const_iterator it = formatters.find(spec);
+            const xpiler::FormatterMapType& formatters = xpiler::GetFormatters();
+            xpiler::FormatterMapType::const_iterator it = formatters.find(spec);
             if (it == formatters.end())
             {
                 cout << "error: unknown target formatter specified: "

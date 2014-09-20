@@ -6,18 +6,15 @@
 #include "options.hpp"
 #include "xpiler.hpp"
 
-using namespace std;
-using namespace xpiler;
-
 int main(int argc, char* argv[])
 {
-    if (!Xpiler::options.Parse(argc, argv))
+    if (!xpiler::xpiler::options.Parse(argc, argv))
     {
         return 2;
     }
 
-    Xpiler xpiler;
-    BOOST_FOREACH(const string& path, Xpiler::options.input)
+    xpiler::xpiler xpiler;
+    BOOST_FOREACH(const std::string& path, xpiler::xpiler::options.input)
     {
         xpiler.Process(path);
     }

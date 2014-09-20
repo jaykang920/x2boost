@@ -17,13 +17,13 @@ namespace xpiler
 {
     struct Options;
 
-    class Xpiler
+    class xpiler
     {
     public:
         typedef std::map<std::string, HandlerPtr> HandlerMapType;
         typedef std::map<std::string, FormatterPtr> FormatterMapType;
 
-        Xpiler();
+        xpiler();
 
         static const FormatterMapType& GetFormatters()
         {

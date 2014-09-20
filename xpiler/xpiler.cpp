@@ -14,126 +14,128 @@
 #include "xml_handler.hpp"
 
 using namespace std;
-using namespace xpiler;
 
-namespace fs = boost::filesystem;
-
-Options Xpiler::options;
-
-Xpiler::HandlerMapType Xpiler::handlers_;
-Xpiler::FormatterMapType Xpiler::formatters_;
-
-Xpiler::StaticInitializer Xpiler::static_init_;
-
-Xpiler::StaticInitializer::StaticInitializer()
+namespace xpiler
 {
-    handlers_[".xml"] = HandlerPtr(new XmlHandler());
-    formatters_["boost"] = FormatterPtr(new BoostFormatter());
-}
+    namespace fs = boost::filesystem;
 
-Xpiler::Xpiler()
-{
-    formatter_ = formatters_[options.spec];
-}
+    Options xpiler::options;
 
-void Xpiler::Process(const string& path)
-{
-    if (fs::is_directory(path))
+    xpiler::HandlerMapType xpiler::handlers_;
+    xpiler::FormatterMapType xpiler::formatters_;
+
+    xpiler::StaticInitializer xpiler::static_init_;
+
+    xpiler::StaticInitializer::StaticInitializer()
     {
-        ProcessDir(path);
+        handlers_[".xml"] = HandlerPtr(new XmlHandler());
+        formatters_["boost"] = FormatterPtr(new BoostFormatter());
     }
-    else if (fs::exists(path))
+
+    xpiler::xpiler()
     {
-        ProcessFile(path);
+        formatter_ = formatters_[options.spec];
     }
-    else
+
+    void xpiler::Process(const string& path)
     {
-        cout << path << " doesn't exist." << endl;
-        error = true;
-    }
-}
-
-void Xpiler::ProcessDir(const string& path)
-{
-    cout << "Directory " << fs::canonical(path).string() << endl;
-
-    fs::directory_iterator di(path);
-    fs::directory_iterator end;
-    for (; di != end; ++di)
-    {
-        fs::directory_entry& entry = *di;
-        fs::path filename = entry.path().filename();
-
-        std::string pathname = (fs::path(path) / filename).string();
-        if (fs::is_directory(entry.status()))
+        if (fs::is_directory(path))
         {
-            if (options.recursive)
-            {
-                sub_dirs_.push_back(filename.string());
-                ProcessDir(pathname);
-                sub_dirs_.pop_back();
-            }
+            ProcessDir(path);
+        }
+        else if (fs::exists(path))
+        {
+            ProcessFile(path);
         }
         else
         {
-            ProcessFile(pathname);
+            cout << path << " doesn't exist." << endl;
+            error = true;
         }
     }
-}
 
-void Xpiler::ProcessFile(const string& path)
-{
-    fs::path p(path);
-    fs::path filename = p.filename();
-    string extension = p.extension().string();
-    fs::path out_dir;
-    if (options.out_dir.empty())
+    void xpiler::ProcessDir(const string& path)
     {
-        out_dir = p.parent_path();
-    }
-    else
-    {
-        out_dir = options.out_dir;
-        BOOST_FOREACH(string& sub_dir, sub_dirs_)
+        cout << "Directory " << fs::canonical(path).string() << endl;
+
+        fs::directory_iterator di(path);
+        fs::directory_iterator end;
+        for (; di != end; ++di)
         {
-            out_dir /= sub_dir;
+            fs::directory_entry& entry = *di;
+            fs::path filename = entry.path().filename();
+
+            std::string pathname = (fs::path(path) / filename).string();
+            if (fs::is_directory(entry.status()))
+            {
+                if (options.recursive)
+                {
+                    sub_dirs_.push_back(filename.string());
+                    ProcessDir(pathname);
+                    sub_dirs_.pop_back();
+                }
+            }
+            else
+            {
+                ProcessFile(pathname);
+            }
         }
     }
 
-    boost::algorithm::to_lower(extension);
-    HandlerMapType::iterator it = handlers_.find(extension);
-    if (it == handlers_.end() ||
-        (!options.forced && formatter_->IsUpToDate(path)))
+    void xpiler::ProcessFile(const string& path)
     {
-        return;
+        fs::path p(path);
+        fs::path filename = p.filename();
+        string extension = p.extension().string();
+        fs::path out_dir;
+        if (options.out_dir.empty())
+        {
+            out_dir = p.parent_path();
+        }
+        else
+        {
+            out_dir = options.out_dir;
+            BOOST_FOREACH(string& sub_dir, sub_dirs_)
+            {
+                out_dir /= sub_dir;
+            }
+        }
+
+        boost::algorithm::to_lower(extension);
+        HandlerMapType::iterator it = handlers_.find(extension);
+        if (it == handlers_.end() ||
+            (!options.forced && formatter_->IsUpToDate(path)))
+        {
+            return;
+        }
+        HandlerPtr handler = it->second;
+
+        cout << filename.string() << endl;
+
+        Document* doc;
+        if (!handler->Handle(path, &doc))
+        {
+            error = true;
+        }
+        if (error == true || doc == NULL)
+        {
+            return;
+        }
+
+        doc->basename = filename.stem().string();
+
+        if (!out_dir.empty() && !fs::is_directory(out_dir))
+        {
+            fs::create_directories(out_dir);
+        }
+
+        if (!formatter_->Format(doc, out_dir.string()))
+        {
+            error = true;
+        }
+
+        delete doc;
     }
-    HandlerPtr handler = it->second;
-
-    cout << filename.string() << endl;
-
-    Document* doc;
-    if (!handler->Handle(path, &doc))
-    {
-        error = true;
-    }
-    if (error == true || doc == NULL)
-    {
-        return;
-    }
-
-    doc->basename = filename.stem().string();
-
-    if (!out_dir.empty() && !fs::is_directory(out_dir))
-    {
-        fs::create_directories(out_dir);
-    }
-
-    if (!formatter_->Format(doc, out_dir.string()))
-    {
-        error = true;
-    }
-
-    delete doc;
 }
 
 // EOF xpiler.cpp

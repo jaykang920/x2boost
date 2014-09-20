@@ -10,15 +10,24 @@
 
 namespace x2
 {
+    class X2BOOST_API caze {};
+
     class X2BOOST_API flow : private boost::noncopyable
     {
     public:
         virtual ~flow() {}
 
-        void feed(event_ptr e) {}
+        void feed(event_ptr e) {
+            std::cout << "flow::feed" << std::endl;
+        }
+
+        flow* add(caze* c) { return this; }
 
         void startup() {}
-        void shutdown() {}
+        void shutdown()
+        {
+            std::cout << "flow::shutdown" << std::endl;
+        }
 
     private:
     };

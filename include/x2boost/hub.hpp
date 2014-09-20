@@ -49,6 +49,16 @@ namespace x2
         /// Gets the singleton instance of the hub.
         static hub& instance() { return instance_; }
 
+        /// Represents the attached flows for cleanup convenience.
+        class flows : private boost::noncopyable
+        {
+        public:
+            ~flows() { shutdown(); }
+
+            void startup() { hub::startup(); }
+            void shutdown() { hub::shutdown(); }
+        };
+
     private:
         typedef std::vector<flow_ptr> list_type;
         typedef boost::unordered_map<const char*, list_type> map_type;

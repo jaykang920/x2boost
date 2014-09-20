@@ -3,6 +3,7 @@
 
 #include "x2boost/hub.hpp"
 
+#include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include <boost/thread/locks.hpp>
 
@@ -62,28 +63,19 @@ void hub::feed(event_ptr e) const
         }
         flows = &(it->second);
     }
-    for (size_t i = 0, count = flows->size(); i < count; ++i)
-    {
-        (*flows)[i]->feed(e);
-    }
+    std::for_each(flows->begin(), flows->end(), boost::bind(&flow::feed, _1, e));
 }
 
 void hub::start_attached_flows() const
 {
     boost::shared_lock<boost::shared_mutex> lock(mutex_);
-    for (size_t i = 0, count = flows_.size(); i < count; ++i)
-    {
-        flows_[i]->startup();
-    }
+    std::for_each(flows_.begin(), flows_.end(), boost::mem_fn(&flow::startup));
 }
 
 void hub::stop_attached_flows() const
 {
     boost::shared_lock<boost::shared_mutex> lock(mutex_);
-    for (size_t i = 0, count = flows_.size(); i < count; ++i)
-    {
-        flows_[i]->shutdown();
-    }
+    std::for_each(flows_.begin(), flows_.end(), boost::mem_fn(&flow::shutdown));
 }
 
 void hub::subscribe(flow_ptr flow, const char* channel)

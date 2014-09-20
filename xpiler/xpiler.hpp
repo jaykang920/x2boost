@@ -15,7 +15,7 @@
 
 namespace xpiler
 {
-    struct Options;
+    struct options;
 
     class xpiler
     {
@@ -32,7 +32,7 @@ namespace xpiler
 
         void Process(const std::string& path);
 
-        static Options options;
+        static options options;
 
         bool error;
 

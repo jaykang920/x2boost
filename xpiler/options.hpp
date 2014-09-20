@@ -10,15 +10,15 @@
 
 namespace xpiler
 {
-    struct Options
+    struct options
     {
-        Options()
+        options()
           : forced(false),
             recursive(false),
-            spec(kDefaultSpec)
+            spec(default_spec)
         {}
 
-        bool Parse(int argc, char* argv[]);
+        bool parse(int argc, char* argv[]);
 
         bool forced;
         std::vector<std::string> input;
@@ -27,7 +27,7 @@ namespace xpiler
         std::string spec;
 
     private:
-        static const char* kDefaultSpec;
+        static const char* default_spec;
     };
 }
 

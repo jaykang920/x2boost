@@ -15,11 +15,11 @@
 
 using namespace std;
 
+namespace fs = boost::filesystem;
+
 namespace xpiler
 {
-    namespace fs = boost::filesystem;
-
-    Options xpiler::options;
+    options xpiler::options;
 
     xpiler::HandlerMapType xpiler::handlers_;
     xpiler::FormatterMapType xpiler::formatters_;

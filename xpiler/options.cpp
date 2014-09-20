@@ -14,13 +14,13 @@
 using namespace std;
 using namespace xpiler;
 
-const char* Options::kDefaultSpec = "boost";
+const char* options::default_spec = "boost";
 
-bool Options::Parse(int argc, char* argv[])
+bool options::parse(int argc, char* argv[])
 {
     namespace po = boost::program_options;
 
-    po::options_description options("Options");
+    po::options_description options("options");
     options.add_options()
         ("force", "force all to be re-xpiled")
         ("help", "print this message and quit")
@@ -50,7 +50,7 @@ bool Options::Parse(int argc, char* argv[])
             {
                 cout << setw(21) << pair.first << " : "
                     << pair.second->GetDescription();
-                if (pair.first == kDefaultSpec)
+                if (pair.first == default_spec)
                 {
                     cout << " (default)";
                 }

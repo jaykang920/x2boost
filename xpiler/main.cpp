@@ -8,7 +8,7 @@
 
 int main(int argc, char* argv[])
 {
-    if (!xpiler::xpiler::options.Parse(argc, argv))
+    if (!xpiler::xpiler::options.parse(argc, argv))
     {
         return 2;
     }

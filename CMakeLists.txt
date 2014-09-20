@@ -112,6 +112,7 @@ list(APPEND x2boost_ALL_INC ${x2boost_INC_UTIL})
 set(x2boost_SRC_DIR "${x2boost_SOURCE_DIR}/src")
 
 set(x2boost_SRC
+  "${x2boost_SRC_DIR}/hub.cpp"
   "${x2boost_SRC_DIR}/main.cpp"
 )
 

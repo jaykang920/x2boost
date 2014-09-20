@@ -10,10 +10,10 @@
 
 namespace x2
 {
-    X2BOOST_API
-    class Cell
+    class X2BOOST_API cell
     {
     public:
+        virtual ~cell() {}
 
     private:
     };

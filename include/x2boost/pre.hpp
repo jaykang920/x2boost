@@ -26,9 +26,13 @@
 
 namespace x2
 {
-    class Flow;
+    class cell;
+    class event;
+    class flow;
 
-    typedef boost::shared_ptr<Flow> FlowPtr;
+    typedef boost::shared_ptr<cell> cell_ptr;
+    typedef boost::shared_ptr<event> event_ptr;
+    typedef boost::shared_ptr<flow> flow_ptr;
 }
 
 #endif  // X2BOOST_PRE_HPP_

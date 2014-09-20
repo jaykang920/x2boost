@@ -10,10 +10,15 @@
 
 namespace x2
 {
-    X2BOOST_API
-    class Flow
+    class X2BOOST_API flow : private boost::noncopyable
     {
     public:
+        virtual ~flow() {}
+
+        void feed(event_ptr e) {}
+
+        void startup() {}
+        void shutdown() {}
 
     private:
     };

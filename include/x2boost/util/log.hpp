@@ -10,8 +10,7 @@
 
 namespace x2
 {
-    X2BOOST_API
-    class Log
+    class X2BOOST_API log
     {
 
     };

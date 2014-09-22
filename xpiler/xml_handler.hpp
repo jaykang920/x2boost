@@ -12,9 +12,9 @@
 
 namespace xpiler
 {
-    struct XmlHandler : public Handler
+    struct xml_handler : public handler
     {
-        virtual bool Handle(const std::string& path, Document** doc);
+        virtual bool handle(const std::string& path, document** doc);
     };
 }
 

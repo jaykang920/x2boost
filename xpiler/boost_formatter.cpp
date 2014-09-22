@@ -23,23 +23,23 @@ namespace
     string MixedCase2UPPER_CASE(const string& s);
 }
 
-bool BoostFormatter::Format(Document* doc, const string& out_dir)
+bool boost_formatter::format(document* doc, const string& out_dir)
 {
     try
     {
         fs::path basename = out_dir;
         basename /= doc->basename;
 
-        BoostHeaderFormatter header_context;
+        BoostHeaderformatter header_context;
         header_context.doc = doc;
         header_context.target = basename.string() + ".hpp";
 
-        BoostSourceFormatter source_context;
+        BoostSourceformatter source_context;
         source_context.doc = doc;
         source_context.target = basename.string() + ".cpp";
 
-        FormatHeaderFile(header_context);
-        FormatSourceFile(source_context);
+        format_header_file(header_context);
+        format_source_file(source_context);
 
         return true;
     }
@@ -50,7 +50,7 @@ bool BoostFormatter::Format(Document* doc, const string& out_dir)
     }
 }
 
-bool BoostFormatter::IsUpToDate(const string& path)
+bool boost_formatter::is_up_to_date(const string& path)
 {
     fs::path p = path;
     fs::path dirname = p.parent_path();
@@ -66,7 +66,7 @@ bool BoostFormatter::IsUpToDate(const string& path)
         fs::last_write_time(source_path) >= source_write_time);
 }
 
-void BoostFormatter::FormatHeaderFile(FormatterContext& context)
+void boost_formatter::format_header_file(formatter_context& context)
 {
     ofstream out(context.target);
     context.out = &out;
@@ -91,7 +91,7 @@ void BoostFormatter::FormatHeaderFile(FormatterContext& context)
     out.close();
 }
 
-void BoostFormatter::FormatSourceFile(FormatterContext& context)
+void boost_formatter::format_source_file(formatter_context& context)
 {
     ofstream out(context.target);
     context.out = &out;
@@ -103,32 +103,32 @@ void BoostFormatter::FormatSourceFile(FormatterContext& context)
     out.close();
 }
 
-void BoostHeaderFormatter::FormatCell(Cell* def)
+void BoostHeaderformatter::format_cell(cell* def)
 {
 
 }
 
-void BoostHeaderFormatter::FormatConsts(Consts* def)
+void BoostHeaderformatter::format_consts(consts* def)
 {
 
 }
 
-void BoostHeaderFormatter::FormatReference(Reference* def)
+void BoostHeaderformatter::format_reference(reference* def)
 {
 
 }
 
-void BoostSourceFormatter::FormatCell(Cell* def)
+void BoostSourceformatter::format_cell(cell* def)
 {
 
 }
 
-void BoostSourceFormatter::FormatConsts(Consts* def)
+void BoostSourceformatter::format_consts(consts* def)
 {
 
 }
 
-void BoostSourceFormatter::FormatReference(Reference* def)
+void BoostSourceformatter::format_reference(reference* def)
 {
 
 }

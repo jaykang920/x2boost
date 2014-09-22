@@ -10,16 +10,16 @@
 
 namespace xpiler
 {
-    struct Reference;
-    struct Definition;
+    struct reference;
+    struct definition;
 
-    struct Document
+    struct document
     {
         std::string basename;
         std::string ns;
 
-        std::vector<boost::shared_ptr<Reference>> references;
-        std::vector<boost::shared_ptr<Definition>> definitions;
+        std::vector<boost::shared_ptr<reference>> references;
+        std::vector<boost::shared_ptr<definition>> definitions;
     };
 }
 

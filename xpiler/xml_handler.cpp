@@ -16,7 +16,7 @@ using namespace xpiler;
 
 namespace pt = boost::property_tree;
 
-bool XmlHandler::Handle(const string& path, Document** doc)
+bool xml_handler::handle(const string& path, document** doc)
 {
     *doc = NULL;
     try
@@ -29,22 +29,22 @@ bool XmlHandler::Handle(const string& path, Document** doc)
         {
             return true;
         }
-        Document* document = *doc = new Document;
+        document* d = *doc = new document;
         BOOST_FOREACH(pt::ptree::value_type const& v, root)
         {
             if (v.first == "<xmlattr>")
             {
-                document->ns = v.second.get<string>("namespace");
+                d->ns = v.second.get<string>("namespace");
             }
             else if (v.first == "ref")
             {
-                ReferencePtr ref(new Reference);
+                reference_ptr ref(new reference);
                 ref->target = v.second.get<string>("<xmlattr>.target");
-                document->references.push_back(ref);
+                d->references.push_back(ref);
             }
             else if (v.first == "consts")
             {
-                ConstsPtr def(new Consts);
+                consts_ptr def(new consts);
                 BOOST_FOREACH(pt::ptree::value_type const& v2, v.second)
                 {
                     if (v2.first == "<xmlattr>")
@@ -54,20 +54,20 @@ bool XmlHandler::Handle(const string& path, Document** doc)
                     }
                     else if (v2.first == "const")
                     {
-                        Consts::ConstPtr constant(new Consts::Const);
-                        constant->name = v2.second.get<string>("<xmlattr>.name");
-                        constant->value = v2.second.get_value<string>();
-                        boost::trim(constant->value);
-                        def->constants.push_back(constant);
+                        consts::element_ptr element(new consts::element);
+                        element->name = v2.second.get<string>("<xmlattr>.name");
+                        element->value = v2.second.get_value<string>();
+                        boost::trim(element->value);
+                        def->elements.push_back(element);
                     }
                 }
-                document->definitions.push_back(def);
+                d->definitions.push_back(def);
             }
             else if (v.first == "cell" || v.first == "event")
             {
                 bool is_event = (v.first == "event");
-                CellPtr def;
-                def.reset(is_event ? new Event : new Cell);
+                cell_ptr def;
+                def.reset(is_event ? new event : new cell);
                 BOOST_FOREACH(pt::ptree::value_type const& v2, v.second)
                 {
                     if (v2.first == "<xmlattr>")
@@ -75,12 +75,12 @@ bool XmlHandler::Handle(const string& path, Document** doc)
                         def->name = v2.second.get<string>("name");
                         if (is_event)
                         {
-                            ((Event*)def.get())->id = v2.second.get<string>("id");
+                            ((event*)def.get())->id = v2.second.get<string>("id");
                         }
                     }
                     else if (v2.first == "property")
                     {
-                        Cell::PropertyPtr property(new Cell::Property);
+                        cell::PropertyPtr property(new cell::Property);
                         property->name = v2.second.get<string>("<xmlattr>.name");
                         //property->type = v2.second.get<string>("<xmlattr>.type");
                         property->default_value = v2.second.get_value<string>();
@@ -88,7 +88,7 @@ bool XmlHandler::Handle(const string& path, Document** doc)
                         def->properties.push_back(property);
                     }
                 }
-                document->definitions.push_back(def);
+                d->definitions.push_back(def);
             }
         }
         return true;

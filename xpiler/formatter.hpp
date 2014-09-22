@@ -10,33 +10,33 @@
 
 namespace xpiler
 {
-    struct Cell;
-    struct Consts;
-    struct Reference;
+    struct cell;
+    struct consts;
+    struct reference;
 
-    struct Document;
+    struct document;
 
-    struct FormatterContext
+    struct formatter_context
     {
-        virtual void FormatCell(Cell* def) = 0;
-        virtual void FormatConsts(Consts* def) = 0;
-        virtual void FormatReference(Reference* def) = 0;
+        virtual void format_cell(cell* def) = 0;
+        virtual void format_consts(consts* def) = 0;
+        virtual void format_reference(reference* def) = 0;
 
-        Document* doc;
+        document* doc;
         std::ostream* out;
         std::string target;
     };
 
-    struct Formatter
+    struct formatter
     {
-        virtual bool Format(Document* doc, const std::string& out_dir) = 0;
+        virtual bool format(document* doc, const std::string& out_dir) = 0;
 
-        virtual const char* GetDescription() = 0;
+        virtual const char* description() = 0;
 
-        virtual bool IsUpToDate(const std::string& path) = 0;
+        virtual bool is_up_to_date(const std::string& path) = 0;
     };
 
-    typedef boost::shared_ptr<Formatter> FormatterPtr;
+    typedef boost::shared_ptr<formatter> formatter_ptr;
 }
 
 #endif  // X2BOOST_XPILER_OUTPUT_FORMATTER_HPP_

@@ -28,8 +28,8 @@ namespace xpiler
 
     xpiler::static_initializer::static_initializer()
     {
-        handlers_[".xml"] = HandlerPtr(new XmlHandler());
-        formatters_["boost"] = FormatterPtr(new BoostFormatter());
+        handlers_[".xml"] = handler_ptr(new xml_handler);
+        formatters_["boost"] = formatter_ptr(new boost_formatter);
     }
 
     xpiler::xpiler()
@@ -104,16 +104,16 @@ namespace xpiler
         boost::algorithm::to_lower(extension);
         handler_map_type::iterator it = handlers_.find(extension);
         if (it == handlers_.end() ||
-            (!options.forced && formatter_->IsUpToDate(path)))
+            (!options.forced && formatter_->is_up_to_date(path)))
         {
             return;
         }
-        HandlerPtr handler = it->second;
+        handler_ptr handler = it->second;
 
         cout << filename.string() << endl;
 
-        Document* doc;
-        if (!handler->Handle(path, &doc))
+        document* doc;
+        if (!handler->handle(path, &doc))
         {
             error = true;
         }
@@ -129,7 +129,7 @@ namespace xpiler
             fs::create_directories(out_dir);
         }
 
-        if (!formatter_->Format(doc, out_dir.string()))
+        if (!formatter_->format(doc, out_dir.string()))
         {
             error = true;
         }

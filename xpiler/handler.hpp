@@ -10,14 +10,14 @@
 
 namespace xpiler
 {
-    struct Document;
+    struct document;
 
-    struct Handler
+    struct handler
     {
-        virtual bool Handle(const std::string& path, Document** doc) = 0;
+        virtual bool handle(const std::string& path, document** doc) = 0;
     };
 
-    typedef boost::shared_ptr<Handler> HandlerPtr;
+    typedef boost::shared_ptr<handler> handler_ptr;
 }
 
 #endif  // X2BOOST_XPILER_INPUT_HANDLER_HPP_

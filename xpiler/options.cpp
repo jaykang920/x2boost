@@ -49,7 +49,7 @@ bool options::parse(int argc, char* argv[])
                 xpiler::formatters())
             {
                 cout << setw(21) << pair.first << " : "
-                    << pair.second->GetDescription();
+                    << pair.second->description();
                 if (pair.first == default_spec)
                 {
                     cout << " (default)";

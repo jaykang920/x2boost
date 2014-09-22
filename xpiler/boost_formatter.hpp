@@ -12,36 +12,36 @@
 
 namespace xpiler
 {
-    struct BoostFormatter : public Formatter
+    struct boost_formatter : public formatter
     {
-        virtual bool Format(Document* doc, const std::string& out_dir);
+        virtual bool format(document* doc, const std::string& out_dir);
 
-        virtual const char* GetDescription()
+        virtual const char* description()
         {
             return "C++ with Boost";
         }
 
-        virtual bool IsUpToDate(const std::string& path);
+        virtual bool is_up_to_date(const std::string& path);
 
     private:
-        void FormatHeaderFile(FormatterContext& context);
-        void FormatSourceFile(FormatterContext& context);
+        void format_header_file(formatter_context& context);
+        void format_source_file(formatter_context& context);
     };
 
-    class BoostHeaderFormatter : public FormatterContext
+    class BoostHeaderformatter : public formatter_context
     {
     public:
-        virtual void FormatCell(Cell* def);
-        virtual void FormatConsts(Consts* def);
-        virtual void FormatReference(Reference* def);
+        virtual void format_cell(cell* def);
+        virtual void format_consts(consts* def);
+        virtual void format_reference(reference* def);
     };
 
-    class BoostSourceFormatter : public FormatterContext
+    class BoostSourceformatter : public formatter_context
     {
     public:
-        virtual void FormatCell(Cell* def);
-        virtual void FormatConsts(Consts* def);
-        virtual void FormatReference(Reference* def);
+        virtual void format_cell(cell* def);
+        virtual void format_consts(consts* def);
+        virtual void format_reference(reference* def);
     };
 }
 

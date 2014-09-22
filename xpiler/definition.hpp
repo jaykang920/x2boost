@@ -12,34 +12,34 @@
 
 namespace xpiler
 {
-    struct Definition
+    struct definition
     {
-        virtual void Format(FormatterContext& context) = 0;
+        virtual void format(formatter_context& context) = 0;
 
         std::string name;
     };
 
-    struct Consts : Definition
+    struct consts : public definition
     {
-        struct Const
+        struct element
         {
             std::string name;
             std::string value;
         };
 
-        typedef boost::shared_ptr<Const> ConstPtr;
+        typedef boost::shared_ptr<element> element_ptr;
 
-        virtual void Format(FormatterContext& context)
+        virtual void format(formatter_context& context)
         {
-            context.FormatConsts(this);
+            context.format_consts(this);
         }
 
         std::string type;
         std::string native_type;
-        std::vector<ConstPtr> constants;
+        std::vector<element_ptr> elements;
     };
 
-    struct Cell : Definition
+    struct cell : public definition
     {
         struct Property
         {
@@ -53,42 +53,42 @@ namespace xpiler
 
         typedef boost::shared_ptr<Property> PropertyPtr;
 
-        virtual void Format(FormatterContext& context)
+        virtual void format(formatter_context& context)
         {
-            context.FormatCell(this);
+            context.format_cell(this);
         }
 
-        bool HasProperties() { return !properties.empty(); }
+        bool has_properties() { return !properties.empty(); }
 
-        virtual bool IsEvent() { return false; }
+        virtual bool is_event() { return false; }
 
         std::string base;
         std::string base_class;
         std::vector<PropertyPtr> properties;
     };
 
-    struct Event : Cell
+    struct event : public cell
     {
-        virtual bool IsEvent() { return true; }
+        virtual bool is_event() { return true; }
 
         std::string id;
     };
 
-    struct Reference
+    struct reference
     {
         std::string target;
 
-        void Format(FormatterContext& context)
+        void format(formatter_context& context)
         {
-            context.FormatReference(this);
+            context.format_reference(this);
         }
     };
 
-    typedef boost::shared_ptr<Definition> DefinitionPtr;
-    typedef boost::shared_ptr<Consts> ConstsPtr;
-    typedef boost::shared_ptr<Cell> CellPtr;
-    typedef boost::shared_ptr<Event> EventPtr;
-    typedef boost::shared_ptr<Reference> ReferencePtr;
+    typedef boost::shared_ptr<definition> definition_ptr;
+    typedef boost::shared_ptr<consts> consts_ptr;
+    typedef boost::shared_ptr<cell> cell_ptr;
+    typedef boost::shared_ptr<event> event_ptr;
+    typedef boost::shared_ptr<reference> reference_ptr;
 }
 
 #endif  // X2BOOST_XPILER_DEFINITION_HPP_

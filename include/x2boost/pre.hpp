@@ -26,10 +26,12 @@
 
 namespace x2
 {
+    class case_interface;
     class cell;
     class event;
     class flow;
 
+    typedef boost::shared_ptr<case_interface> case_ptr;
     typedef boost::shared_ptr<cell> cell_ptr;
     typedef boost::shared_ptr<event> event_ptr;
     typedef boost::shared_ptr<flow> flow_ptr;

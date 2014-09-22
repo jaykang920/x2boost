@@ -93,8 +93,10 @@ string_append(x2boost_INCLUDES "${x2boost_SOURCE_DIR}" ";")
 set(x2boost_INC_DIR "${x2boost_INCLUDE_DIR}/x2boost")
 
 set(x2boost_INC
+  "${x2boost_INC_DIR}/case.hpp"
   "${x2boost_INC_DIR}/cell.hpp"
   "${x2boost_INC_DIR}/event.hpp"
+  "${x2boost_INC_DIR}/event_sink.hpp"
   "${x2boost_INC_DIR}/flow.hpp"
   "${x2boost_INC_DIR}/hub.hpp"
   "${x2boost_INC_DIR}/pre.hpp"
@@ -112,6 +114,7 @@ list(APPEND x2boost_ALL_INC ${x2boost_INC_UTIL})
 set(x2boost_SRC_DIR "${x2boost_SOURCE_DIR}/src")
 
 set(x2boost_SRC
+  "${x2boost_SRC_DIR}/case.cpp"
   "${x2boost_SRC_DIR}/hub.cpp"
   "${x2boost_SRC_DIR}/main.cpp"
 )

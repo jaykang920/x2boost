@@ -8,10 +8,10 @@
 #include "x2boost/pre.hpp"
 #endif
 
+#include "x2boost/case.hpp"
+
 namespace x2
 {
-    class X2BOOST_API caze {};
-
     class X2BOOST_API flow : private boost::noncopyable
     {
     public:
@@ -21,7 +21,7 @@ namespace x2
             std::cout << "flow::feed" << std::endl;
         }
 
-        flow* add(caze* c) { return this; }
+        flow* add(case_interface* c) { return this; }
 
         void startup() {}
         void shutdown()
@@ -30,6 +30,7 @@ namespace x2
         }
 
     private:
+        case_stack cases_;
     };
 }
 

@@ -26,7 +26,7 @@
 
 namespace x2
 {
-    class case_interface;
+    struct case_interface;
     class cell;
     class event;
     class flow;

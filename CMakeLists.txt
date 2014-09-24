@@ -100,13 +100,24 @@ set(x2boost_INC
   "${x2boost_INC_DIR}/flow.hpp"
   "${x2boost_INC_DIR}/hub.hpp"
   "${x2boost_INC_DIR}/pre.hpp"
+  "${x2boost_INC_DIR}/queue.hpp"
   "${x2boost_INC_DIR}/x2boost.hpp"
+)
+set(x2boost_INC_FLOWS
+  "${x2boost_INC_DIR}/flows/event_based_flow.hpp"
+  "${x2boost_INC_DIR}/flows/multi_threaded_flow.hpp"
+  "${x2boost_INC_DIR}/flows/single_threaded_flow.hpp"
+)
+set(x2boost_INC_QUEUES
+  "${x2boost_INC_DIR}/queues/synchronized_queue.hpp"
 )
 set(x2boost_INC_UTIL
   "${x2boost_INC_DIR}/util/log.hpp"
 )
 
 list(APPEND x2boost_ALL_INC ${x2boost_INC})
+list(APPEND x2boost_ALL_INC ${x2boost_INC_FLOWS})
+list(APPEND x2boost_ALL_INC ${x2boost_INC_QUEUES})
 list(APPEND x2boost_ALL_INC ${x2boost_INC_UTIL})
 
 # x2boost source files
@@ -115,16 +126,25 @@ set(x2boost_SRC_DIR "${x2boost_SOURCE_DIR}/src")
 
 set(x2boost_SRC
   "${x2boost_SRC_DIR}/case.cpp"
+  "${x2boost_SRC_DIR}/flow.cpp"
   "${x2boost_SRC_DIR}/hub.cpp"
   "${x2boost_SRC_DIR}/main.cpp"
 )
+set(x2boost_SRC_FLOWS
+  "${x2boost_SRC_DIR}/flows/event_based_flow.cpp"
+  "${x2boost_SRC_DIR}/flows/single_threaded_flow.cpp"
+)
 
 list(APPEND x2boost_ALL_SRC ${x2boost_SRC})
+list(APPEND x2boost_ALL_SRC ${x2boost_SRC_FLOWS})
 
 # Source groups
 source_group("Header Files" FILES ${x2boost_INC})
+source_group("Header Files\\flows" FILES ${x2boost_INC_FLOWS})
+source_group("Header Files\\queues" FILES ${x2boost_INC_QUEUES})
 source_group("Header Files\\util" FILES ${x2boost_INC_UTIL})
 source_group("Source Files" FILES ${x2boost_SRC})
+source_group("Source Files\\flows" FILES ${x2boost_SRC_FLOWS})
 
 add_library(x2boost ${x2boost_ALL_SRC} ${x2boost_ALL_INC})
 set_target_properties(x2boost PROPERTIES

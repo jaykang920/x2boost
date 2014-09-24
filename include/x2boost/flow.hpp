@@ -8,20 +8,31 @@
 #include "x2boost/pre.hpp"
 #endif
 
+#include <boost/enable_shared_from_this.hpp>
+
 #include "x2boost/case.hpp"
 
 namespace x2
 {
-    class X2BOOST_API flow : private boost::noncopyable
+    class X2BOOST_API flow
+      : public boost::enable_shared_from_this<flow>, private boost::noncopyable
     {
     public:
         virtual ~flow() {}
 
-        void feed(event_ptr e) {
-            std::cout << "flow::feed" << std::endl;
+        virtual void feed(event_ptr e) = 0;
+
+        flow_ptr add(case_ptr c)
+        {
+            case_stack_.add(c);
+            return shared_from_this();
         }
 
-        flow* add(case_interface* c) { return this; }
+        flow_ptr remove(case_ptr c)
+        {
+            case_stack_.remove(c);
+            return shared_from_this();
+        }
 
         void startup() {}
         void shutdown()
@@ -29,8 +40,21 @@ namespace x2
             std::cout << "flow::shutdown" << std::endl;
         }
 
-    private:
-        case_stack cases_;
+        /// Makes this flow subscribe to the specified channel.
+        flow& subscribe_to(const char* channel) const;
+        /// Makes this flow unsubscribe from the specified channel.
+        flow& unsubscribe_from(const char* channel) const;
+
+    protected:
+        virtual void setup()
+        {
+
+        }
+        virtual void teardown() {}
+
+        case_stack case_stack_;
+
+        mutable boost::mutex mutex_;
     };
 }
 

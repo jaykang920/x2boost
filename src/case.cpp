@@ -11,7 +11,10 @@ using namespace x2;
 void case_stack::add(case_ptr c)
 {
     boost::mutex::scoped_lock lock(mutex_);
-    cases_.push_back(c);
+    if (std::find(cases_.begin(), cases_.end(), c) == cases_.end())
+    {
+        cases_.push_back(c);
+    }
 }
 
 void case_stack::remove(case_ptr c)

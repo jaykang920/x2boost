@@ -21,7 +21,7 @@ namespace x2
         }
 
         flow_ptr flow() const { return f.lock(); }
-        void set_flow(flow_ptr value) { f = boost::weak_ptr<x2::flow>(value); }
+        void set_flow(flow_ptr value) { f = value; }
 
     protected:
         void cleanup()

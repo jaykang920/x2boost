@@ -16,7 +16,7 @@ namespace x2
 {
     struct X2BOOST_API case_interface
     {
-        virtual ~case_interface() = 0;
+        virtual ~case_interface() {}
 
         virtual void setup(flow_ptr holder) = 0;
         virtual void teardown(flow_ptr holder) = 0;

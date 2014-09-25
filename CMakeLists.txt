@@ -97,6 +97,7 @@ set(x2boost_INC
   "${x2boost_INC_DIR}/cell.hpp"
   "${x2boost_INC_DIR}/event.hpp"
   "${x2boost_INC_DIR}/event_sink.hpp"
+  "${x2boost_INC_DIR}/fingerprint.hpp"
   "${x2boost_INC_DIR}/flow.hpp"
   "${x2boost_INC_DIR}/hub.hpp"
   "${x2boost_INC_DIR}/pre.hpp"
@@ -126,6 +127,7 @@ set(x2boost_SRC_DIR "${x2boost_SOURCE_DIR}/src")
 
 set(x2boost_SRC
   "${x2boost_SRC_DIR}/case.cpp"
+  "${x2boost_SRC_DIR}/fingerprint.cpp"
   "${x2boost_SRC_DIR}/flow.cpp"
   "${x2boost_SRC_DIR}/hub.cpp"
   "${x2boost_SRC_DIR}/main.cpp"

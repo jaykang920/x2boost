@@ -13,7 +13,7 @@
 
 namespace x2
 {
-    template<class Q = synchronized_queue<event_ptr>>
+    template<class Q = synchronized_event_queue>
     class X2BOOST_API event_based_flow : public flow
     {
     public:

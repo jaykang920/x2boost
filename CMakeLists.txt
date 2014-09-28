@@ -93,12 +93,14 @@ string_append(x2boost_INCLUDES "${x2boost_SOURCE_DIR}" ";")
 set(x2boost_INC_DIR "${x2boost_INCLUDE_DIR}/x2boost")
 
 set(x2boost_INC
+  "${x2boost_INC_DIR}/binder.hpp"
   "${x2boost_INC_DIR}/case.hpp"
   "${x2boost_INC_DIR}/cell.hpp"
   "${x2boost_INC_DIR}/event.hpp"
   "${x2boost_INC_DIR}/event_sink.hpp"
   "${x2boost_INC_DIR}/fingerprint.hpp"
   "${x2boost_INC_DIR}/flow.hpp"
+  "${x2boost_INC_DIR}/handler.hpp"
   "${x2boost_INC_DIR}/hub.hpp"
   "${x2boost_INC_DIR}/pre.hpp"
   "${x2boost_INC_DIR}/queue.hpp"
@@ -110,6 +112,7 @@ set(x2boost_INC_FLOWS
   "${x2boost_INC_DIR}/flows/single_threaded_flow.hpp"
 )
 set(x2boost_INC_QUEUES
+  "${x2boost_INC_DIR}/queues/lockfree_queue.hpp"
   "${x2boost_INC_DIR}/queues/synchronized_queue.hpp"
 )
 set(x2boost_INC_UTIL
@@ -126,7 +129,10 @@ list(APPEND x2boost_ALL_INC ${x2boost_INC_UTIL})
 set(x2boost_SRC_DIR "${x2boost_SOURCE_DIR}/src")
 
 set(x2boost_SRC
+  "${x2boost_SRC_DIR}/binder.cpp"
   "${x2boost_SRC_DIR}/case.cpp"
+  "${x2boost_SRC_DIR}/cell.cpp"
+  "${x2boost_SRC_DIR}/event.cpp"
   "${x2boost_SRC_DIR}/fingerprint.cpp"
   "${x2boost_SRC_DIR}/flow.cpp"
   "${x2boost_SRC_DIR}/hub.cpp"

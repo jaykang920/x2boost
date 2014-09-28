@@ -8,7 +8,7 @@
 #include "x2boost/pre.hpp"
 #endif
 
-#include <boost/thread/once.hpp>
+#include "x2boost/fingerprint.hpp"
 
 namespace x2
 {
@@ -17,34 +17,64 @@ namespace x2
     public:
         virtual ~cell() {}
 
+        // Determines whether this cell is equal to the specified one.
+        virtual bool equals(const cell& other) const;
+        // Determines whether this cell is equivalent to the specified one.
+        virtual bool equivalent(const cell& other) const;
+        // Returns the hash code for the current object.
+        virtual std::size_t hash_code() const;
+        // Returns the hash code based on the specified fingerprint.
+        virtual std::size_t hash_code(const fingerprint& fingerprint) const;
+        // Returns a string that describes the current object.
+        std::string string() const;
+
         /** Supports light-weight custom type hierarchy for cell and its subclasses. */
-        struct tag
+        class tag
         {
-            /** Initializes a new instance of the cell::tag class. */
-            tag(tag* base, int num_props)
+        public:
+            // Initializes an empty cell::tag object.
+            tag() {}
+            
+            // Initializes this cell::tag object with the specified fields.
+            void set(const tag* base, int num_props)
             {
-                this->base = base;
-                this->num_props = num_props;
-                offset = 0;
+                base_ = base;
+                num_props_ = num_props;
+                offset_ = 0;
                 if (base)
                 {
-                    offset = base->offset + base->num_props;
+                    offset_ = base->offset() + base->num_props();
                 }
             }
 
-            /** Gets the pointer to the immediate base type tag. */
-            tag* base;
-            /** Gets the number of immediate (directly defined) properties in this type. */
-            int num_props;
-            /** Gets the fingerprint base offset for immediate properties in this type. */
-            int offset;
+            // Gets the pointer to the immediate base type tag.
+            const tag* base() const { return base_; }
+            // Gets the number of immediate (directly defined) properties in this type.
+            int num_props() const { return num_props_; }
+            // Gets the fingerprint base offset for immediate properties in this type.
+            int offset() const { return offset_; }
+
+        private:
+            const tag* base_;
+            int num_props_;
+            int offset_;
         };
 
-        //static const tag& _tag();
+        // Returns the custom type tag for this class.
+        static const tag* _tag();
 
-    private:
-        //static tag _t;
-        static boost::once_flag once_;
+        bool is_kind_of(const cell& other) const;
+
+        // Returns the custom type tag of this object.
+        virtual const tag* type_tag() const;
+
+    protected:
+        explicit cell(std::size_t length) : fingerprint_(length) {}
+
+        // Describes the immediate properties into the specified stream.
+        virtual void describe(std::ostream& stream) const;
+
+        fingerprint fingerprint_;
     };
 }
 

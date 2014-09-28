@@ -1,8 +1,8 @@
 // Copyright (c) 2014 Jae-jun Kang
 // See the file COPYING for license details.
 
-#ifndef X2BOOST_SINGLE_THREADED_FLOW_HPP_
-#define X2BOOST_SINGLE_THREADED_FLOW_HPP_
+#ifndef X2BOOST_MULTI_THREADED_FLOW_HPP_
+#define X2BOOST_MULTI_THREADED_FLOW_HPP_
 
 #ifndef X2BOOST_PRE_HPP_
 #include "x2boost/pre.hpp"
@@ -16,7 +16,7 @@
 
 namespace x2
 {
-    template<class Q = synchronized_queue<event_ptr>>
+    template<class Q = synchronized_event_queue>
     class X2BOOST_API multi_threaded_flow : public event_based_flow<Q>
     {
     public:
@@ -65,4 +65,4 @@ namespace x2
     };
 }
 
-#endif  // X2BOOST_SINGLE_THREADED_FLOW_HPP_
+#endif  // X2BOOST_MULTI_THREADED_FLOW_HPP_

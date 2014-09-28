@@ -113,6 +113,34 @@ bool fingerprint::operator==(const fingerprint& other) const
     return true;
 }
 
+bool fingerprint::equivalent(const fingerprint& other) const
+{
+    if (this == &other)
+    {
+        return true;
+    }
+    if (length_ > other.length_)
+    {
+        return false;
+    }
+    if ((block_ & other.block_) != block_)
+    {
+        return false;
+    }
+    if (blocks_)
+    {
+        for (std::size_t i = 0, count = num_additional_blocks(); i < count; ++i)
+        {
+            std::size_t mine = blocks_[i];
+            if ((mine & other.blocks_[i]) != mine)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 std::size_t fingerprint::hash_code() const
 {
     std::size_t value = 17;
@@ -126,13 +154,6 @@ std::size_t fingerprint::hash_code() const
         }
     }
     return value;
-}
-
-void fingerprint::swap(fingerprint& other)
-{
-    std::swap(length_, other.length_);
-    std::swap(block_, other.block_);
-    std::swap(blocks_, other.blocks_);
 }
 
 // EOF fingerprint.cpp

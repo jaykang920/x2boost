@@ -15,7 +15,35 @@ namespace x2
     class X2BOOST_API event : public cell
     {
     public:
+        event() : cell(_tag()->num_props()) {}
         virtual ~event() {}
+
+        // Supports light-weight custom type hierarchy for event and its subclasses.
+        class tag : public cell::tag
+        {
+        public:
+            // Initializes an empty event::tag object.
+            tag() {}
+
+            // Initializes this event::tag object with the specified fields.
+            void set(const tag* base, int num_props, int type_id)
+            {
+                cell::tag::set(base, num_props);
+                type_id_ = type_id;
+            }
+
+            // Gets the integer type identifier.
+            int type_id() const { return type_id_; }
+
+        private:
+            int type_id_;
+        };
+
+        // Returns the custom type tag for this class.
+        static const tag* _tag();
+
+        // Returns the custom type tag of this object.
+        virtual const cell::tag* type_tag() const;
 
         const char* _channel() const
         {

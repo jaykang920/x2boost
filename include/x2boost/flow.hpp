@@ -40,6 +40,12 @@ namespace x2
             std::cout << "flow::shutdown" << std::endl;
         }
 
+        template<class E, class T>
+        flow& subscribe(E e, void (T::*mf)(E), T* t)
+        {
+            return *this;
+        }
+
         /// Makes this flow subscribe to the specified channel.
         flow& subscribe_to(const char* channel) const;
         /// Makes this flow unsubscribe from the specified channel.

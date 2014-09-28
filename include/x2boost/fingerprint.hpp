@@ -8,8 +8,6 @@
 #include "x2boost/pre.hpp"
 #endif
 
-#include <bitset>
-
 namespace x2
 {
     // Manages a fixed-length compact array of bit values.
@@ -18,12 +16,12 @@ namespace x2
     public:
         // Initializes a new fingerprint object that can hold the specified
         // number of bit values, which are initially set to false.
-        explicit fingerprint(size_t length);
+        explicit fingerprint(std::size_t length);
         // Initializes a new fingerprint object that contains bit values copied
         // from the specified fingerprint.
         fingerprint(const fingerprint& other);
 
-        ~fingerprint();
+        virtual ~fingerprint();
 
         // Clears all the bits in the fingerprint, setting them as false.
         void clear();
@@ -32,56 +30,82 @@ namespace x2
         bool get(std::size_t index) const
         {
             if (index >= length_) { return false; }
-            if (index >= bits_per_block)
+            if ((index & ~block_mask) != 0)
             {
                 index -= bits_per_block;
-                return ((blocks_[index >> block_exp] & (1 << (index & block_mask))) != 0);
+                return ((blocks_[index >> block_exp] & ((std::size_t)1 << (index & block_mask))) != 0);
             }
-            return (block_ & (1 << index) != 0);
+            return ((block_ & ((std::size_t)1 << index)) != 0);
         }
         // Sets the bit at the specified index.
         void touch(std::size_t index)
         {
             if (index >= length_) { return; }
-            if (index >= bits_per_block)
+            if ((index & ~block_mask) != 0)
             {
                 index -= bits_per_block;
-                blocks_[index >> block_exp] |= (1 << (index & block_mask));
+                blocks_[index >> block_exp] |= ((std::size_t)1 << (index & block_mask));
             }
-            block_ |= (1 << index);
+            block_ |= ((std::size_t)1 << index);
         }
         // Clears the bit at the specified index.
         void wipe(std::size_t index)
         {
             if (index >= length_) { return; }
-            if (index >= bits_per_block)
+            if ((index & ~block_mask) != 0)
             {
                 index -= bits_per_block;
                 blocks_[index >> block_exp] &= ~(1 << (index & block_mask));
             }
-            block_ &= ~(1 << index);
+            block_ &= ~((std::size_t)1 << index);
         }
 
+        // Determines whether this fingerprint is equivalent to the specified one.
+        bool equivalent(const fingerprint& other) const;
         // Returns the hash code for the current object.
-        size_t hash_code() const;
+        std::size_t hash_code() const;
         // Gets the number of effective bits in this fingerprint.
-        size_t length() const { return length_; }
+        std::size_t length() const { return length_; }
 
+        // The copy assignment operator.
+        fingerprint& operator=(const fingerprint& other)
+        {
+            if (this != &other)
+            {
+                fingerprint temp(other);
+                swap(temp);
+            }
+            return *this;
+        }
         // Determines whether this fingerprint is less than the specified one.
         bool operator<(const fingerprint& other) const;
         // Determines whether this fingerprint is equal to the specified one.
         bool operator==(const fingerprint& other) const;
+        // Determines whether this fingerprint is not equal to the specified one.
+        bool operator!=(const fingerprint& other) const
+        {
+            return !(*this == other);
+        }
+
+    protected:
+        // Exchanges the values of this object and the specified one.
+        void swap(fingerprint& other)
+        {
+            std::swap(length_, other.length_);
+            std::swap(block_, other.block_);
+            std::swap(blocks_, other.blocks_);
+        }
 
     private:
-        static const size_t bits_per_byte = 8;
-        static const size_t byte_exp = 3;
-        static const size_t bits_per_block = sizeof(size_t) * bits_per_byte;
-        static const size_t block_exp = (bits_per_block == 64 ? 6 : 5);
-        static const size_t block_mask = bits_per_block - 1;
+        static const std::size_t bits_per_byte = 8;
+        static const std::size_t byte_exp = 3;
+        static const std::size_t bits_per_block = sizeof(size_t) * bits_per_byte;
+        static const std::size_t block_exp = (bits_per_block == 64 ? 6 : 5);
+        static const std::size_t block_mask = bits_per_block - 1;
 
         // Gets the minimum number of bytes required to hold all the effective
         // bits in this fingerprint.
-        size_t length_in_bytes() const
+        std::size_t length_in_bytes() const
         {
             return (length_ == 0 ? 0 :
                 ((length_ - 1) >> byte_exp) + 1);
@@ -89,17 +113,51 @@ namespace x2
 
         // Gets the minimum number of additional blocks required to hold all
         // the effective bits in this fingerprint.
-        size_t num_additional_blocks() const
+        std::size_t num_additional_blocks() const
         {
             return (length_ <= bits_per_block ? 0 :
                 ((length_ - (bits_per_block + 1)) >> block_exp) + 1);
         }
 
-        void swap(fingerprint& other);
+        std::size_t length_;
+        std::size_t block_;
+        std::size_t* blocks_;
+    };
 
-        size_t length_;
-        size_t block_;
-        size_t* blocks_;
+    // Extends fingerprint class to hold an additional reference count.
+    class slot : public fingerprint
+    {
+    public:
+        slot(const fingerprint& base) : fingerprint(base), ref_count_(1) {}
+        slot(const slot& other) : fingerprint(other), ref_count_(other.ref_count_) {}
+        virtual ~slot() {}
+
+        // Increases the reference count of this slot.
+        void add_ref() { ++ref_count_; }
+        // Decreases the reference count of this slot.
+        int remove_ref() { return --ref_count_; }
+
+        // The copy assignment operator.
+        slot& operator=(const slot& other)
+        {
+            if (this != &other)
+            {
+                slot temp(other);
+                swap(temp);
+            }
+            return *this;
+        }
+
+    protected:
+        // Exchanges the values of this object and the specified one.
+        void swap(slot& other)
+        {
+            fingerprint::swap(other);
+            std::swap(ref_count_, other.ref_count_);
+        }
+    
+    private:
+        int ref_count_;
     };
 }
 

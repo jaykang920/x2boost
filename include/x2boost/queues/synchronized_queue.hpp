@@ -81,6 +81,8 @@ namespace x2
         mutable boost::mutex mutex_;
         mutable boost::condition_variable cond_;
     };
+
+    typedef synchronized_queue<event_ptr> synchronized_event_queue;
 }
 
 #endif  // X2BOOST_SYNCHRONIZED_QUEUE_HPP_

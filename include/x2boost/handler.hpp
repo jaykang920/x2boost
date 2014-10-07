@@ -14,6 +14,24 @@ namespace x2
     {
         virtual void invoke(event_ptr e) = 0;
     };
+
+    template<class T, class E>
+    class mem_fun_ptr_handler : public handler
+    {
+    public:
+        mem_fun_ptr_handler(T* target, void (T::*f)(boost::shared_ptr<E>)) :
+            f_(f),
+            target_(target)
+        {}
+
+        virtual void invoke(event_ptr e)
+        {
+            (target_->*f_)(boost::static_pointer_cast<E>(e));
+        }
+    private:
+        void (T::*f_)(boost::shared_ptr<E>);
+        T* target_;
+    };
 }
 
 #endif  // X2BOOST_HANDLER_HPP_

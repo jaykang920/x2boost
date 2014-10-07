@@ -8,6 +8,8 @@
 #include "pre.hpp"
 #endif
 
+#include <boost/filesystem.hpp>
+
 namespace xpiler
 {
     struct cell;
@@ -31,9 +33,11 @@ namespace xpiler
     {
         virtual bool format(document* doc, const std::string& out_dir) = 0;
 
-        virtual const char* description() = 0;
+        virtual bool is_up_to_date(const boost::filesystem::path& path) = 0;
 
-        virtual bool is_up_to_date(const std::string& path) = 0;
+        virtual void setup() = 0;
+
+        virtual const char* description() = 0;
     };
 
     typedef boost::shared_ptr<formatter> formatter_ptr;

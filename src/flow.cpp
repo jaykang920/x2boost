@@ -7,18 +7,14 @@
 
 using namespace x2;
 
-flow& flow::subscribe_to(const char* channel) const
+void flow::subscribe_to(const char* channel) const
 {
-    flow* p = const_cast<flow*>(this);
-    hub::instance().subscribe(flow_ptr(p), channel);
-    return *p;
+    hub::instance().subscribe(boost::const_pointer_cast<flow>(shared_from_this()), channel);
 }
 
-flow& flow::unsubscribe_from(const char* channel) const
+void flow::unsubscribe_from(const char* channel) const
 {
-    flow* p = const_cast<flow*>(this);
-    hub::instance().unsubscribe(flow_ptr(p), channel);
-    return *p;
+    hub::instance().unsubscribe(boost::const_pointer_cast<flow>(shared_from_this()), channel);
 }
 
 // EOF flow.cpp

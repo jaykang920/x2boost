@@ -35,6 +35,7 @@ bool xml_handler::handle(const string& path, document** doc)
             if (v.first == "<xmlattr>")
             {
                 d->ns = v.second.get<string>("namespace");
+                boost::trim(d->ns);
             }
             else if (v.first == "ref")
             {
@@ -80,9 +81,13 @@ bool xml_handler::handle(const string& path, document** doc)
                     }
                     else if (v2.first == "property")
                     {
-                        cell::PropertyPtr property(new cell::Property);
+                        cell::property_ptr property(new cell::property);
                         property->name = v2.second.get<string>("<xmlattr>.name");
-                        //property->type = v2.second.get<string>("<xmlattr>.type");
+                        if (!types::parse(v2.second.get<string>("<xmlattr>.type"), &(property->type_spec)))
+                        {
+                            // error parsing type spec
+                            return false;
+                        }
                         property->default_value = v2.second.get_value<string>();
                         boost::trim(property->default_value);
                         def->properties.push_back(property);

@@ -9,6 +9,7 @@
 #endif
 
 #include "formatter.hpp"
+#include "types.hpp"
 
 namespace xpiler
 {
@@ -17,6 +18,7 @@ namespace xpiler
         virtual void format(formatter_context& context) = 0;
 
         std::string name;
+        std::string native_name;
     };
 
     struct consts : public definition
@@ -25,6 +27,7 @@ namespace xpiler
         {
             std::string name;
             std::string value;
+            std::string native_name;
         };
 
         typedef boost::shared_ptr<element> element_ptr;
@@ -41,17 +44,17 @@ namespace xpiler
 
     struct cell : public definition
     {
-        struct Property
+        struct property
         {
             int index;
             std::string name;
-            //TypeSpec type_spec;
+            type_spec type_spec;
             std::string default_value;
             std::string native_name;
             std::string native_type;
         };
 
-        typedef boost::shared_ptr<Property> PropertyPtr;
+        typedef boost::shared_ptr<property> property_ptr;
 
         virtual void format(formatter_context& context)
         {
@@ -64,7 +67,7 @@ namespace xpiler
 
         std::string base;
         std::string base_class;
-        std::vector<PropertyPtr> properties;
+        std::vector<property_ptr> properties;
     };
 
     struct event : public cell

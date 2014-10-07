@@ -8,27 +8,49 @@
 #include "pre.hpp"
 #endif
 
+#include <map>
+
 #include "formatter.hpp"
 
 namespace xpiler
 {
+    class boost_formatter_context;
+
     struct boost_formatter : public formatter
     {
         virtual bool format(document* doc, const std::string& out_dir);
+
+        virtual bool is_up_to_date(const boost::filesystem::path& path);
+
+        virtual void setup();
 
         virtual const char* description()
         {
             return "C++ with Boost";
         }
 
-        virtual bool is_up_to_date(const std::string& path);
-
     private:
-        void format_header_file(formatter_context& context);
-        void format_source_file(formatter_context& context);
+        void format_header_file(boost_formatter_context& context);
+        void format_source_file(boost_formatter_context& context);
     };
 
-    class BoostHeaderformatter : public formatter_context
+    class boost_formatter_context : public formatter_context
+    {
+    public:
+        void indent() { ++base_indentation_; }
+        void unindent() { --base_indentation_; }
+
+    protected:
+        boost_formatter_context() : base_indentation_(0) {}
+
+        void indent(int level) const;
+
+        static const char* tab_;
+
+        int base_indentation_;
+    };
+
+    class boost_header_formatter : public boost_formatter_context
     {
     public:
         virtual void format_cell(cell* def);
@@ -36,7 +58,7 @@ namespace xpiler
         virtual void format_reference(reference* def);
     };
 
-    class BoostSourceformatter : public formatter_context
+    class boost_source_formatter : public boost_formatter_context
     {
     public:
         virtual void format_cell(cell* def);

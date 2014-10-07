@@ -4,7 +4,6 @@
 #include "xpiler.hpp"
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 
 #include "document.hpp"
@@ -35,6 +34,7 @@ namespace xpiler
     xpiler::xpiler()
     {
         formatter_ = formatters_[options.spec];
+        formatter_->setup();
     }
 
     void xpiler::process(const string& path)
@@ -54,7 +54,7 @@ namespace xpiler
         }
     }
 
-    void xpiler::process_dir(const string& path)
+    void xpiler::process_dir(const fs::path& path)
     {
         cout << "Directory " << fs::canonical(path).string() << endl;
 
@@ -65,7 +65,7 @@ namespace xpiler
             fs::directory_entry& entry = *di;
             fs::path filename = entry.path().filename();
 
-            std::string pathname = (fs::path(path) / filename).string();
+            fs::path pathname = path / filename;
             if (fs::is_directory(entry.status()))
             {
                 if (options.recursive)
@@ -82,15 +82,14 @@ namespace xpiler
         }
     }
 
-    void xpiler::process_file(const string& path)
+    void xpiler::process_file(const fs::path& path)
     {
-        fs::path p(path);
-        fs::path filename = p.filename();
-        string extension = p.extension().string();
+        fs::path filename = path.filename();
+        string extension = path.extension().string();
         fs::path out_dir;
         if (options.out_dir.empty())
         {
-            out_dir = p.parent_path();
+            out_dir = path.parent_path();
         }
         else
         {
@@ -113,7 +112,7 @@ namespace xpiler
         cout << filename.string() << endl;
 
         document* doc;
-        if (!handler->handle(path, &doc))
+        if (!handler->handle(path.string(), &doc))
         {
             error = true;
         }

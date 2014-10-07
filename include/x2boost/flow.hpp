@@ -11,11 +11,13 @@
 #include <boost/enable_shared_from_this.hpp>
 
 #include "x2boost/case.hpp"
+#include "x2boost/handler.hpp"
 
 namespace x2
 {
-    class X2BOOST_API flow
-      : public boost::enable_shared_from_this<flow>, private boost::noncopyable
+    class X2BOOST_API flow :
+        public boost::enable_shared_from_this<flow>,
+        private boost::noncopyable
     {
     public:
         virtual ~flow() {}
@@ -41,15 +43,16 @@ namespace x2
         }
 
         template<class E, class T>
-        flow& subscribe(E e, void (T::*mf)(E), T* t)
+        flow_ptr subscribe(boost::shared_ptr<E> e, void (T::*mf)(boost::shared_ptr<E>), T* t)
         {
-            return *this;
+            handler* h = new mem_fun_ptr_handler<T, E>(t, mf);
+            return shared_from_this();
         }
 
         /// Makes this flow subscribe to the specified channel.
-        flow& subscribe_to(const char* channel) const;
+        void subscribe_to(const char* channel) const;
         /// Makes this flow unsubscribe from the specified channel.
-        flow& unsubscribe_from(const char* channel) const;
+        void unsubscribe_from(const char* channel) const;
 
     protected:
         virtual void setup()

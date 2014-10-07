@@ -179,6 +179,7 @@ if(BUILD_XPILER)
     "${xpiler_SRC_DIR}/options.hpp"
     "${xpiler_SRC_DIR}/formatter.hpp"
     "${xpiler_SRC_DIR}/pre.hpp"
+    "${xpiler_SRC_DIR}/types.hpp"
     "${xpiler_SRC_DIR}/xml_handler.hpp"
     "${xpiler_SRC_DIR}/xpiler.hpp"
   )
@@ -187,6 +188,7 @@ if(BUILD_XPILER)
     "${xpiler_SRC_DIR}/boost_formatter.cpp"
     "${xpiler_SRC_DIR}/main.cpp"
     "${xpiler_SRC_DIR}/options.cpp"
+    "${xpiler_SRC_DIR}/types.cpp"
     "${xpiler_SRC_DIR}/xml_handler.cpp"
     "${xpiler_SRC_DIR}/xpiler.cpp"
   )

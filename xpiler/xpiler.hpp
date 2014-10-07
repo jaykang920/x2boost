@@ -10,6 +10,8 @@
 
 #include <map>
 
+#include <boost/filesystem.hpp>
+
 #include "formatter.hpp"
 #include "handler.hpp"
 
@@ -34,8 +36,8 @@ namespace xpiler
         bool error;
 
     private:
-        void process_dir(const std::string& path);
-        void process_file(const std::string& path);
+        void process_dir(const boost::filesystem::path& path);
+        void process_file(const boost::filesystem::path& path);
 
         static handler_map_type handlers_;
         static formatter_map_type formatters_;

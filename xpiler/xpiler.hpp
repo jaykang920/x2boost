@@ -22,8 +22,8 @@ namespace xpiler
     class xpiler
     {
     public:
-        typedef std::map<std::string, handler_ptr> handler_map_type;
-        typedef std::map<std::string, formatter_ptr> formatter_map_type;
+        typedef std::map<std::string, handler*> handler_map_type;
+        typedef std::map<std::string, formatter*> formatter_map_type;
 
         xpiler();
 
@@ -45,10 +45,11 @@ namespace xpiler
         struct static_initializer
         {
             static_initializer();
+            ~static_initializer();
         };
         static static_initializer static_init_;
 
-        formatter_ptr formatter_;
+        formatter* formatter_;
         std::vector<std::string> sub_dirs_;
     };
 }

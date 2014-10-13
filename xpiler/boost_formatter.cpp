@@ -130,7 +130,7 @@ void boost_formatter::format_header_file(boost_formatter_context& context)
         context.indent();
     }
 
-    BOOST_FOREACH(definition_ptr def, context.doc->definitions)
+    BOOST_FOREACH(definition* def, context.doc->definitions)
     {
         def->format(context);
         out << endl;
@@ -171,7 +171,7 @@ void boost_formatter::format_source_file(boost_formatter_context& context)
         out << endl;
     }
 
-    BOOST_FOREACH(definition_ptr def, context.doc->definitions)
+    BOOST_FOREACH(definition* def, context.doc->definitions)
     {
         def->format(context);
         out << endl;
@@ -196,7 +196,7 @@ void boost_header_formatter::format_cell(cell* def)
     indent(0); *out << "class " << def->native_name << endl;
     indent(0); *out << "{" << endl;
 
-    BOOST_FOREACH(cell::property_ptr prop, def->properties)
+    BOOST_FOREACH(cell::property* prop, def->properties)
     {
         //*out << "  const " << def->type << " " << MixedCase2lower_case(elem->name) << " = " << elem->value << ";" << endl;
     }
@@ -211,7 +211,7 @@ void boost_header_formatter::format_consts(consts* def)
     indent(0); *out << "struct " << def->native_name << endl;
     indent(0); *out << "{" << endl;
     
-    BOOST_FOREACH(consts::element_ptr elem, def->elements)
+    BOOST_FOREACH(consts::element* elem, def->elements)
     {
         indent(1); *out << "const " << def->native_type << " " << elem->native_name;
         if (types::is_integral(def->type))
@@ -238,7 +238,7 @@ void boost_source_formatter::format_consts(consts* def)
 {
     if (types::is_integral(def->type)) { return; }
 
-    BOOST_FOREACH(consts::element_ptr elem, def->elements)
+    BOOST_FOREACH(consts::element* elem, def->elements)
     {
         indent(0); *out << def->native_type << " " << def->native_name << "::"
             << elem->native_name << " = ";
@@ -262,7 +262,7 @@ namespace
         def->native_name = MixedCase2lower_case(def->name);
         def->native_type = types::native_type(def->type);
 
-        BOOST_FOREACH(consts::element_ptr elem, def->elements)
+        BOOST_FOREACH(consts::element* elem, def->elements)
         {
             elem->native_name = MixedCase2lower_case(elem->name);
         }
@@ -272,7 +272,7 @@ namespace
     {
         def->native_name = MixedCase2lower_case(def->name);
 
-        BOOST_FOREACH(cell::property_ptr prop, def->properties)
+        BOOST_FOREACH(cell::property* prop, def->properties)
         {
             prop->native_name = MixedCase2lower_case(prop->name);
         }

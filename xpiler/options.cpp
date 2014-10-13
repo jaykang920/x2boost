@@ -8,8 +8,8 @@
 #include <boost/foreach.hpp>
 #include <boost/program_options.hpp>
 
-#include "xpiler.hpp"
 #include "formatter.hpp"
+#include "xpiler.hpp"
 
 using namespace std;
 using namespace xpiler;
@@ -65,7 +65,7 @@ bool options::parse(int argc, char* argv[])
         }
         else
         {
-            cout << "error: at least one input path is required" << endl;
+            cout << "error: at least one input path required" << endl;
             return false;
         }
 

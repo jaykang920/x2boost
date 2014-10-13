@@ -1,8 +1,8 @@
 // Copyright (c) 2014 Jae-jun Kang
 // See the file COPYING for license details.
 
-#ifndef X2BOOST_XPILER_OUTPUT_FORMATTER_HPP_
-#define X2BOOST_XPILER_OUTPUT_FORMATTER_HPP_
+#ifndef X2BOOST_XPILER_FORMATTER_HPP_
+#define X2BOOST_XPILER_FORMATTER_HPP_
 
 #ifndef X2BOOST_XPILER_PRE_HPP_
 #include "pre.hpp"
@@ -39,8 +39,6 @@ namespace xpiler
 
         virtual const char* description() = 0;
     };
-
-    typedef boost::shared_ptr<formatter> formatter_ptr;
 }
 
-#endif  // X2BOOST_XPILER_OUTPUT_FORMATTER_HPP_
+#endif  // X2BOOST_XPILER_FORMATTER_HPP_

@@ -39,13 +39,13 @@ bool xml_handler::handle(const string& path, document** doc)
             }
             else if (v.first == "ref")
             {
-                reference_ptr ref(new reference);
+                reference* ref = new reference;
                 ref->target = v.second.get<string>("<xmlattr>.target");
                 d->references.push_back(ref);
             }
             else if (v.first == "consts")
             {
-                consts_ptr def(new consts);
+                consts* def = new consts;
                 BOOST_FOREACH(pt::ptree::value_type const& v2, v.second)
                 {
                     if (v2.first == "<xmlattr>")
@@ -55,7 +55,7 @@ bool xml_handler::handle(const string& path, document** doc)
                     }
                     else if (v2.first == "const")
                     {
-                        consts::element_ptr element(new consts::element);
+                        consts::element* element = new consts::element;
                         element->name = v2.second.get<string>("<xmlattr>.name");
                         element->value = v2.second.get_value<string>();
                         boost::trim(element->value);
@@ -67,8 +67,8 @@ bool xml_handler::handle(const string& path, document** doc)
             else if (v.first == "cell" || v.first == "event")
             {
                 bool is_event = (v.first == "event");
-                cell_ptr def;
-                def.reset(is_event ? new event : new cell);
+                cell* def;
+                def = (is_event ? new event : new cell);
                 BOOST_FOREACH(pt::ptree::value_type const& v2, v.second)
                 {
                     if (v2.first == "<xmlattr>")
@@ -76,12 +76,12 @@ bool xml_handler::handle(const string& path, document** doc)
                         def->name = v2.second.get<string>("name");
                         if (is_event)
                         {
-                            ((event*)def.get())->id = v2.second.get<string>("id");
+                            ((event*)def)->id = v2.second.get<string>("id");
                         }
                     }
                     else if (v2.first == "property")
                     {
-                        cell::property_ptr property(new cell::property);
+                        cell::property* property = new cell::property;
                         property->name = v2.second.get<string>("<xmlattr>.name");
                         if (!types::parse(v2.second.get<string>("<xmlattr>.type"), &(property->type_spec)))
                         {

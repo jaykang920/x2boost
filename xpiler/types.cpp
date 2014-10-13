@@ -3,6 +3,8 @@
 
 #include "types.hpp"
 
+#include <sstream>
+
 #include <boost/algorithm/string.hpp>
 
 using namespace std;
@@ -10,6 +12,23 @@ using namespace xpiler;
 
 types::map_type types::types_;
 types::static_initializer static_init_;
+
+string type_spec::string() const
+{
+    ostringstream oss;
+    oss << type;
+    if (!details.empty())
+    {
+        oss << '(';
+        for (std::size_t i = 0, count = details.size(); i < count; ++i)
+        {
+            if (i != 0) { oss << ", "; }
+            oss << details[i].string();
+        }
+        oss << ')';
+    }
+    return oss.str();
+}
 
 bool types::parse(const string& s, type_spec* spec)
 {

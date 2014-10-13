@@ -8,6 +8,8 @@
 #include "pre.hpp"
 #endif
 
+#include <boost/foreach.hpp>
+
 namespace xpiler
 {
     struct reference;
@@ -15,11 +17,18 @@ namespace xpiler
 
     struct document
     {
+        document() {}
+        ~document()
+        {
+            BOOST_FOREACH(reference* p, references) { delete p; }
+            BOOST_FOREACH(definition* p, definitions) { delete p; }
+        }
+
         std::string basename;
         std::string ns;
 
-        std::vector<boost::shared_ptr<reference>> references;
-        std::vector<boost::shared_ptr<definition>> definitions;
+        std::vector<reference*> references;
+        std::vector<definition*> definitions;
     };
 }
 

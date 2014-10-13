@@ -8,6 +8,8 @@
 #include "pre.hpp"
 #endif
 
+#include <boost/foreach.hpp>
+
 #include "formatter.hpp"
 #include "types.hpp"
 
@@ -15,6 +17,9 @@ namespace xpiler
 {
     struct definition
     {
+        definition() {}
+        virtual ~definition() {}
+
         virtual void format(formatter_context& context) = 0;
 
         std::string name;
@@ -32,6 +37,12 @@ namespace xpiler
 
         typedef boost::shared_ptr<element> element_ptr;
 
+        consts() {}
+        virtual ~consts()
+        {
+            BOOST_FOREACH(element* p, elements) { delete p; }
+        }
+
         virtual void format(formatter_context& context)
         {
             context.format_consts(this);
@@ -39,7 +50,7 @@ namespace xpiler
 
         std::string type;
         std::string native_type;
-        std::vector<element_ptr> elements;
+        std::vector<element*> elements;
     };
 
     struct cell : public definition
@@ -56,6 +67,12 @@ namespace xpiler
 
         typedef boost::shared_ptr<property> property_ptr;
 
+        cell() {}
+        virtual ~cell()
+        {
+            BOOST_FOREACH(property* p, properties) { delete p; }
+        }
+
         virtual void format(formatter_context& context)
         {
             context.format_cell(this);
@@ -67,11 +84,14 @@ namespace xpiler
 
         std::string base;
         std::string base_class;
-        std::vector<property_ptr> properties;
+        std::vector<property*> properties;
     };
 
     struct event : public cell
     {
+        event() {}
+        virtual ~event() {}
+
         virtual bool is_event() { return true; }
 
         std::string id;
@@ -79,6 +99,8 @@ namespace xpiler
 
     struct reference
     {
+        reference() {}
+
         std::string target;
 
         void format(formatter_context& context)
@@ -86,12 +108,6 @@ namespace xpiler
             context.format_reference(this);
         }
     };
-
-    typedef boost::shared_ptr<definition> definition_ptr;
-    typedef boost::shared_ptr<consts> consts_ptr;
-    typedef boost::shared_ptr<cell> cell_ptr;
-    typedef boost::shared_ptr<event> event_ptr;
-    typedef boost::shared_ptr<reference> reference_ptr;
 }
 
 #endif  // X2BOOST_XPILER_DEFINITION_HPP_

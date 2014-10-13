@@ -25,12 +25,6 @@ namespace xpiler
 
     xpiler::static_initializer xpiler::static_init_;
 
-    xpiler::static_initializer::static_initializer()
-    {
-        handlers_[".xml"] = handler_ptr(new xml_handler);
-        formatters_["boost"] = formatter_ptr(new boost_formatter);
-    }
-
     xpiler::xpiler()
     {
         formatter_ = formatters_[options.spec];
@@ -107,7 +101,7 @@ namespace xpiler
         {
             return;
         }
-        handler_ptr handler = it->second;
+        handler* handler = it->second;
 
         cout << filename.string() << endl;
 
@@ -134,6 +128,24 @@ namespace xpiler
         }
 
         delete doc;
+    }
+
+    xpiler::static_initializer::static_initializer()
+    {
+        handlers_[".xml"] = new xml_handler;
+        formatters_["boost"] = new boost_formatter;
+    }
+
+    xpiler::static_initializer::~static_initializer()
+    {
+        BOOST_FOREACH(handler_map_type::value_type& pair, handlers_)
+        {
+            delete pair.second;
+        }
+        BOOST_FOREACH(formatter_map_type::value_type& pair, formatters_)
+        {
+            delete pair.second;
+        }
     }
 }
 

@@ -16,6 +16,8 @@ namespace xpiler
     {
         type_spec() {}
 
+        std::string string() const;
+
         std::string type;
         std::vector<type_spec> details;
     };

@@ -4,6 +4,7 @@
 #include "boost_formatter.hpp"
 
 #include <fstream>
+#include <sstream>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
@@ -21,6 +22,9 @@ const char* boost_formatter_context::tab_ = "    ";
 
 namespace
 {
+    string format_type_spec(const type_spec& type_spec);
+    string format_collection_type(const type_spec& type_spec);
+
     void preprocess_consts(consts* def);
     void preprocess_cell(cell* def);
 
@@ -82,6 +86,7 @@ void boost_formatter::setup()
     types::set_native_type("float32", "boost::float32_t");
     types::set_native_type("float64", "boost::float64_t");
     types::set_native_type("string", "std::string");
+    types::set_native_type("list", "std::vector");
 
     types::set_default_value("bool", "false");
     types::set_default_value("int8", "0");
@@ -193,12 +198,46 @@ void boost_formatter_context::indent(int level) const
 
 void boost_header_formatter::format_cell(cell* def)
 {
-    indent(0); *out << "class " << def->native_name << endl;
-    indent(0); *out << "{" << endl;
+    preprocess_cell(def);
+
+    indent(0); *out << "class " << def->native_name << " : public " << def->base_class << endl;
+
+    indent(0); *out << "public:" << endl;
 
     BOOST_FOREACH(cell::property* prop, def->properties)
     {
-        //*out << "  const " << def->type << " " << MixedCase2lower_case(elem->name) << " = " << elem->value << ";" << endl;
+        bool is_primitive = types::is_primitive(prop->type_spec.type);
+        indent(1);
+        if (!is_primitive) { *out << "const "; }
+        *out << prop->native_type;
+        if (!is_primitive) { *out << "&"; }
+        *out << " " << prop->name << "() const" << endl;
+        indent(1); *out << "{" << endl;
+        indent(2); *out << "return " << prop->native_name << ";" << endl;
+        indent(1); *out << "}" << endl;
+        indent(1); *out << "void set_" << prop->name << "(";
+        if (!is_primitive) { *out << "const "; }
+        *out << prop->native_type;
+        if (!is_primitive) { *out << "&"; }
+        *out << " value)" << endl;
+        indent(1); *out << "{" << endl;
+        indent(2); *out << prop->native_name << " = value;" << endl;
+        indent(1); *out << "}" << endl;
+    }
+    if (!def->properties.empty())
+    {
+        *out << endl;
+    }
+
+    indent(1); *out << "void describe(std::ostringstream& oss) const;" << endl;
+
+    *out << endl;
+
+    indent(0); *out << "private:" << endl;
+
+    BOOST_FOREACH(cell::property* prop, def->properties)
+    {
+        indent(1); *out << prop->native_type << " " << prop->native_name << ";" << endl;
     }
 
     indent(0); *out << "}" << endl;
@@ -231,7 +270,14 @@ void boost_header_formatter::format_reference(reference* def)
 
 void boost_source_formatter::format_cell(cell* def)
 {
-
+    indent(0); *out << "void " << def->native_name << "::describe(std::ostringstream& oss) const" << endl;
+    indent(0); *out << "{" << endl;
+    indent(1); *out << def->base_class << "::describe(oss);" << endl;
+    BOOST_FOREACH(cell::property* prop, def->properties)
+    {
+        indent(1); *out << "oss << \" " << prop->name << "=\" << " << prop->native_name << ";" << endl;
+    }
+    indent(0); *out << "}" << endl;
 }
 
 void boost_source_formatter::format_consts(consts* def)
@@ -257,6 +303,33 @@ void boost_source_formatter::format_reference(reference* def)
 
 namespace
 {
+    string format_type_spec(const type_spec& type_spec)
+    {
+        const string& type = type_spec.type;
+        if (!types::is_builtin(type))
+        {
+            return type;  // custom type
+        }
+        return types::is_primitive(type) ? types::native_type(type)
+            : format_collection_type(type_spec);
+    }
+
+    string format_collection_type(const type_spec& type_spec)
+    {
+        ostringstream oss;
+        oss << types::native_type(type_spec.type);
+        if (!type_spec.details.empty())
+        {
+            oss << '<';
+            for (size_t i = 0, count = type_spec.details.size(); i < count; ++i)
+            {
+                if (i != 0) { oss << ", "; }
+                oss << format_type_spec(type_spec.details[i]);
+            }
+        }
+        return oss.str();
+    }
+
     void preprocess_consts(consts* def)
     {
         def->native_name = MixedCase2lower_case(def->name);
@@ -271,10 +344,30 @@ namespace
     void preprocess_cell(cell* def)
     {
         def->native_name = MixedCase2lower_case(def->name);
+        def->base_class = (def->base.empty() ?
+            (def->is_event() ? "x2::event" : "x2::cell") :
+            MixedCase2lower_case(def->base_class));
 
+        int index = 0;
         BOOST_FOREACH(cell::property* prop, def->properties)
         {
-            prop->native_name = MixedCase2lower_case(prop->name);
+            prop->index = index++;
+            prop->name = MixedCase2lower_case(prop->name);
+            prop->native_name = prop->name + "_";
+            prop->native_type = format_type_spec(prop->type_spec);
+            
+            // default value
+            if (types::is_primitive(prop->type_spec.type))
+            {
+                if (prop->default_value.empty())
+                {
+                    prop->default_value = types::default_value(prop->type_spec.type);
+                }
+                if (prop->type_spec.type == "string")
+                {
+                    prop->default_value = "\"" + prop->default_value + "\"";
+                }
+            }
         }
     }
 

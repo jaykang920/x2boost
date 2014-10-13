@@ -34,7 +34,7 @@ bool xml_handler::handle(const string& path, document** doc)
         {
             if (v.first == "<xmlattr>")
             {
-                d->ns = v.second.get<string>("namespace");
+                d->ns = v.second.get("namespace", "");
                 boost::trim(d->ns);
             }
             else if (v.first == "ref")
@@ -74,6 +74,7 @@ bool xml_handler::handle(const string& path, document** doc)
                     if (v2.first == "<xmlattr>")
                     {
                         def->name = v2.second.get<string>("name");
+                        def->base = v2.second.get("extends", "");
                         if (is_event)
                         {
                             ((event*)def)->id = v2.second.get<string>("id");

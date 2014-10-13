@@ -148,9 +148,10 @@ types::static_initializer::static_initializer()
 
     types_.insert(map_type::value_type("float32", t));
     types_.insert(map_type::value_type("float64", t));
-    types_.insert(map_type::value_type("string", t));
 
     t.is_primitive = false;
+
+    types_.insert(map_type::value_type("string", t));
 
     types_.insert(map_type::value_type("list", t));
 }

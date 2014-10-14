@@ -59,7 +59,7 @@ namespace xpiler
         {
             int index;
             std::string name;
-            type_spec type_spec;
+            type_spec type;
             std::string default_value;
             std::string native_name;
             std::string native_type;

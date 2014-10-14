@@ -216,7 +216,7 @@ void boost_header_formatter::format_cell(cell* def)
 
     BOOST_FOREACH(cell::property* prop, def->properties)
     {
-        bool is_primitive = types::is_primitive(prop->type_spec.type);
+        bool is_primitive = types::is_primitive(prop->type.type);
         indent(1);
         if (!is_primitive) { *out << "const "; }
         *out << prop->native_type;
@@ -391,17 +391,17 @@ namespace
             prop->index = index++;
             prop->name = MixedCase2lower_case(prop->name);
             prop->native_name = prop->name + "_";
-            prop->native_type = format_type_spec(prop->type_spec);
+            prop->native_type = format_type_spec(prop->type);
             
             // default value
-            if (types::is_primitive(prop->type_spec.type))
+            if (types::is_primitive(prop->type.type))
             {
                 if (prop->default_value.empty())
                 {
-                    prop->default_value = types::default_value(prop->type_spec.type);
+                    prop->default_value = types::default_value(prop->type.type);
                 }
             }
-            else if (prop->type_spec.type == "string")
+            else if (prop->type.type == "string")
             {
                 prop->default_value = "\"" + prop->default_value + "\"";
             }

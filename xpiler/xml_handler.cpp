@@ -84,7 +84,7 @@ bool xml_handler::handle(const string& path, document** doc)
                     {
                         cell::property* property = new cell::property;
                         property->name = v2.second.get<string>("<xmlattr>.name");
-                        if (!types::parse(v2.second.get<string>("<xmlattr>.type"), &(property->type_spec)))
+                        if (!types::parse(v2.second.get<string>("<xmlattr>.type"), &(property->type)))
                         {
                             // error parsing type spec
                             return false;

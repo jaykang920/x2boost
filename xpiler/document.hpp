@@ -10,11 +10,10 @@
 
 #include <boost/foreach.hpp>
 
+#include "definition.hpp"
+
 namespace xpiler
 {
-    struct reference;
-    struct definition;
-
     struct document
     {
         document() {}

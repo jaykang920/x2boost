@@ -9,7 +9,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 
-#include "definition.hpp"
 #include "document.hpp"
 #include "types.hpp"
 

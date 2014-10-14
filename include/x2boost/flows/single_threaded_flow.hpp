@@ -29,7 +29,7 @@ namespace x2
             if (thread_) { return; }
 
             this->setup();
-            flow::case_stack_.setup(shared_from_this());
+            flow::case_stack_.setup(boost::enable_shared_from_this<flow>::shared_from_this());
 
             thread_ = new boost::thread(boost::bind(&event_based_flow<Q>::run, this));
         }
@@ -40,13 +40,13 @@ namespace x2
             if (!thread_) { return; }
 
             // enqueue flow_stop
-            queue_.close();
+            event_based_flow<Q>::queue_.close();
 
             thread_->join();
             delete thread_;
             thread_ = NULL;
 
-            flow::case_stack_.teardown(shared_from_this());
+            flow::case_stack_.teardown(boost::enable_shared_from_this<flow>::shared_from_this());
             this->teardown();
         }
 

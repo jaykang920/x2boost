@@ -12,6 +12,21 @@
 
 namespace x2
 {
+    template<typename T, int I>
+    class property {
+        T value;
+    public:
+        T& operator=(const T& value)
+        {
+            // touch(I)
+            return this->value = value;
+        }
+        operator T const& () const
+        {
+            return value;
+        }
+    };
+
     class X2BOOST_API cell
     {
     public:

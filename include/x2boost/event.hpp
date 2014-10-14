@@ -15,7 +15,6 @@ namespace x2
     class X2BOOST_API event : public cell
     {
     public:
-        event() : cell(_tag()->num_props()) {}
         virtual ~event() {}
 
         // Supports light-weight custom type hierarchy for event and its subclasses.
@@ -54,8 +53,13 @@ namespace x2
         {
             _channel_ = value;
         }
+    
+    protected:
+        event(std::size_t length) : cell(length + _tag()->num_props()) {}
 
     private:
+        event() : cell(_tag()->num_props()) {}
+
         const char* _channel_;
     };
 }

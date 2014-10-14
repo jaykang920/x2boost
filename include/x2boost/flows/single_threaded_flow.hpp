@@ -25,7 +25,7 @@ namespace x2
 
         virtual void startup()
         {
-            boost::mutex::scoped_lock lock(mutex_);
+            boost::mutex::scoped_lock lock(flow::mutex_);
             if (thread_) { return; }
 
             setup();
@@ -36,7 +36,7 @@ namespace x2
 
         virtual void shutdown()
         {
-            boost::mutex::scoped_lock lock(mutex_);
+            boost::mutex::scoped_lock lock(flow::mutex_);
             if (!thread_) { return; }
 
             // enqueue flow_stop

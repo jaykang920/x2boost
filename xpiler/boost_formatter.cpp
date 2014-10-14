@@ -204,6 +204,16 @@ void boost_header_formatter::format_cell(cell* def)
 
     indent(0); *out << "public:" << endl;
 
+    indent(1); *out << "static " << def->native_name << "_ptr _new()" << endl;
+    indent(1); *out << "{" << endl;
+    indent(2); *out << "return " << def->native_name << "_ptr(new " << def->native_name << ");" << endl;
+    indent(1); *out << "}" << endl;
+
+    *out << endl;
+    indent(1); *out << "void _initialize();" << endl;
+
+    *out << endl;
+
     BOOST_FOREACH(cell::property* prop, def->properties)
     {
         bool is_primitive = types::is_primitive(prop->type_spec.type);
@@ -229,18 +239,35 @@ void boost_header_formatter::format_cell(cell* def)
         *out << endl;
     }
 
-    indent(1); *out << "void describe(std::ostringstream& oss) const;" << endl;
+    indent(0); *out << "protected:" << endl;
+
+    // ctor
+    indent(1); *out << def->native_name << "(std::size_t length)" << endl;
+    indent(2); *out << ": " << def->base_class << "(length + _tag()->num_props())" << endl;
+    indent(1); *out << "{" << endl;
+    indent(2); *out << "initialize();" << endl;
+    indent(1); *out << "}" << endl;
+
+    indent(1); *out << "void _describe(std::ostringstream& oss) const;" << endl;
 
     *out << endl;
-
     indent(0); *out << "private:" << endl;
+
+    indent(1); *out << def->native_name << "()" << endl;
+    indent(2); *out << ": " << def->base_class << "(_tag()->num_props())" << endl;
+    indent(1); *out << "{" << endl;
+    indent(2); *out << "initialize();" << endl;
+    indent(1); *out << "}" << endl;
 
     BOOST_FOREACH(cell::property* prop, def->properties)
     {
         indent(1); *out << prop->native_type << " " << prop->native_name << ";" << endl;
     }
 
-    indent(0); *out << "}" << endl;
+    indent(0); *out << "};" << endl;
+
+    indent(0); *out << "typedef boost::shared_ptr<" << def->native_name << "> "
+        << def->native_name << "_ptr;" << endl;
 }
 
 void boost_header_formatter::format_consts(consts* def)
@@ -270,7 +297,7 @@ void boost_header_formatter::format_reference(reference* def)
 
 void boost_source_formatter::format_cell(cell* def)
 {
-    indent(0); *out << "void " << def->native_name << "::describe(std::ostringstream& oss) const" << endl;
+    indent(0); *out << "void " << def->native_name << "::_describe(std::ostringstream& oss) const" << endl;
     indent(0); *out << "{" << endl;
     indent(1); *out << def->base_class << "::describe(oss);" << endl;
     BOOST_FOREACH(cell::property* prop, def->properties)
@@ -278,6 +305,16 @@ void boost_source_formatter::format_cell(cell* def)
         indent(1); *out << "oss << \" " << prop->name << "=\" << " << prop->native_name << ";" << endl;
     }
     indent(0); *out << "}" << endl;
+    *out << endl;
+
+    indent(0); *out << "void " << def->native_name << "::_initialize()" << endl;
+    indent(0); *out << "{" << endl;
+    BOOST_FOREACH(cell::property* prop, def->properties)
+    {
+        indent(1); *out << prop->native_name << " = " << prop->default_value << ";" << endl;
+    }
+    indent(0); *out << "}" << endl;
+    //*out << endl;
 }
 
 void boost_source_formatter::format_consts(consts* def)
@@ -363,10 +400,10 @@ namespace
                 {
                     prop->default_value = types::default_value(prop->type_spec.type);
                 }
-                if (prop->type_spec.type == "string")
-                {
-                    prop->default_value = "\"" + prop->default_value + "\"";
-                }
+            }
+            else if (prop->type_spec.type == "string")
+            {
+                prop->default_value = "\"" + prop->default_value + "\"";
             }
         }
     }

@@ -28,8 +28,8 @@ namespace x2
             boost::mutex::scoped_lock lock(flow::mutex_);
             if (thread_) { return; }
 
-            setup();
-            case_stack_.setup(shared_from_this());
+            this->setup();
+            flow::case_stack_.setup(shared_from_this());
 
             thread_ = new boost::thread(boost::bind(&event_based_flow<Q>::run, this));
         }
@@ -46,8 +46,8 @@ namespace x2
             delete thread_;
             thread_ = NULL;
 
-            case_stack_.teardown(shared_from_this());
-            teardown();
+            flow::case_stack_.teardown(shared_from_this());
+            this->teardown();
         }
 
     protected:

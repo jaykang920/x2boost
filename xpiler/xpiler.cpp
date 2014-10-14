@@ -7,7 +7,6 @@
 #include <boost/foreach.hpp>
 
 #include "document.hpp"
-#include "options.hpp"
 
 #include "boost_formatter.hpp"
 #include "xml_handler.hpp"
@@ -18,7 +17,7 @@ namespace fs = boost::filesystem;
 
 namespace xpiler
 {
-    options xpiler::options;
+    options xpiler::opts;
 
     xpiler::handler_map_type xpiler::handlers_;
     xpiler::formatter_map_type xpiler::formatters_;
@@ -27,7 +26,7 @@ namespace xpiler
 
     xpiler::xpiler()
     {
-        formatter_ = formatters_[options.spec];
+        formatter_ = formatters_[opts.spec];
         formatter_->setup();
     }
 
@@ -62,7 +61,7 @@ namespace xpiler
             fs::path pathname = path / filename;
             if (fs::is_directory(entry.status()))
             {
-                if (options.recursive)
+                if (opts.recursive)
                 {
                     sub_dirs_.push_back(filename.string());
                     process_dir(pathname);
@@ -81,13 +80,13 @@ namespace xpiler
         fs::path filename = path.filename();
         string extension = path.extension().string();
         fs::path out_dir;
-        if (options.out_dir.empty())
+        if (opts.out_dir.empty())
         {
             out_dir = path.parent_path();
         }
         else
         {
-            out_dir = options.out_dir;
+            out_dir = opts.out_dir;
             BOOST_FOREACH(string& sub_dir, sub_dirs_)
             {
                 out_dir /= sub_dir;
@@ -97,7 +96,7 @@ namespace xpiler
         boost::algorithm::to_lower(extension);
         handler_map_type::iterator it = handlers_.find(extension);
         if (it == handlers_.end() ||
-            (!options.forced && formatter_->is_up_to_date(path)))
+            (!opts.forced && formatter_->is_up_to_date(path)))
         {
             return;
         }

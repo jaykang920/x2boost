@@ -3,18 +3,17 @@
 
 #include <boost/foreach.hpp>
 
-#include "options.hpp"
 #include "xpiler.hpp"
 
 int main(int argc, char* argv[])
 {
-    if (!xpiler::xpiler::options.parse(argc, argv))
+    if (!xpiler::xpiler::opts.parse(argc, argv))
     {
         return 2;
     }
 
     xpiler::xpiler xpiler;
-    BOOST_FOREACH(const std::string& path, xpiler::xpiler::options.input)
+    BOOST_FOREACH(const std::string& path, xpiler::xpiler::opts.input)
     {
         xpiler.process(path);
     }

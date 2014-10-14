@@ -14,11 +14,10 @@
 
 #include "formatter.hpp"
 #include "handler.hpp"
+#include "options.hpp"
 
 namespace xpiler
 {
-    struct options;
-
     class xpiler
     {
     public:
@@ -31,7 +30,7 @@ namespace xpiler
 
         static const formatter_map_type& formatters() { return formatters_; }
 
-        static options options;
+        static options opts;
 
         bool error;
 

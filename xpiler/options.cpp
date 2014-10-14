@@ -26,7 +26,7 @@ bool options::parse(int argc, char* argv[])
         ("help", "print this message and quit")
         ("out-dir", po::value<string>(), "output root directory")
         ("recursive", "process subdirectories recursively")
-        ("path", po::value<vector<string>>(), "input path specifications")
+        ("path", po::value<vector<string> >(), "input path specifications")
         ("spec", po::value<string>(), "specifies the target formatter");
 
     po::positional_options_description positional;
@@ -61,7 +61,7 @@ bool options::parse(int argc, char* argv[])
 
         if (variables.count("path"))
         {
-            input = variables["path"].as<vector<string>>();
+            input = variables["path"].as<vector<string> >();
         }
         else
         {

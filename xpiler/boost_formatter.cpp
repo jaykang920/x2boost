@@ -37,6 +37,8 @@ bool boost_formatter::format(document* doc, const string& out_dir)
 {
     try
     {
+        doc->basename = MixedCase2lower_case(doc->basename);
+
         fs::path basename = out_dir;
         basename /= doc->basename;
 
@@ -109,7 +111,7 @@ void boost_formatter::format_header_file(boost_formatter_context& context)
         boost::replace_all(include_guard, "/", "_");
         include_guard.append("_");
     }
-    include_guard += MixedCase2Under_Score(context.doc->basename);
+    include_guard += context.doc->basename;
     include_guard += "_HPP_";
     boost::to_upper(include_guard);
 

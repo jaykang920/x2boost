@@ -44,7 +44,7 @@ bool options::parse(int argc, char* argv[])
         {
             cout << "  usage: xpiler [options] path..." << endl;
             cout << options << endl;
-            cout << "Specs:" << endl;
+            cout << "specs:" << endl;
             BOOST_FOREACH(const xpiler::formatter_map_type::value_type& pair,
                 xpiler::formatters())
             {

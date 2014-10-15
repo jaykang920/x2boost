@@ -26,6 +26,8 @@ namespace xpiler
 
     xpiler::xpiler()
     {
+        error = false;
+
         formatter_ = formatters_[opts.spec];
         formatter_->setup();
     }

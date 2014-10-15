@@ -101,6 +101,8 @@ void boost_formatter::setup()
 
 void boost_formatter::format_header_file(boost_formatter_context& context)
 {
+    cout << context.target << endl;
+
     ofstream out(context.target.c_str());
     if (!out)
     {
@@ -164,6 +166,8 @@ void boost_formatter::format_header_file(boost_formatter_context& context)
 
 void boost_formatter::format_source_file(boost_formatter_context& context)
 {
+    cout << context.target << endl;
+
     ofstream out(context.target.c_str());
     if (!out)
     {

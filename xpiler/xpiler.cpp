@@ -104,6 +104,8 @@ namespace xpiler
         }
         handler* handler = it->second;
 
+        cout << filename.string() << endl;
+
         document* doc;
         if (!handler->handle(path.string(), &doc))
         {
@@ -113,8 +115,6 @@ namespace xpiler
         {
             return;
         }
-
-        cout << filename.string() << endl;
 
         doc->basename = filename.stem().string();
 

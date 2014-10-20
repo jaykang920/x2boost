@@ -42,7 +42,7 @@ namespace x2
         static const tag* _tag();
 
         // Returns the custom type tag of this object.
-        virtual const cell::tag* type_tag() const;
+        virtual const cell::tag* _type_tag() const;
 
         const char* _channel() const
         {

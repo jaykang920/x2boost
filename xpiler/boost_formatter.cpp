@@ -176,14 +176,15 @@ void boost_formatter::format_source_file(boost_formatter_context& context)
     out << endl;
     out << "#include \"" << context.doc->basename + ".hpp\"" << endl;
     out << endl;
+    out << "#include <boost/thread/once.hpp>" << endl;
+    out << endl;
 
     if (!context.doc->ns.empty())
     {
         string ns = context.doc->ns;
         boost::replace_all(ns, "/", "::");
-        boost::to_lower(ns);
 
-        out << "using namespace " << ns << ';' << endl;
+        out << "using namespace " << MixedCase2lower_case(ns) << ';' << endl;
         out << endl;
     }
 
@@ -211,6 +212,8 @@ void boost_header_formatter::format_cell(cell* def)
 {
     preprocess_cell(def);
 
+    const char* root_class = (def->is_event() ? "x2::event" : "x2::cell");
+
     indent(0); *out << "class " << def->native_name << ";" << endl;
     indent(0); *out << "typedef boost::shared_ptr<" << def->native_name << "> "
         << def->native_name << "_ptr;" << endl;
@@ -219,16 +222,6 @@ void boost_header_formatter::format_cell(cell* def)
     indent(0); *out << "{" << endl;
 
     indent(0); *out << "public:" << endl;
-
-    indent(1); *out << "static " << def->native_name << "_ptr _new()" << endl;
-    indent(1); *out << "{" << endl;
-    indent(2); *out << "return " << def->native_name << "_ptr(new " << def->native_name << ");" << endl;
-    indent(1); *out << "}" << endl;
-
-    *out << endl;
-    indent(1); *out << "void _initialize();" << endl;
-
-    *out << endl;
 
     BOOST_FOREACH(cell::property* prop, def->properties)
     {
@@ -255,6 +248,19 @@ void boost_header_formatter::format_cell(cell* def)
         *out << endl;
     }
 
+    // _initialize() member function
+    indent(1); *out << "void _initialize();" << endl;
+    // _new() static member function
+    indent(1); *out << "static " << def->native_name << "_ptr _new()" << endl;
+    indent(1); *out << "{" << endl;
+    indent(2); *out << "return " << def->native_name << "_ptr(new " << def->native_name << ");" << endl;
+    indent(1); *out << "}" << endl;
+    // _tag() static member function
+    indent(1); *out << "static const tag* _tag();" << endl;
+    // _type_tag() member function
+    indent(1); *out << "virtual const cell:tag* _type_tag() const;" << endl;
+    *out << endl;
+
     indent(0); *out << "protected:" << endl;
 
     // ctor
@@ -264,6 +270,7 @@ void boost_header_formatter::format_cell(cell* def)
     indent(2); *out << "_initialize();" << endl;
     indent(1); *out << "}" << endl;
 
+    // _describe() member function
     indent(1); *out << "void _describe(std::ostringstream& oss) const;" << endl;
 
     *out << endl;
@@ -310,9 +317,31 @@ void boost_header_formatter::format_reference(reference* def)
 
 void boost_source_formatter::format_cell(cell* def)
 {
+    const char* root_class = (def->is_event() ? "x2::event" : "x2::cell");
+
+    // static type tag
+    indent(0); *out << "namespace" << endl;
+    indent(0); *out << "{" << endl;
+    indent(1); *out << root_class << "::tag " << def->native_name << "_tag;" << endl;
+    indent(1); *out << "boost::once_flag " << def->native_name << "_once = BOOST_ONCE_INIT;" << endl;
+    indent(1); *out << "void " << def->native_name << "_init()" << endl;
+    indent(1); *out << "{" << endl;
+    indent(2); *out << def->native_name << "_tag.set("
+        << def->base_class << "::_tag(), "
+        << def->properties.size();
+    if (def->is_event())
+    {
+        *out << ", " << ((event*)def)->id << endl;
+    }
+    *out << ");" << endl;
+    indent(1); *out << "}" << endl;
+    indent(0); *out << "}" << endl;
+    *out << endl;
+
+    // _describe() member function
     indent(0); *out << "void " << def->native_name << "::_describe(std::ostringstream& oss) const" << endl;
     indent(0); *out << "{" << endl;
-    indent(1); *out << def->base_class << "::describe(oss);" << endl;
+    indent(1); *out << def->base_class << "::_describe(oss);" << endl;
     BOOST_FOREACH(cell::property* prop, def->properties)
     {
         indent(1); *out << "oss << \" " << prop->name << "=\" << " << prop->native_name << ";" << endl;
@@ -320,6 +349,7 @@ void boost_source_formatter::format_cell(cell* def)
     indent(0); *out << "}" << endl;
     *out << endl;
 
+    // _initialize() member function
     indent(0); *out << "void " << def->native_name << "::_initialize()" << endl;
     indent(0); *out << "{" << endl;
     BOOST_FOREACH(cell::property* prop, def->properties)
@@ -327,7 +357,21 @@ void boost_source_formatter::format_cell(cell* def)
         indent(1); *out << prop->native_name << " = " << prop->default_value << ";" << endl;
     }
     indent(0); *out << "}" << endl;
-    //*out << endl;
+    *out << endl;
+
+    // _tag() static member function
+    indent(0); *out << "const " << root_class << "::tag* " << def->native_name << "::_tag()" << endl;
+    indent(0); *out << "{" << endl;
+    indent(1); *out << "boost::call_once(&" << def->native_name << "_init, " << def->native_name << "_once);" << endl;
+    indent(1); *out << "return &" << def->native_name << "_tag;" << endl;
+    indent(0); *out << "}" << endl;
+    *out << endl;
+
+    // _type_tag() member function
+    indent(0); *out << "const cell:tag* " << def->native_name << "::_type_tag() const" << endl;
+    indent(0); *out << "{" << endl;
+    indent(1); *out << "return _tag();" << endl;
+    indent(0); *out << "}" << endl;
 }
 
 void boost_source_formatter::format_consts(consts* def)

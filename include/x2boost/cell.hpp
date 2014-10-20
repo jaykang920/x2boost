@@ -12,36 +12,21 @@
 
 namespace x2
 {
-    template<typename T, int I>
-    class property {
-        T value;
-    public:
-        T& operator=(const T& value)
-        {
-            // touch(I)
-            return this->value = value;
-        }
-        operator T const& () const
-        {
-            return value;
-        }
-    };
-
     class X2BOOST_API cell
     {
     public:
         virtual ~cell() {}
 
         // Determines whether this cell is equal to the specified one.
-        virtual bool equals(const cell& other) const;
+        virtual bool _equals(const cell& other) const;
         // Determines whether this cell is equivalent to the specified one.
-        virtual bool equivalent(const cell& other) const;
+        virtual bool _equivalent(const cell& other) const;
         // Returns the hash code for the current object.
-        virtual std::size_t hash_code() const;
+        virtual std::size_t _hash_code() const;
         // Returns the hash code based on the specified fingerprint.
-        virtual std::size_t hash_code(const fingerprint& fingerprint) const;
+        virtual std::size_t _hash_code(const fingerprint& fingerprint) const;
         // Returns a string that describes the current object.
-        std::string string() const;
+        std::string _string() const;
 
         /** Supports light-weight custom type hierarchy for cell and its subclasses. */
         class tag
@@ -78,16 +63,16 @@ namespace x2
         // Returns the custom type tag for this class.
         static const tag* _tag();
 
-        bool is_kind_of(const cell& other) const;
+        bool _is_kind_of(const cell& other) const;
 
         // Returns the custom type tag of this object.
-        virtual const tag* type_tag() const;
+        virtual const tag* _type_tag() const;
 
     protected:
         explicit cell(std::size_t length) : fingerprint_(length) {}
 
         // Describes the immediate properties into the specified stream.
-        virtual void describe(std::ostream& stream) const;
+        virtual void _describe(std::ostream& stream) const;
 
         fingerprint fingerprint_;
     };

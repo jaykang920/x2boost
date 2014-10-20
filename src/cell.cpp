@@ -11,22 +11,22 @@ using namespace x2;
 
 namespace
 {
-    cell::tag t;
-    boost::once_flag once = BOOST_ONCE_INIT;
+    cell::tag cell_tag;
+    boost::once_flag cell_once = BOOST_ONCE_INIT;
 
-    void init()
+    void cell_init()
     {
-        t.set(NULL, 0);
+        cell_tag.set(NULL, 0);
     }
 }
 
-bool cell::equals(const cell& other) const
+bool cell::_equals(const cell& other) const
 {
     if (this == &other)
     {
         return true;
     }
-    if (type_tag() != other.type_tag())
+    if (_type_tag() != other._type_tag())
     {
         return false;
     }
@@ -37,13 +37,13 @@ bool cell::equals(const cell& other) const
     return true;
 }
 
-bool cell::equivalent(const cell& other) const
+bool cell::_equivalent(const cell& other) const
 {
     if (this == &other)
     {
         return true;
     }
-    if (!other.is_kind_of(*this))
+    if (!other._is_kind_of(*this))
     {
         return false;
     }
@@ -54,33 +54,33 @@ bool cell::equivalent(const cell& other) const
     return true;
 }
 
-std::size_t cell::hash_code() const
+std::size_t cell::_hash_code() const
 {
-    return hash_code(fingerprint_);
+    return _hash_code(fingerprint_);
 }
 
-std::size_t cell::hash_code(const fingerprint& fingerprint) const
+std::size_t cell::_hash_code(const fingerprint& fingerprint) const
 {
     return 17;
 }
 
-std::string cell::string() const
+std::string cell::_string() const
 {
     std::ostringstream oss;
-    describe(oss);
+    _describe(oss);
     return oss.str();
 }
 
 const cell::tag* cell::_tag()
 {
-    boost::call_once(&init, once);
-    return &t;
+    boost::call_once(&cell_init, cell_once);
+    return &cell_tag;
 }
 
-bool cell::is_kind_of(const cell& other) const
+bool cell::_is_kind_of(const cell& other) const
 {
-    const tag* t = type_tag();
-    const tag* t_ = other.type_tag();
+    const tag* t = _type_tag();
+    const tag* t_ = other._type_tag();
     while (t)
     {
         if (t == t_)
@@ -92,12 +92,12 @@ bool cell::is_kind_of(const cell& other) const
     return false;
 }
 
-const cell::tag* cell::type_tag() const
+const cell::tag* cell::_type_tag() const
 {
     return _tag();
 }
 
-void cell::describe(std::ostream& /*stream*/) const
+void cell::_describe(std::ostream& /*stream*/) const
 {
     return;
 }

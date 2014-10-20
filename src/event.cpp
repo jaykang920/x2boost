@@ -18,6 +18,16 @@ namespace
     }
 }
 
+bool event::_equals(const cell& other) const
+{
+    if (!cell::_equals(other))
+    {
+        return false;
+    }
+    // channel?
+    return true;
+}
+
 const event::tag* event::_tag()
 {
     boost::call_once(&event_init, event_once);
@@ -27,6 +37,11 @@ const event::tag* event::_tag()
 const cell::tag* event::_type_tag() const
 {
     return _tag();
+}
+
+void event::_describe(std::ostream& /*stream*/) const
+{
+    return;
 }
 
 // EOF event.cpp

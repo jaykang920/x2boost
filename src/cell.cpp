@@ -20,16 +20,19 @@ namespace
     }
 }
 
+void cell::tag::set(const cell::tag* base, int num_props)
+{
+    base_ = base;
+    num_props_ = num_props;
+    offset_ = 0;
+    if (base)
+    {
+        offset_ = base->offset() + base->num_props();
+    }
+}
+
 bool cell::_equals(const cell& other) const
 {
-    if (this == &other)
-    {
-        return true;
-    }
-    if (_type_tag() != other._type_tag())
-    {
-        return false;
-    }
     if (fingerprint_ != other.fingerprint_)
     {
         return false;
@@ -71,12 +74,6 @@ std::string cell::_string() const
     return oss.str();
 }
 
-const cell::tag* cell::_tag()
-{
-    boost::call_once(&cell_init, cell_once);
-    return &cell_tag;
-}
-
 bool cell::_is_kind_of(const cell& other) const
 {
     const tag* t = _type_tag();
@@ -92,9 +89,28 @@ bool cell::_is_kind_of(const cell& other) const
     return false;
 }
 
+const cell::tag* cell::_tag()
+{
+    boost::call_once(&cell_init, cell_once);
+    return &cell_tag;
+}
+
 const cell::tag* cell::_type_tag() const
 {
     return _tag();
+}
+
+bool cell::operator==(const cell& rhs) const
+{
+    if (this == &rhs)
+    {
+        return true;
+    }
+    if (_type_tag() != rhs._type_tag())
+    {
+        return false;
+    }
+    return _equals(rhs);
 }
 
 void cell::_describe(std::ostream& /*stream*/) const

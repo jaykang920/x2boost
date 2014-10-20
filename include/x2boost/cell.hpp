@@ -12,23 +12,11 @@
 
 namespace x2
 {
+    // Common base class for all custom types.
     class X2BOOST_API cell
     {
     public:
-        virtual ~cell() {}
-
-        // Determines whether this cell is equal to the specified one.
-        virtual bool _equals(const cell& other) const;
-        // Determines whether this cell is equivalent to the specified one.
-        virtual bool _equivalent(const cell& other) const;
-        // Returns the hash code for the current object.
-        virtual std::size_t _hash_code() const;
-        // Returns the hash code based on the specified fingerprint.
-        virtual std::size_t _hash_code(const fingerprint& fingerprint) const;
-        // Returns a string that describes the current object.
-        std::string _string() const;
-
-        /** Supports light-weight custom type hierarchy for cell and its subclasses. */
+        // Supports custom type hierarchy for cell and its subclasses.
         class tag
         {
         public:
@@ -36,16 +24,7 @@ namespace x2
             tag() {}
             
             // Initializes this cell::tag object with the specified fields.
-            void set(const tag* base, int num_props)
-            {
-                base_ = base;
-                num_props_ = num_props;
-                offset_ = 0;
-                if (base)
-                {
-                    offset_ = base->offset() + base->num_props();
-                }
-            }
+            void set(const tag* base, int num_props);
 
             // Gets the pointer to the immediate base type tag.
             const tag* base() const { return base_; }
@@ -60,13 +39,30 @@ namespace x2
             int offset_;
         };
 
-        // Returns the custom type tag for this class.
-        static const tag* _tag();
+        virtual ~cell() {}
 
+        // Determines whether this cell is equal to the other.
+        virtual bool _equals(const cell& other) const;
+        // Determines whether this cell is equivalent to the other.
+        virtual bool _equivalent(const cell& other) const;
+        // Returns the hash code for the current object.
+        virtual std::size_t _hash_code() const;
+        // Returns the hash code based on the specified fingerprint.
+        virtual std::size_t _hash_code(const fingerprint& fingerprint) const;
+        // Determines whether this cell is a kind of the other.
         bool _is_kind_of(const cell& other) const;
-
-        // Returns the custom type tag of this object.
+        // Returns a string that describes the current object.
+        std::string _string() const;
+        // Returns the custom type tag of this class.
+        static const tag* _tag();
+        // Returns the custom type tag of the current object.
         virtual const tag* _type_tag() const;
+
+        // Built-in properties
+        const fingerprint& _fingerprint() { return fingerprint_; }
+
+        // Operator overloadings
+        bool operator==(const cell& rhs) const;
 
     protected:
         explicit cell(std::size_t length) : fingerprint_(length) {}

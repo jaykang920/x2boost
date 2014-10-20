@@ -218,6 +218,7 @@ void boost_header_formatter::format_cell(cell* def)
     indent(0); *out << "typedef boost::shared_ptr<" << def->native_name << "> "
         << def->native_name << "_ptr;" << endl;
 
+    *out << endl;
     indent(0); *out << "class " << def->native_name << " : public " << def->base_class << endl;
     indent(0); *out << "{" << endl;
 
@@ -248,6 +249,8 @@ void boost_header_formatter::format_cell(cell* def)
         *out << endl;
     }
 
+    // _equals() member function
+    indent(1); *out << "virtual bool _equals(const x2::cell& other) const;" << endl;
     // _initialize() member function
     indent(1); *out << "void _initialize();" << endl;
     // _new() static member function
@@ -338,14 +341,23 @@ void boost_source_formatter::format_cell(cell* def)
     indent(0); *out << "}" << endl;
     *out << endl;
 
-    // _describe() member function
-    indent(0); *out << "void " << def->native_name << "::_describe(std::ostringstream& oss) const" << endl;
+    // _equals() member function
+    indent(0); *out << "bool " << def->native_name << "::_equals(const x2::cell& other) const" << endl;
     indent(0); *out << "{" << endl;
-    indent(1); *out << def->base_class << "::_describe(oss);" << endl;
+    indent(1); *out << "if (!" << def->base_class << "::_equals(other))" << endl;
+    indent(1); *out << "{" << endl;
+    indent(2); *out << "return false;" << endl;
+    indent(1); *out << "}" << endl;
+    indent(1); *out << "const " << def->native_name << "& o = static_cast<const "
+        << def->native_name << "&>(other);" << endl;
     BOOST_FOREACH(cell::property* prop, def->properties)
     {
-        indent(1); *out << "oss << \" " << prop->name << "=\" << " << prop->native_name << ";" << endl;
+        indent(1); *out << "if (" << prop->native_name << " != o." << prop->native_name << ")" << endl;
+        indent(1); *out << "{" << endl;
+        indent(2); *out << "return false;" << endl;
+        indent(1); *out << "}" << endl;
     }
+    indent(1); *out << "return true;" << endl;
     indent(0); *out << "}" << endl;
     *out << endl;
 
@@ -371,6 +383,17 @@ void boost_source_formatter::format_cell(cell* def)
     indent(0); *out << "const x2::cell::tag* " << def->native_name << "::_type_tag() const" << endl;
     indent(0); *out << "{" << endl;
     indent(1); *out << "return _tag();" << endl;
+    indent(0); *out << "}" << endl;
+
+    // _describe() member function
+    *out << endl;
+    indent(0); *out << "void " << def->native_name << "::_describe(std::ostringstream& oss) const" << endl;
+    indent(0); *out << "{" << endl;
+    indent(1); *out << def->base_class << "::_describe(oss);" << endl;
+    BOOST_FOREACH(cell::property* prop, def->properties)
+    {
+        indent(1); *out << "oss << \" " << prop->name << "=\" << " << prop->native_name << ";" << endl;
+    }
     indent(0); *out << "}" << endl;
 }
 

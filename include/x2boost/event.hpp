@@ -12,12 +12,11 @@
 
 namespace x2
 {
+    // Common base class for all events.
     class X2BOOST_API event : public cell
     {
     public:
-        virtual ~event() {}
-
-        // Supports light-weight custom type hierarchy for event and its subclasses.
+        // Supports custom type hierarchy for event and its subclasses.
         class tag : public cell::tag
         {
         public:
@@ -38,27 +37,43 @@ namespace x2
             int type_id_;
         };
 
-        // Returns the custom type tag for this class.
-        static const tag* _tag();
+        virtual ~event() {}
 
-        // Returns the custom type tag of this object.
+        // Determines whether this cell is equal to the other.
+        virtual bool _equals(const cell& other) const;
+        // Initializes this event object.
+        void _initialize()
+        {
+            _channel_ = NULL;
+        }
+        // Instantiates a new event object.
+        static event_ptr _new()
+        {
+            return event_ptr(new event);
+        }
+        // Returns the custom type tag of this class.
+        static const tag* _tag();
+        // Returns the custom type tag of the current object.
         virtual const cell::tag* _type_tag() const;
 
-        const char* _channel() const
-        {
-            return _channel_;
-        }
-
-        event& _set_channel(const char* value)
-        {
-            _channel_ = value;
-        }
+        // Built-in properties
+        const char* _channel() const { return _channel_; }
+        event& _set_channel(const char* value) { _channel_ = value; }
     
     protected:
-        event(std::size_t length) : cell(length + _tag()->num_props()) {}
+        explicit event(std::size_t length) : cell(length + _tag()->num_props())
+        {
+            _initialize();
+        }
+
+        // Describes the immediate properties into the specified stream.
+        virtual void _describe(std::ostream& stream) const;
 
     private:
-        event() : cell(_tag()->num_props()) {}
+        event() : cell(_tag()->num_props())
+        {
+            _initialize();
+        }
 
         const char* _channel_;
     };

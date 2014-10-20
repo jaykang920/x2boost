@@ -258,7 +258,7 @@ void boost_header_formatter::format_cell(cell* def)
     // _tag() static member function
     indent(1); *out << "static const tag* _tag();" << endl;
     // _type_tag() member function
-    indent(1); *out << "virtual const x2::cell:tag* _type_tag() const;" << endl;
+    indent(1); *out << "virtual const x2::cell::tag* _type_tag() const;" << endl;
     *out << endl;
 
     indent(0); *out << "protected:" << endl;

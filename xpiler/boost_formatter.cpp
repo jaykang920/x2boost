@@ -211,7 +211,12 @@ void boost_header_formatter::format_cell(cell* def)
 {
     preprocess_cell(def);
 
+    indent(0); *out << "class " << def->native_name << ";" << endl;
+    indent(0); *out << "typedef boost::shared_ptr<" << def->native_name << "> "
+        << def->native_name << "_ptr;" << endl;
+
     indent(0); *out << "class " << def->native_name << " : public " << def->base_class << endl;
+    indent(0); *out << "{" << endl;
 
     indent(0); *out << "public:" << endl;
 
@@ -256,7 +261,7 @@ void boost_header_formatter::format_cell(cell* def)
     indent(1); *out << def->native_name << "(std::size_t length)" << endl;
     indent(2); *out << ": " << def->base_class << "(length + _tag()->num_props())" << endl;
     indent(1); *out << "{" << endl;
-    indent(2); *out << "initialize();" << endl;
+    indent(2); *out << "_initialize();" << endl;
     indent(1); *out << "}" << endl;
 
     indent(1); *out << "void _describe(std::ostringstream& oss) const;" << endl;
@@ -267,7 +272,7 @@ void boost_header_formatter::format_cell(cell* def)
     indent(1); *out << def->native_name << "()" << endl;
     indent(2); *out << ": " << def->base_class << "(_tag()->num_props())" << endl;
     indent(1); *out << "{" << endl;
-    indent(2); *out << "initialize();" << endl;
+    indent(2); *out << "_initialize();" << endl;
     indent(1); *out << "}" << endl;
 
     BOOST_FOREACH(cell::property* prop, def->properties)
@@ -276,9 +281,6 @@ void boost_header_formatter::format_cell(cell* def)
     }
 
     indent(0); *out << "};" << endl;
-
-    indent(0); *out << "typedef boost::shared_ptr<" << def->native_name << "> "
-        << def->native_name << "_ptr;" << endl;
 }
 
 void boost_header_formatter::format_consts(consts* def)

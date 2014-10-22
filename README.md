@@ -14,6 +14,12 @@ Requirements
  * system
  * thread
 
+ToDo
+----
+
+* consider using intrusive_ptr for cells/events
+* handler chain call efficiency
+
 License
 -------
 

@@ -117,6 +117,7 @@ set(x2boost_INC_QUEUES
 )
 set(x2boost_INC_UTIL
   "${x2boost_INC_DIR}/util/log.hpp"
+  "${x2boost_INC_DIR}/util/shared_object.hpp"
 )
 
 list(APPEND x2boost_ALL_INC ${x2boost_INC})

@@ -25,8 +25,8 @@ namespace x2
 
         void run()
         {
-            //
-            //
+            current_flow_.reset(this);
+            handler_chain_.reset(new handler_chain_type);
 
             while (true)
             {
@@ -38,8 +38,8 @@ namespace x2
                 //dispatch(e);
             }
 
-            //handlerChain = null;
-            //currentFlow = null;
+            handler_chain_.reset();
+            current_flow_.release();
         }
 
     protected:

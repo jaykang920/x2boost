@@ -12,8 +12,15 @@ namespace x2
 {
     struct X2BOOST_API handler
     {
+        virtual ~handler() {}
+
         virtual void invoke(event_ptr e) = 0;
+
+    protected:
+        handler() {}
     };
+
+    typedef std::vector<handler_ptr> handler_chain_type;
 
     template<class T, class E>
     class mem_fun_ptr_handler : public handler
@@ -28,6 +35,7 @@ namespace x2
         {
             (target_->*f_)(boost::static_pointer_cast<E>(e));
         }
+
     private:
         void (T::*f_)(boost::shared_ptr<E>);
         T* target_;

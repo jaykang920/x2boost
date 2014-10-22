@@ -9,7 +9,9 @@
 #endif
 
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/thread/tss.hpp>
 
+#include "x2boost/binder.hpp"
 #include "x2boost/case.hpp"
 #include "x2boost/handler.hpp"
 
@@ -46,6 +48,7 @@ namespace x2
         flow_ptr subscribe(boost::shared_ptr<E> e, void (T::*mf)(boost::shared_ptr<E>), T* t)
         {
             handler* h = new mem_fun_ptr_handler<T, E>(t, mf);
+            binder_.bind(e, handler_ptr(h));
             return shared_from_this();
         }
 
@@ -54,6 +57,8 @@ namespace x2
         /// Makes this flow unsubscribe from the specified channel.
         void unsubscribe_from(const char* channel) const;
 
+        static flow* current_flow() { return current_flow_.get(); }
+
     protected:
         virtual void setup()
         {
@@ -61,6 +66,10 @@ namespace x2
         }
         virtual void teardown() {}
 
+        static boost::thread_specific_ptr<flow> current_flow_;
+        static boost::thread_specific_ptr<handler_chain_type> handler_chain_;
+
+        binder binder_;
         case_stack case_stack_;
 
         mutable boost::mutex mutex_;

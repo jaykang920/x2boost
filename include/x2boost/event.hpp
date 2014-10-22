@@ -53,6 +53,12 @@ namespace x2
         }
         // Returns the custom type tag of this class.
         static const tag* _tag();
+        // Returns the type identifier of this event.
+        int _type_id() const
+        {
+            const tag* t = static_cast<const tag*>(_type_tag());
+            return t->type_id();
+        }
         // Returns the custom type tag of the current object.
         virtual const cell::tag* _type_tag() const;
 
@@ -77,6 +83,23 @@ namespace x2
 
         const char* _channel_;
     };
+
+    class event_ptr_equivalent : public event_ptr
+    {
+    public:
+        explicit event_ptr_equivalent(const event_ptr& e, const fingerprint& fp)
+            : e_(e), fp_(fp) {}
+    
+        
+    private:
+        const event_ptr& e_;
+        const fingerprint& fp_;
+    };
+
+    inline bool operator==(event_ptr const& lhs, event_ptr const& rhs)
+    {
+        return lhs->_equals(*rhs);
+    }
 }
 
 #endif  // X2BOOST_EVENT_HPP_

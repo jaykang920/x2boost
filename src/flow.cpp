@@ -7,6 +7,8 @@
 
 using namespace x2;
 
+boost::thread_specific_ptr<flow> flow::current_flow_;
+
 void flow::subscribe_to(const char* channel) const
 {
     hub::instance().subscribe(boost::const_pointer_cast<flow>(shared_from_this()), channel);

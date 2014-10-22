@@ -30,11 +30,13 @@ namespace x2
     class cell;
     class event;
     class flow;
+    struct handler;
 
     typedef boost::shared_ptr<case_interface> case_ptr;
     typedef boost::shared_ptr<cell> cell_ptr;
     typedef boost::shared_ptr<event> event_ptr;
     typedef boost::shared_ptr<flow> flow_ptr;
+    typedef boost::shared_ptr<handler> handler_ptr;
 }
 
 #endif  // X2BOOST_PRE_HPP_

@@ -20,6 +20,9 @@ namespace x2
 
         virtual void setup(flow_ptr holder) = 0;
         virtual void teardown(flow_ptr holder) = 0;
+    
+    protected:
+        case_interface() {}
     };
 
     class X2BOOST_API caze : public event_sink, public case_interface
@@ -40,6 +43,8 @@ namespace x2
         }
 
     protected:
+        caze() {}
+
         virtual void setup() = 0;
         virtual void teardown() = 0;
     };
@@ -47,6 +52,9 @@ namespace x2
     class X2BOOST_API case_stack : public case_interface
     {
     public:
+        case_stack() {}
+        virtual ~case_stack() {}
+
         void add(case_ptr c);
         void remove(case_ptr c);
 

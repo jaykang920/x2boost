@@ -159,6 +159,20 @@ namespace x2
     private:
         int ref_count_;
     };
+
+    class X2BOOST_API capo : private boost::noncopyable
+    {
+    public:
+        capo(const fingerprint& fp, int offset) : fp_(fp), offset_(offset) {}
+
+        bool operator[](std::size_t index) const
+        {
+            return fp_.get(index + offset_);
+        }
+    private:
+        const fingerprint& fp_;
+        int offset_;
+    };
 }
 
 #endif  // X2BOOST_FINGERPRINT_HPP_

@@ -8,6 +8,8 @@
 #include "x2boost/pre.hpp"
 #endif
 
+#include <boost/core/null_deleter.hpp>
+
 #include "x2boost/cell.hpp"
 
 namespace x2
@@ -41,6 +43,12 @@ namespace x2
 
         // Determines whether this cell is equal to the other.
         virtual bool _equals(const cell& other) const;
+        // Returns the hash code for the current object.
+        virtual std::size_t _hash_code() const;
+        // Returns the hash code based on the specified fingerprint.
+        virtual std::size_t _hash_code(const fingerprint& fp) const;
+        // Returns the hash code based on the specified fingerprint and type id.
+        std::size_t _hash_code(const fingerprint& fingerprint, boost::int32_t type_id) const;
         // Initializes this event object.
         void _initialize()
         {
@@ -67,6 +75,11 @@ namespace x2
         event& _set_channel(const char* value) { _channel_ = value; }
     
     protected:
+        event() : cell(_tag()->num_props())
+        {
+            _initialize();
+        }
+
         explicit event(std::size_t length) : cell(length + _tag()->num_props())
         {
             _initialize();
@@ -76,24 +89,32 @@ namespace x2
         virtual void _describe(std::ostream& stream) const;
 
     private:
-        event() : cell(_tag()->num_props())
-        {
-            _initialize();
-        }
-
         const char* _channel_;
     };
 
-    class event_ptr_equivalent : public event_ptr
+    class event_equivalent : public event, private boost::noncopyable
     {
     public:
-        explicit event_ptr_equivalent(const event_ptr& e, const fingerprint& fp)
-            : e_(e), fp_(fp) {}
+        event_equivalent(const event_ptr& e, const fingerprint& fp, boost::int32_t type_id)
+            : e_(e), fp_(fp), type_id_(type_id) {}
     
-        
+        virtual bool _equals(const cell& other) const
+        {
+            return _equivalent(other);
+        }
+        virtual std::size_t _hash_code() const
+        {
+            return event::_hash_code(fp_, type_id_);
+        }
+        event_ptr ptr()
+        {
+            return event_ptr(this, boost::null_deleter());
+        }
+
     private:
         const event_ptr& e_;
         const fingerprint& fp_;
+        boost::int32_t type_id_;
     };
 
     inline bool operator==(event_ptr const& lhs, event_ptr const& rhs)

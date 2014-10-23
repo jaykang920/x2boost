@@ -48,7 +48,7 @@ namespace x2
         // Returns the hash code for the current object.
         virtual std::size_t _hash_code() const;
         // Returns the hash code based on the specified fingerprint.
-        virtual std::size_t _hash_code(const fingerprint& fingerprint) const;
+        virtual std::size_t _hash_code(const fingerprint& fp) const;
         // Determines whether this cell is a kind of the other.
         bool _is_kind_of(const cell& other) const;
         // Returns a string that describes the current object.
@@ -72,6 +72,12 @@ namespace x2
 
         fingerprint fingerprint_;
     };
+
+    // Extending boost::hash for cell-derived objects
+    inline std::size_t hash_value(const cell& x)
+    {
+        return x._hash_code();
+    }
 }
 
 #endif  // X2BOOST_CELL_HPP_

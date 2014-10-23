@@ -5,6 +5,8 @@
 
 #include <sstream>
 
+#include <boost/functional/hash.hpp>
+
 #include <boost/thread/once.hpp>
 
 using namespace x2;
@@ -62,9 +64,9 @@ std::size_t cell::_hash_code() const
     return _hash_code(fingerprint_);
 }
 
-std::size_t cell::_hash_code(const fingerprint& fingerprint) const
+std::size_t cell::_hash_code(const fingerprint& /*fp*/) const
 {
-    return 17;
+    return 0;
 }
 
 std::string cell::_string() const

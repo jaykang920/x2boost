@@ -80,7 +80,23 @@ namespace x2
             list_type store_;
         };
 
-        typedef boost::unordered_map<event_ptr, handler_set*> map_type;
+        struct hasher
+        {
+            std::size_t operator()(const event_ptr& x) const
+            {
+                return x->_hash_code();
+            }
+        };
+
+        struct key_equal
+        {
+            bool operator()(const event_ptr& x, const event_ptr& y) const
+            {
+                return x->_equals(*y);
+            }
+        };
+
+        typedef boost::unordered_map<event_ptr, handler_set*, hasher, key_equal> map_type;
 
         filter filter_;
         map_type map_;

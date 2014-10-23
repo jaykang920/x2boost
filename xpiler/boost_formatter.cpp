@@ -176,6 +176,7 @@ void boost_formatter::format_source_file(boost_formatter_context& context)
     out << endl;
     out << "#include \"" << context.doc->basename + ".hpp\"" << endl;
     out << endl;
+    out << "#include <boost/functional/hash.hpp>" << endl;
     out << "#include <boost/thread/once.hpp>" << endl;
     out << endl;
 
@@ -251,6 +252,8 @@ void boost_header_formatter::format_cell(cell* def)
 
     // _equals() member function
     indent(1); *out << "virtual bool _equals(const x2::cell& other) const;" << endl;
+    // _hash_code() member function
+    indent(1); *out << "virtual std::size_t _hash_code(const x2::fingerprint& fp) const;" << endl;
     // _initialize() member function
     indent(1); *out << "void _initialize();" << endl;
     // _new() static member function
@@ -358,6 +361,23 @@ void boost_source_formatter::format_cell(cell* def)
         indent(1); *out << "}" << endl;
     }
     indent(1); *out << "return true;" << endl;
+    indent(0); *out << "}" << endl;
+    *out << endl;
+
+    // _hash_code() member_function
+    indent(0); *out << "std::size_t " << def->native_name << "::_hash_code(const x2::fingerprint& fp) const" << endl;
+    indent(0); *out << "{" << endl;
+    indent(1); *out << "std::size_t value = " << def->base_class << "::_hash_code(fp);" << endl;
+    indent(1); *out << "x2::capo touched(x2::cell::fingerprint_, _tag()->offset());" << endl;
+    for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
+    {
+        cell::property* prop = def->properties[i];
+        indent(1); *out << "if (touched[" << i << "])" << endl;
+        indent(1); *out << "{" << endl;
+        indent(2); *out << "boost::hash_combine(value, " << prop->native_name << ");" << endl;
+        indent(1); *out << "}" << endl;
+    }
+    indent(1); *out << "return value;" << endl;
     indent(0); *out << "}" << endl;
     *out << endl;
 

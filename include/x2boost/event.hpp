@@ -8,9 +8,8 @@
 #include "x2boost/pre.hpp"
 #endif
 
-#include <boost/utility/empty_deleter.hpp>
-
 #include "x2boost/cell.hpp"
+#include "x2boost/util/deleter.hpp"
 
 namespace x2
 {
@@ -108,7 +107,7 @@ namespace x2
         }
         event_ptr ptr()
         {
-            return event_ptr(this, boost::empty_deleter());
+            return event_ptr(this, null_deleter());
         }
 
     private:

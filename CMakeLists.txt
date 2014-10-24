@@ -116,6 +116,7 @@ set(x2boost_INC_QUEUES
   "${x2boost_INC_DIR}/queues/synchronized_queue.hpp"
 )
 set(x2boost_INC_UTIL
+  "${x2boost_INC_DIR}/util/deleter.hpp"
   "${x2boost_INC_DIR}/util/log.hpp"
   "${x2boost_INC_DIR}/util/shared_object.hpp"
 )

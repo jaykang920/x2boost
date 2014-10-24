@@ -253,7 +253,7 @@ void boost_header_formatter::format_cell(cell* def)
     // _equals() member function
     indent(1); *out << "virtual bool _equals(const x2::cell& other) const;" << endl;
     // _equivalent() member function
-    indent(0); *out << "virtual bool _equivalent(const x2::cell& other) const;" << endl;
+    indent(1); *out << "virtual bool _equivalent(const x2::cell& other) const;" << endl;
     // _hash_code() member function
     indent(1); *out << "virtual std::size_t _hash_code(const x2::fingerprint& fp) const;" << endl;
     // _initialize() member function
@@ -369,7 +369,7 @@ void boost_source_formatter::format_cell(cell* def)
     // _equivalent() member function
     indent(0); *out << "bool " << def->native_name << "::_equivalent(const x2::cell& other) const" << endl;
     indent(0); *out << "{" << endl;
-    indent(1); *out << "if (!" << def->base_class << "::_eqivalent(other))" << endl;
+    indent(1); *out << "if (!" << def->base_class << "::_equivalent(other))" << endl;
     indent(1); *out << "{" << endl;
     indent(2); *out << "return false;" << endl;
     indent(1); *out << "}" << endl;

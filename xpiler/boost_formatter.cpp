@@ -252,6 +252,8 @@ void boost_header_formatter::format_cell(cell* def)
 
     // _equals() member function
     indent(1); *out << "virtual bool _equals(const x2::cell& other) const;" << endl;
+    // _equivalent() member function
+    indent(0); *out << "virtual bool _equivalent(const x2::cell& other) const;" << endl;
     // _hash_code() member function
     indent(1); *out << "virtual std::size_t _hash_code(const x2::fingerprint& fp) const;" << endl;
     // _initialize() member function
@@ -364,7 +366,29 @@ void boost_source_formatter::format_cell(cell* def)
     indent(0); *out << "}" << endl;
     *out << endl;
 
-    // _hash_code() member_function
+    // _equivalent() member function
+    indent(0); *out << "bool " << def->native_name << "::_equivalent(const x2::cell& other) const" << endl;
+    indent(0); *out << "{" << endl;
+    indent(1); *out << "if (!" << def->base_class << "::_eqivalent(other))" << endl;
+    indent(1); *out << "{" << endl;
+    indent(2); *out << "return false;" << endl;
+    indent(1); *out << "}" << endl;
+    indent(1); *out << "const " << def->native_name << "& o = static_cast<const "
+        << def->native_name << "&>(other);" << endl;
+    indent(1); *out << "x2::capo touched(x2::cell::fingerprint_, _tag()->offset());" << endl;
+    for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
+    {
+        cell::property* prop = def->properties[i];
+        indent(1); *out << "if (touched[" << i << "] && " << prop->native_name << " != o." << prop->native_name << ")" << endl;
+        indent(1); *out << "{" << endl;
+        indent(2); *out << "return false;" << endl;
+        indent(1); *out << "}" << endl;
+    }
+    indent(1); *out << "return true;" << endl;
+    indent(0); *out << "}" << endl;
+    *out << endl;
+
+    // _hash_code() member function
     indent(0); *out << "std::size_t " << def->native_name << "::_hash_code(const x2::fingerprint& fp) const" << endl;
     indent(0); *out << "{" << endl;
     indent(1); *out << "std::size_t value = " << def->base_class << "::_hash_code(fp);" << endl;

@@ -225,8 +225,9 @@ void boost_header_formatter::format_cell(cell* def)
 
     indent(0); *out << "public:" << endl;
 
-    BOOST_FOREACH(cell::property* prop, def->properties)
+    for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
     {
+        cell::property* prop = def->properties[i];
         bool is_primitive = types::is_primitive(prop->type.type);
         indent(1);
         if (!is_primitive) { *out << "const "; }
@@ -242,6 +243,7 @@ void boost_header_formatter::format_cell(cell* def)
         if (!is_primitive) { *out << "&"; }
         *out << " value)" << endl;
         indent(1); *out << "{" << endl;
+        indent(2); *out << "fingerprint_.touch(_tag()->offset() + " << i << ");" << endl;
         indent(2); *out << prop->native_name << " = value;" << endl;
         indent(1); *out << "}" << endl;
     }
@@ -392,7 +394,7 @@ void boost_source_formatter::format_cell(cell* def)
     indent(0); *out << "std::size_t " << def->native_name << "::_hash_code(const x2::fingerprint& fp) const" << endl;
     indent(0); *out << "{" << endl;
     indent(1); *out << "std::size_t value = " << def->base_class << "::_hash_code(fp);" << endl;
-    indent(1); *out << "x2::capo touched(x2::cell::fingerprint_, _tag()->offset());" << endl;
+    indent(1); *out << "x2::capo touched(fp, _tag()->offset());" << endl;
     for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
     {
         cell::property* prop = def->properties[i];

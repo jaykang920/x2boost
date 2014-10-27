@@ -99,11 +99,12 @@ namespace x2
     
         virtual bool _equals(const cell& other) const
         {
-            return _equivalent(other);
+            //return e_->_equivalent(other);
+            return other._equivalent(*e_);
         }
         virtual std::size_t _hash_code() const
         {
-            return event::_hash_code(fp_, type_id_);
+            return e_->_hash_code(fp_, type_id_);
         }
         event_ptr ptr()
         {

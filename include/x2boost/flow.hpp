@@ -38,8 +38,8 @@ namespace x2
             return shared_from_this();
         }
 
-        void startup() {}
-        void shutdown()
+        virtual void startup() {}
+        virtual void shutdown()
         {
             std::cout << "flow::shutdown" << std::endl;
         }
@@ -65,6 +65,8 @@ namespace x2
 
         }
         virtual void teardown() {}
+
+        void dispatch(event_ptr e);
 
         static boost::thread_specific_ptr<flow> current_flow_;
         static boost::thread_specific_ptr<handler_chain_type> handler_chain_;

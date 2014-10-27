@@ -37,7 +37,7 @@ namespace x2
         {
             T value;
             boost::mutex::scoped_lock lock(mutex_);
-            if (store_.empty())
+            while (store_.empty())
             {
                 if (closing_)
                 {

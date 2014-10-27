@@ -28,6 +28,8 @@ namespace x2
             current_flow_.reset(this);
             handler_chain_.reset(new handler_chain_type);
 
+            std::cout << "run()" << std::endl;
+
             while (true)
             {
                 event_ptr e = queue_.dequeue();
@@ -35,7 +37,7 @@ namespace x2
                 {
                     break;
                 }
-                //dispatch(e);
+                dispatch(e);
             }
 
             handler_chain_.reset();

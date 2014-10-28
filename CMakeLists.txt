@@ -102,6 +102,7 @@ set(x2boost_INC
   "${x2boost_INC_DIR}/flow.hpp"
   "${x2boost_INC_DIR}/handler.hpp"
   "${x2boost_INC_DIR}/hub.hpp"
+  "${x2boost_INC_DIR}/link.hpp"
   "${x2boost_INC_DIR}/pre.hpp"
   "${x2boost_INC_DIR}/queue.hpp"
   "${x2boost_INC_DIR}/x2boost.hpp"
@@ -110,6 +111,11 @@ set(x2boost_INC_FLOWS
   "${x2boost_INC_DIR}/flows/event_based_flow.hpp"
   "${x2boost_INC_DIR}/flows/multi_threaded_flow.hpp"
   "${x2boost_INC_DIR}/flows/single_threaded_flow.hpp"
+)
+set(x2boost_INC_ASIO_LINKS
+  "${x2boost_INC_DIR}/links/asio_link/asio_client.hpp"
+  "${x2boost_INC_DIR}/links/asio_link/asio_link.hpp"
+  "${x2boost_INC_DIR}/links/asio_link/asio_server.hpp"
 )
 set(x2boost_INC_QUEUES
   "${x2boost_INC_DIR}/queues/lockfree_queue.hpp"
@@ -123,6 +129,7 @@ set(x2boost_INC_UTIL
 
 list(APPEND x2boost_ALL_INC ${x2boost_INC})
 list(APPEND x2boost_ALL_INC ${x2boost_INC_FLOWS})
+list(APPEND x2boost_ALL_INC ${x2boost_INC_ASIO_LINKS})
 list(APPEND x2boost_ALL_INC ${x2boost_INC_QUEUES})
 list(APPEND x2boost_ALL_INC ${x2boost_INC_UTIL})
 
@@ -151,6 +158,8 @@ list(APPEND x2boost_ALL_SRC ${x2boost_SRC_FLOWS})
 # Source groups
 source_group("Header Files" FILES ${x2boost_INC})
 source_group("Header Files\\flows" FILES ${x2boost_INC_FLOWS})
+source_group("Header Files\\links")
+source_group("Header Files\\links\\asio_link" FILES ${x2boost_INC_ASIO_LINKS})
 source_group("Header Files\\queues" FILES ${x2boost_INC_QUEUES})
 source_group("Header Files\\util" FILES ${x2boost_INC_UTIL})
 source_group("Source Files" FILES ${x2boost_SRC})

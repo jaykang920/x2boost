@@ -80,7 +80,7 @@ namespace x2
             list_type store_;
         };
 
-        struct hasher
+        struct h
         {
             std::size_t operator()(const event_ptr& x) const
             {
@@ -88,7 +88,7 @@ namespace x2
             }
         };
 
-        struct key_equal
+        struct eq
         {
             bool operator()(const event_ptr& x, const event_ptr& y) const
             {
@@ -96,7 +96,7 @@ namespace x2
             }
         };
 
-        typedef boost::unordered_map<event_ptr, handler_set*, hasher, key_equal> map_type;
+        typedef boost::unordered_map<event_ptr, handler_set*, h, eq> map_type;
 
         filter filter_;
         map_type map_;

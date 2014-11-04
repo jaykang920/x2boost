@@ -1,8 +1,8 @@
 // Copyright (c) 2014 Jae-jun Kang
 // See the file COPYING for license details.
 
-#ifndef X2BOOST_ASIO_LINK_HPP_
-#define X2BOOST_ASIO_LINK_HPP_
+#ifndef X2BOOST_ASIO_LINK_SESSION_HPP_
+#define X2BOOST_ASIO_LINK_SESSION_HPP_
 
 #ifndef X2BOOST_PRE_HPP_
 #include "x2boost/pre.hpp"
@@ -19,11 +19,8 @@ namespace x2
     public:
 
     protected:
-        asio_link_session() {}
-
-
-        boost::asio::io_service io_service_;
+        asio_link_session() : link_session(0) {}
     };
 }
 
-#endif  // X2BOOST_ASIO_LINK_HPP_
+#endif  // X2BOOST_ASIO_LINK_SESSION_HPP_

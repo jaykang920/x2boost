@@ -14,7 +14,8 @@ namespace
 {
     volatile bool should_stop = false;
     boost::atomic<int> ref_count;
-    boost::thread_group workers;
+    boost::thread* worker = NULL;
+    //boost::thread_group workers;
 
     void work()
     {
@@ -34,6 +35,8 @@ namespace
 
     void asio_start()
     {
+        worker = new boost::thread(work);
+        /*
         int num_workers = boost::thread::hardware_concurrency();
         if (num_workers > 2) { num_workers /= 2; }
 
@@ -41,13 +44,16 @@ namespace
         {
             workers.create_thread(work);
         }
+        */
     }
 
     void asio_stop()
     {
         should_stop = true;
         asio_link::io_service().stop();
-        workers.join_all();
+        //workers.join_all();
+        worker->join();
+        delete worker;
     }
 }
 

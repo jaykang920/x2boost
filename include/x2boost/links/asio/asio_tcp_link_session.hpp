@@ -9,13 +9,15 @@
 #endif
 
 #include <boost/asio.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include "x2boost/links/asio/asio_link.hpp"
 #include "x2boost/links/asio/asio_link_session.hpp"
 
 namespace x2
 {
-    class X2BOOST_API asio_tcp_link_session : public asio_link_session
+    class X2BOOST_API asio_tcp_link_session
+        : public asio_link_session, public boost::enable_shared_from_this<asio_tcp_link_session>
     {
     public:
         typedef boost::shared_ptr<asio_tcp_link_session> pointer;
@@ -29,8 +31,10 @@ namespace x2
 
         void start_send()
         {
-            socket_.async_send(boost::asio::buffer(txbuf_.data()),
-                boost::bind(&asio_tcp_link_session::handle_send, this,
+            boost::asio::streambuf::const_buffers_type const_buffers =
+                txbuf_.data();
+            socket_.async_send(boost::asio::buffer(const_buffers),
+                boost::bind(&asio_tcp_link_session::handle_send, shared_from_this(),
                 boost::asio::placeholders::error,
                 boost::asio::placeholders::bytes_transferred));
         }
@@ -43,10 +47,17 @@ namespace x2
 
         void start_receive()
         {
-            boost::asio::streambuf::mutable_buffers_type mutable_buffer =
-                rxbuf_.prepare(4096);
-            socket_.async_receive(boost::asio::buffer(mutable_buffer),
-                boost::bind(&asio_tcp_link_session::handle_receive, this,
+           // boost::asio::streambuf::mutable_buffers_type mutable_buffers =
+                //rxbuf_.prepare(4096);
+
+            //log::warning() << mutable_buffers.begin() << " " << mutable_buffers.end() << std::endl;
+            //log::warning() << rxbuf_.size() << std::endl;
+
+            socket_.async_receive(
+                boost::asio::buffer(buf_, 4096),
+                //boost::asio::buffer(mutable_buffers),
+                //boost::asio::transfer_at_least(1),
+                boost::bind(&asio_tcp_link_session::handle_receive, shared_from_this(),
                     boost::asio::placeholders::error,
                     boost::asio::placeholders::bytes_transferred));
         }
@@ -55,6 +66,7 @@ namespace x2
             std::size_t bytes_transferred)
         {
             log::info() << "received " << bytes_transferred << " byte(s)" << std::endl;
+            //rxbuf_.commit(bytes_transferred);
             start_receive();
         }
 
@@ -65,6 +77,7 @@ namespace x2
 
         boost::asio::streambuf rxbuf_;
         boost::asio::streambuf txbuf_;
+        char buf_[4096];
     };
 }
 

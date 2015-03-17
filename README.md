@@ -1,6 +1,8 @@
 x2boost
 =======
 
+_Under development now_
+
 x2boost is a C++ port of [x2](https://github.com/jaykang920/x2) based on C++98
 and [Boost](http://www.boost.org/) libraries.
 

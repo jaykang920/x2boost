@@ -568,9 +568,9 @@ namespace
             while (it != end)
             {
                 if ((::islower(*prev) && ::isupper(*it)) ||
-                    (next != end && ::isupper(*prev) && ::isupper(*it) && ::islower(*next)) ||
+                    (next != end && ::isupper(*prev) && ::isupper(*it) && ::islower(*next))/* ||
                     (!::isdigit(*prev) && ::isdigit(*it)) ||
-                    (next != end && ::isdigit(*prev) && ::isdigit(*it) && !::isdigit(*next)))
+                    (next != end && ::isdigit(*prev) && ::isdigit(*it) && !::isdigit(*next))*/)
                 {
                     *out++ = '_';
                 }

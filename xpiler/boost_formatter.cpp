@@ -213,8 +213,6 @@ void boost_header_formatter::format_cell(cell* def)
 {
     preprocess_cell(def);
 
-    const char* root_class = (def->is_event() ? "x2::event" : "x2::cell");
-
     indent(0); *out << "class " << def->native_name << ";" << endl;
     indent(0); *out << "typedef boost::shared_ptr<" << def->native_name << "> "
         << def->native_name << "_ptr;" << endl;

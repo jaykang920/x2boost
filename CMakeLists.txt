@@ -1,22 +1,22 @@
-# CMake build script for x2boost
+# CMake build script
 
 cmake_minimum_required(VERSION 2.8.8) # for per-target include_directories
 
+project(x2boost CXX C)
+
 # CMake options
-option(BUILD_SHARED_LIBS "Build x2boost as a shared library (DLL)." OFF)
+option(BUILD_SHARED_LIBS "Build x2boost as a shared library (DLL)" OFF)
 # x2boost options
-option(BUILD_FORCE_SHARED_CRT "Shared (DLL) version of C runtime library." OFF)
-option(BUILD_XPILER "Build xpiler executable." ON)
+option(BUILD_FORCE_SHARED_CRT "Shared (DLL) version of C runtime library" OFF)
+option(BUILD_XPILER "Build xpiler executable" ON)
+option(BUILD_EXAMPLES "Build examples" OFF)
 
 if(WIN32)
     SET(CMAKE_USE_RELATIVE_PATHS true)
 endif()
 
 # Project module path
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/build/cmake")
-include(build/cmake/internal_utils.cmake)
-
-project(x2boost CXX C)
+include(${x2boost_SOURCE_DIR}/build/cmake/internal_utils.cmake)
 
 set(CMAKE_THREAD_PREFER_PTHREAD true)
 find_package(Threads REQUIRED)
@@ -26,6 +26,8 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_STATIC_RUNTIME ON)
 unset(Boost_LIBRARIES CACHE)
 find_package(Boost REQUIRED COMPONENTS
+  chrono
+  date_time
   filesystem
   program_options
   system
@@ -85,152 +87,16 @@ foreach(output_config ${CMAKE_CONFIGURATION_TYPES})
 endforeach()
 
 set(x2boost_INCLUDE_DIR "${x2boost_SOURCE_DIR}/include")
-string_append(x2boost_INCLUDES "${x2boost_INCLUDE_DIR}" ";")
-string_append(x2boost_INCLUDES "${x2boost_SOURCE_DIR}" ";")
+set(x2boost_INCLUDES ${x2boost_INCLUDE_DIR})
 
-# x2boost header files
-
-set(x2boost_INC_DIR "${x2boost_INCLUDE_DIR}/x2boost")
-
-set(x2boost_INC
-  "${x2boost_INC_DIR}/binder.hpp"
-  "${x2boost_INC_DIR}/buffer.hpp"
-  "${x2boost_INC_DIR}/case.hpp"
-  "${x2boost_INC_DIR}/cell.hpp"
-  "${x2boost_INC_DIR}/event.hpp"
-  "${x2boost_INC_DIR}/event_sink.hpp"
-  "${x2boost_INC_DIR}/fingerprint.hpp"
-  "${x2boost_INC_DIR}/flow.hpp"
-  "${x2boost_INC_DIR}/handler.hpp"
-  "${x2boost_INC_DIR}/hub.hpp"
-  "${x2boost_INC_DIR}/link.hpp"
-  "${x2boost_INC_DIR}/pre.hpp"
-  "${x2boost_INC_DIR}/queue.hpp"
-  "${x2boost_INC_DIR}/x2boost.hpp"
-)
-set(x2boost_INC_FLOWS
-  "${x2boost_INC_DIR}/flows/event_based_flow.hpp"
-  "${x2boost_INC_DIR}/flows/multi_threaded_flow.hpp"
-  "${x2boost_INC_DIR}/flows/single_threaded_flow.hpp"
-)
-set(x2boost_INC_LINKS
-  "${x2boost_INC_DIR}/links/asio_link.hpp"
-  "${x2boost_INC_DIR}/links/asio_link_session.hpp"
-  "${x2boost_INC_DIR}/links/asio_tcp_client.hpp"
-  "${x2boost_INC_DIR}/links/asio_tcp_link_session.hpp"
-  "${x2boost_INC_DIR}/links/asio_tcp_server.hpp"
-)
-set(x2boost_INC_QUEUES
-  "${x2boost_INC_DIR}/queues/lockfree_queue.hpp"
-  "${x2boost_INC_DIR}/queues/synchronized_queue.hpp"
-)
-set(x2boost_INC_UTIL
-  "${x2boost_INC_DIR}/util/array_segment.hpp"
-  "${x2boost_INC_DIR}/util/deleter.hpp"
-  "${x2boost_INC_DIR}/util/log.hpp"
-  "${x2boost_INC_DIR}/util/shared_object.hpp"
-)
-
-list(APPEND x2boost_ALL_INC ${x2boost_INC})
-list(APPEND x2boost_ALL_INC ${x2boost_INC_FLOWS})
-list(APPEND x2boost_ALL_INC ${x2boost_INC_LINKS})
-list(APPEND x2boost_ALL_INC ${x2boost_INC_QUEUES})
-list(APPEND x2boost_ALL_INC ${x2boost_INC_UTIL})
-
-# x2boost source files
-
-set(x2boost_SRC_DIR "${x2boost_SOURCE_DIR}/src")
-
-set(x2boost_SRC
-  "${x2boost_SRC_DIR}/binder.cpp"
-  "${x2boost_SRC_DIR}/buffer.cpp"
-  "${x2boost_SRC_DIR}/case.cpp"
-  "${x2boost_SRC_DIR}/cell.cpp"
-  "${x2boost_SRC_DIR}/event.cpp"
-  "${x2boost_SRC_DIR}/fingerprint.cpp"
-  "${x2boost_SRC_DIR}/flow.cpp"
-  "${x2boost_SRC_DIR}/hub.cpp"
-  "${x2boost_SRC_DIR}/main.cpp"
-)
-set(x2boost_SRC_FLOWS
-  "${x2boost_SRC_DIR}/flows/event_based_flow.cpp"
-  "${x2boost_SRC_DIR}/flows/single_threaded_flow.cpp"
-)
-set(x2boost_SRC_LINKS
-  "${x2boost_SRC_DIR}/links/asio_link.cpp"
-)
-set(x2boost_SRC_UTIL
-  "${x2boost_SRC_DIR}/util/log.cpp"
-)
-
-list(APPEND x2boost_ALL_SRC ${x2boost_SRC})
-list(APPEND x2boost_ALL_SRC ${x2boost_SRC_FLOWS})
-list(APPEND x2boost_ALL_SRC ${x2boost_SRC_LINKS})
-list(APPEND x2boost_ALL_SRC ${x2boost_SRC_UTIL})
-
-# Source groups
-source_group("Header Files" FILES ${x2boost_INC})
-source_group("Header Files\\flows" FILES ${x2boost_INC_FLOWS})
-source_group("Header Files\\links" FILES ${x2boost_INC_LINKS})
-source_group("Header Files\\queues" FILES ${x2boost_INC_QUEUES})
-source_group("Header Files\\util" FILES ${x2boost_INC_UTIL})
-source_group("Source Files" FILES ${x2boost_SRC})
-source_group("Source Files\\flows" FILES ${x2boost_SRC_FLOWS})
-source_group("Source Files\\links")
-source_group("Source Files\\links" FILES ${x2boost_SRC_LINKS})
-source_group("Source Files\\util" FILES ${x2boost_SRC_UTIL})
-
-add_library(x2boost ${x2boost_ALL_SRC} ${x2boost_ALL_INC})
-set_target_properties(x2boost PROPERTIES
-  COMPILE_DEFINITIONS "${x2boost_CDEFS}"
-)
-set_property(TARGET x2boost APPEND PROPERTY
-  INCLUDE_DIRECTORIES "${x2boost_INCLUDES}"
-)
-if(BUILD_SHARED_LIBS)
-  set_target_properties(x2boost PROPERTIES DEFINE_SYMBOL X2BOOST_EXPORTS)
-endif()
+add_subdirectory(src)
 
 if(BUILD_XPILER)
-  set(xpiler_INCLUDES "${x2boost_INCLUDES}")
-  set(xpiler_CDEFS "${x2boost_CDEFS}")
+  add_subdirectory(xpiler)
+endif()
 
-  set(xpiler_SRC_DIR "${x2boost_SOURCE_DIR}/xpiler")
-
-  set(xpiler_INC
-    "${xpiler_SRC_DIR}/boost_formatter.hpp"
-    "${xpiler_SRC_DIR}/definition.hpp"
-    "${xpiler_SRC_DIR}/document.hpp"
-    "${xpiler_SRC_DIR}/handler.hpp"
-    "${xpiler_SRC_DIR}/options.hpp"
-    "${xpiler_SRC_DIR}/formatter.hpp"
-    "${xpiler_SRC_DIR}/pre.hpp"
-    "${xpiler_SRC_DIR}/types.hpp"
-    "${xpiler_SRC_DIR}/xml_handler.hpp"
-    "${xpiler_SRC_DIR}/xpiler.hpp"
-  )
-
-  set(xpiler_SRC
-    "${xpiler_SRC_DIR}/boost_formatter.cpp"
-    "${xpiler_SRC_DIR}/main.cpp"
-    "${xpiler_SRC_DIR}/options.cpp"
-    "${xpiler_SRC_DIR}/types.cpp"
-    "${xpiler_SRC_DIR}/xml_handler.cpp"
-    "${xpiler_SRC_DIR}/xpiler.cpp"
-  )
-
-  add_executable(xpiler ${xpiler_SRC} ${xpiler_INC})
-  target_link_libraries(xpiler ${Boost_LIBRARIES})
-
-  set_target_properties(xpiler PROPERTIES
-    DEBUG_POSTFIX _d
-    MINSIZEREL_POSTFIX _mr
-    RELWITHDEBINFO_POSTFIX _rd
-    COMPILE_DEFINITIONS "${xpiler_CDEFS}"
-  )
-  set_property(TARGET xpiler APPEND PROPERTY
-    INCLUDE_DIRECTORIES "${xpiler_INCLUDES}"
-  )
+if(BUILD_EXAMPLES)
+  add_subdirectory(examples)
 endif()
 
 # EOF CMakeLists.txt

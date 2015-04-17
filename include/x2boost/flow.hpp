@@ -45,6 +45,12 @@ namespace x2
         }
 
         template<class E, class T>
+        static void bind(boost::shared_ptr<E> e, void (T::*mf)(boost::shared_ptr<E>), T* t)
+        {
+            current_flow_->subscribe(e, mf, t);
+        }
+
+        template<class E, class T>
         flow_ptr subscribe(boost::shared_ptr<E> e, void (T::*mf)(boost::shared_ptr<E>), T* t)
         {
             handler* h = new mem_fun_ptr_handler<T, E>(t, mf);
@@ -57,7 +63,7 @@ namespace x2
         /// Makes this flow unsubscribe from the specified channel.
         void unsubscribe_from(const char* channel) const;
 
-        static flow* current_flow() { return current_flow_.get(); }
+        static boost::thread_specific_ptr<flow>& current_flow() { return current_flow_; }
 
     protected:
         virtual void setup()

@@ -6,7 +6,37 @@
 #include <boost/bind.hpp>
 #include <boost/thread/locks.hpp>
 
+#include "x2boost/flow.hpp"
+
 using namespace x2;
+
+void caze::setup(flow_ptr holder)
+{
+    set_flow(holder);
+
+    boost::thread_specific_ptr<x2::flow>& current_flow = flow::current_flow();
+    x2::flow* backup = current_flow.release();
+    current_flow.reset(holder.get());
+
+    setup();
+
+    current_flow.release();
+    current_flow.reset(backup);
+}
+
+void caze::teardown(flow_ptr holder)
+{
+    boost::thread_specific_ptr<x2::flow>& current_flow = flow::current_flow();
+    x2::flow* backup = current_flow.release();
+    current_flow.reset(holder.get());
+
+    teardown();
+
+    current_flow.release();
+    current_flow.reset(backup);
+
+    cleanup();
+}
 
 void case_stack::add(case_ptr c)
 {

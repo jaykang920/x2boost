@@ -30,23 +30,14 @@ namespace x2
     public:
         virtual ~caze() {}
 
-        virtual void setup(flow_ptr holder)
-        {
-            set_flow(holder);
-            setup();
-        }
-
-        virtual void teardown(flow_ptr holder)
-        {
-            teardown();
-            cleanup();
-        }
+        virtual void setup(flow_ptr holder);
+        virtual void teardown(flow_ptr holder);
 
     protected:
         caze() {}
 
-        virtual void setup() = 0;
-        virtual void teardown() = 0;
+        virtual void setup() {};
+        virtual void teardown() {};
     };
 
     class X2BOOST_API case_stack : public case_interface

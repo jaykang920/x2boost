@@ -4,6 +4,7 @@
 #include "x2boost/util/log.hpp"
 
 #include <cstdarg>
+#include <cstdio>
 
 #include <boost/algorithm/string.hpp>
 
@@ -24,7 +25,7 @@ namespace
     {
         const std::size_t length = 1024;
         char buffer[length + 1];
-        //vsnprintf(buffer, length, format, args);
+        ::vsnprintf(buffer, length, format, args);
         buffer[length] = '\0';
         log::emit(log_level, buffer);
     }

@@ -26,4 +26,6 @@
 *.suo
 
 # Project-specific files
-current
+bin/
+current/
+lib/

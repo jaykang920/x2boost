@@ -11,8 +11,12 @@ Requirements
 
 * CMake 2.8.8 or newer to build
 * Boost C++ libraries with the following modules built
+ * atomic
+ * chrono
+ * date_time
  * filesystem
  * program_options
+ * regex
  * system
  * thread
 
@@ -26,4 +30,4 @@ License
 -------
 
 x2boost is distributed under [MIT License](http://opensource.org/licenses/MIT).
-See the file COPYING for license details.
+See the file LICENSE for details.

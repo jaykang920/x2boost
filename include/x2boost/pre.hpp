@@ -25,7 +25,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include <x2boost/util/log.hpp>
+#include "x2boost/util/log.hpp"
 
 namespace x2
 {

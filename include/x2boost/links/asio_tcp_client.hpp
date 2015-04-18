@@ -10,8 +10,8 @@
 
 #include <boost/bind.hpp>
 
-#include "x2boost/links/asio/asio_link.hpp"
-#include "x2boost/links/asio/asio_tcp_link_session.hpp"
+#include "x2boost/links/asio_link.hpp"
+#include "x2boost/links/asio_tcp_link_session.hpp"
 
 namespace x2
 {

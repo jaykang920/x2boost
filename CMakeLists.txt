@@ -15,9 +15,6 @@ if(WIN32)
     SET(CMAKE_USE_RELATIVE_PATHS true)
 endif()
 
-# Project module path
-include(${x2boost_SOURCE_DIR}/build/cmake/internal_utils.cmake)
-
 set(CMAKE_THREAD_PREFER_PTHREAD true)
 find_package(Threads REQUIRED)
 
@@ -26,10 +23,12 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_STATIC_RUNTIME ON)
 unset(Boost_LIBRARIES CACHE)
 find_package(Boost REQUIRED COMPONENTS
+  atomic
   chrono
   date_time
   filesystem
   program_options
+  regex
   system
   thread
 )
@@ -38,7 +37,7 @@ if(Boost_FOUND)
 endif()
 
 if(BUILD_SHARED_LIBS)
-  string_append(x2boost_CDEFS "X2_AS_SHARED_LIB" ";")
+  list(APPEND x2boost_CDEFS "X2_AS_SHARED_LIB")
   if (MSVC)
     # Suppress warnings about DLL interface.
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275")

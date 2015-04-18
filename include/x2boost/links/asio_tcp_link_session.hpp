@@ -11,8 +11,8 @@
 #include <boost/asio.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-#include "x2boost/links/asio/asio_link.hpp"
-#include "x2boost/links/asio/asio_link_session.hpp"
+#include "x2boost/links/asio_link.hpp"
+#include "x2boost/links/asio_link_session.hpp"
 
 namespace x2
 {
@@ -65,6 +65,11 @@ namespace x2
         void handle_receive(const boost::system::error_code& error,
             std::size_t bytes_transferred)
         {
+            if (bytes_transferred == 0)
+            {
+                // disconnect
+                return;
+            }
             log::info() << "received " << bytes_transferred << " byte(s)" << std::endl;
             //rxbuf_.commit(bytes_transferred);
             start_receive();

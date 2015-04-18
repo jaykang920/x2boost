@@ -27,5 +27,5 @@
 
 # Project-specific files
 bin/
-current/
+build/
 lib/

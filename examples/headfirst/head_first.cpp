@@ -5,7 +5,7 @@
 #include <boost/functional/hash.hpp>
 #include <boost/thread/once.hpp>
 
-using namespace x2::samples::head_first;
+using namespace x2::examples::head_first;
 
 namespace
 {

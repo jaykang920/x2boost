@@ -8,6 +8,7 @@
 #include "x2boost/pre.hpp"
 #endif
 
+#include "x2boost/case.hpp"
 #include "x2boost/event.hpp"
 #include "x2boost/flow.hpp"
 #include "x2boost/hub.hpp"

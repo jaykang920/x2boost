@@ -1,41 +1,10 @@
-#include <boost/algorithm/string.hpp>
-
 #include <x2boost/flows/single_threaded_flow.hpp>
 
 #include "head_first.hpp"
+#include "headfirst_cases.hpp"
 
 using namespace x2;
-using namespace x2::samples::head_first;
-
-class capitalizer_case : public caze
-{
-protected:
-    virtual void setup()
-    {
-        flow::bind(capitalize_req::_new(), &capitalizer_case::on_capitalize_req, this);
-    }
-private:
-    void on_capitalize_req(capitalize_req_ptr req)
-    {
-        capitalize_resp_ptr resp = capitalize_resp::_new();
-        resp->set_result(boost::to_upper_copy(req->message()));
-        hub::post(resp);
-    }
-};
-
-class output_case : public caze
-{
-protected:
-    virtual void setup()
-    {
-        flow::bind(capitalize_resp::_new(), &output_case::on_capitalize_resp, this);
-    }
-private:
-    void on_capitalize_resp(capitalize_resp_ptr e)
-    {
-        std::cout << e->result() << std::endl;
-    }
-};
+using namespace x2::examples::head_first;
 
 int main()
 {
@@ -62,6 +31,5 @@ int main()
             hub::post(req);
         }
     }
-
     return 0;
 }

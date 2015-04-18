@@ -19,10 +19,12 @@ add_custom_target(headfirst_xpiled
 
 set(headfirst_INC
   "${headfirst_SRC_DIR}/head_first.hpp"
+  "${headfirst_SRC_DIR}/headfirst_cases.hpp"
 )
 
 set(headfirst_SRC
   "${headfirst_SRC_DIR}/head_first.cpp"
+  "${headfirst_SRC_DIR}/HeadFirst.xml"
 )
 
 add_executable(headfirst1 ${headfirst_SRC} ${headfirst_INC}

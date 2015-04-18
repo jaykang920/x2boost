@@ -9,7 +9,7 @@ and [Boost](http://www.boost.org/) libraries.
 Requirements
 ------------
 
-* CMake 2.8.8 or newer to build
+* CMake 2.8.8 or newer (and relevant C++ compiler, of course) to build
 * Boost C++ libraries with the following modules built
  * atomic
  * chrono

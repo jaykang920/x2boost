@@ -67,6 +67,8 @@ if(MSVC)
   # Suppress uninteresting warnings.
   add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_DEPRECATE)
   add_definitions(/D_CRT_NONSTDC_NO_DEPRECATE /D_SCL_SECURE_NO_DEPRECATE)
+elseif(CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
 endif()
 
 set(x2boost_LIB_DIR ${x2boost_SOURCE_DIR}/lib)

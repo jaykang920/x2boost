@@ -45,13 +45,13 @@ namespace x2
         }
 
         template<class E, class T>
-        static void bind(boost::shared_ptr<E> e, void (T::*mf)(boost::shared_ptr<E>), T* t)
+        static void bind(boost::intrusive_ptr<E> e, void (T::*mf)(boost::intrusive_ptr<E>), T* t)
         {
             current_flow_->subscribe(e, mf, t);
         }
 
         template<class E, class T>
-        flow_ptr subscribe(boost::shared_ptr<E> e, void (T::*mf)(boost::shared_ptr<E>), T* t)
+        flow_ptr subscribe(boost::intrusive_ptr<E> e, void (T::*mf)(boost::intrusive_ptr<E>), T* t)
         {
             handler* h = new mem_fun_ptr_handler<T, E>(t, mf);
             binder_.bind(e, handler_ptr(h));

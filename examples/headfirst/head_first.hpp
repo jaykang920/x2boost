@@ -10,7 +10,7 @@ namespace examples {
 namespace head_first {
 
     class capitalize_req;
-    typedef boost::shared_ptr<capitalize_req> capitalize_req_ptr;
+    typedef boost::intrusive_ptr<capitalize_req> capitalize_req_ptr;
 
     class capitalize_req : public x2::event
     {
@@ -19,7 +19,7 @@ namespace head_first {
         {
             return message_;
         }
-        void set_message(const std::string& value)
+        void message(const std::string& value)
         {
             fingerprint_.touch(_tag()->offset() + 0);
             message_ = value;
@@ -54,7 +54,7 @@ namespace head_first {
     };
 
     class capitalize_resp;
-    typedef boost::shared_ptr<capitalize_resp> capitalize_resp_ptr;
+    typedef boost::intrusive_ptr<capitalize_resp> capitalize_resp_ptr;
 
     class capitalize_resp : public x2::event
     {
@@ -63,7 +63,7 @@ namespace head_first {
         {
             return result_;
         }
-        void set_result(const std::string& value)
+        void result(const std::string& value)
         {
             fingerprint_.touch(_tag()->offset() + 0);
             result_ = value;

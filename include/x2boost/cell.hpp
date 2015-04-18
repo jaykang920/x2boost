@@ -9,11 +9,12 @@
 #endif
 
 #include "x2boost/fingerprint.hpp"
+#include "x2boost/util/shared_object.hpp"
 
 namespace x2
 {
     // Common base class for all custom types.
-    class X2BOOST_API cell
+    class X2BOOST_API cell : public shared_object
     {
     public:
         // Supports custom type hierarchy for cell and its subclasses.

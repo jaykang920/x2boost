@@ -214,7 +214,7 @@ void boost_header_formatter::format_cell(cell* def)
     preprocess_cell(def);
 
     indent(0); *out << "class " << def->native_name << ";" << endl;
-    indent(0); *out << "typedef boost::shared_ptr<" << def->native_name << "> "
+    indent(0); *out << "typedef boost::intrusive_ptr<" << def->native_name << "> "
         << def->native_name << "_ptr;" << endl;
 
     *out << endl;
@@ -235,7 +235,7 @@ void boost_header_formatter::format_cell(cell* def)
         indent(1); *out << "{" << endl;
         indent(2); *out << "return " << prop->native_name << ";" << endl;
         indent(1); *out << "}" << endl;
-        indent(1); *out << "void set_" << prop->name << "(";
+        indent(1); *out << "void " << prop->name << "(";
         if (!is_primitive) { *out << "const "; }
         *out << prop->native_type;
         if (!is_primitive) { *out << "&"; }

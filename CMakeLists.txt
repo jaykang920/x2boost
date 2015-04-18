@@ -47,21 +47,21 @@ endif()
 
 if(MSVC)
   # Prefer statically linked runtime library.
-  foreach(flag_var
+  foreach(flags
           CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
           CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO
           CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
           CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
     if(NOT BUILD_SHARED_LIBS AND NOT BUILD_FORCE_SHARED_CRT)
-      string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+      string(REPLACE "/MD" "/MT" ${flags} "${${flags}}")
     endif()
   endforeach()
   # Prefer warning level 4.
-  foreach(flag_var
-          CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-          CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-    string(REPLACE "/W3" "/W4" ${flag_var} "${${flag_var}}")
-  endforeach()
+  #foreach(flags
+  #        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+  #        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+  #  string(REPLACE "/W3" "/W4" ${flags} "${${flags}}")
+  #endforeach()
 
   # Suppress uninteresting warnings.
   add_definitions(/D_CRT_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_DEPRECATE)

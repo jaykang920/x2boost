@@ -22,8 +22,10 @@
 #include <vector>
 
 #include <boost/cstdint.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/version.hpp>
 
 #include "x2boost/util/log.hpp"
 
@@ -36,10 +38,10 @@ namespace x2
     struct handler;
 
     typedef boost::shared_ptr<case_interface> case_ptr;
-    typedef boost::shared_ptr<cell> cell_ptr;
-    typedef boost::shared_ptr<event> event_ptr;
+    typedef boost::intrusive_ptr<cell> cell_ptr;
+    typedef boost::intrusive_ptr<event> event_ptr;
     typedef boost::shared_ptr<flow> flow_ptr;
-    typedef boost::shared_ptr<handler> handler_ptr;
+    typedef boost::intrusive_ptr<handler> handler_ptr;
 }
 
 #endif  // X2BOOST_PRE_HPP_

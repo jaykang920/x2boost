@@ -71,7 +71,7 @@ namespace x2
 
         // Built-in properties
         const char* _channel() const { return _channel_; }
-        event& _set_channel(const char* value) { _channel_ = value; }
+        event& _channel(const char* value) { _channel_ = value; }
     
     protected:
         event() : cell(_tag()->num_props())
@@ -105,10 +105,6 @@ namespace x2
         virtual std::size_t _hash_code() const
         {
             return e_->_hash_code(fp_, type_id_);
-        }
-        event_ptr ptr()
-        {
-            return event_ptr(this, null_deleter());
         }
 
     private:

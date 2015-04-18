@@ -61,7 +61,7 @@ int main()
         else
         {
             capitalize_req_ptr req = capitalize_req::_new();
-            req->set_message(message);
+            req->message(message);
             hub::post(req);
         }
     }

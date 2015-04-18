@@ -12,7 +12,7 @@ namespace
     template<typename T>
     struct xx
     {
-        boost::shared_ptr<T> operator()(const boost::shared_ptr<T>& x)
+        boost::intrusive_ptr<T> operator()(const boost::intrusive_ptr<T>& x)
         {
             return x;
         }
@@ -86,8 +86,16 @@ std::size_t binder::build_handler_chain(event_ptr e, handler_chain_type& handler
                 const slot& s = slots->at(i);
                 if (s.equivalent(fp))
                 {
-                    event_equivalent eq(e, s, type_id);
-                    map_type::const_iterator it = map_.find(eq.ptr());
+                    map_type::const_iterator it;
+                    {
+                        event_equivalent eq(e, s, type_id);
+
+                        // Prevent it from being deleted on release
+                        // to support boost version < 1.56 lacking detach()
+                        event_ptr ptr(&eq, false);
+                        
+                        it = map_.find(ptr);
+                    }
                     if (it != map_.end())
                     {
                         const handler_set::list_type& handlers = it->second->get();

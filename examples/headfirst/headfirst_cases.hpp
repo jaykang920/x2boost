@@ -24,7 +24,7 @@ namespace head_first {
         void on_capitalize_req(capitalize_req_ptr req)
         {
             capitalize_resp_ptr resp = capitalize_resp::_new();
-            resp->set_result(boost::to_upper_copy(req->message()));
+            resp->result(boost::to_upper_copy(req->message()));
             hub::post(resp);
         }
     };

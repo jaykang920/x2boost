@@ -10,7 +10,7 @@
 
 namespace x2
 {
-    struct X2BOOST_API handler
+    struct X2BOOST_API handler : public shared_object
     {
         virtual ~handler() {}
 
@@ -26,7 +26,7 @@ namespace x2
     class mem_fun_ptr_handler : public handler
     {
     public:
-        mem_fun_ptr_handler(T* target, void (T::*f)(boost::shared_ptr<E>)) :
+        mem_fun_ptr_handler(T* target, void (T::*f)(boost::intrusive_ptr<E>)) :
             f_(f),
             target_(target)
         {}
@@ -37,7 +37,7 @@ namespace x2
         }
 
     private:
-        void (T::*f_)(boost::shared_ptr<E>);
+        void (T::*f_)(boost::intrusive_ptr<E>);
         T* target_;
     };
 }

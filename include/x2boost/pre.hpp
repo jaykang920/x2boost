@@ -42,6 +42,8 @@ namespace x2
     typedef boost::intrusive_ptr<event> event_ptr;
     typedef boost::shared_ptr<flow> flow_ptr;
     typedef boost::intrusive_ptr<handler> handler_ptr;
+
+    typedef boost::uint8_t byte_t;
 }
 
 #endif  // X2BOOST_PRE_HPP_

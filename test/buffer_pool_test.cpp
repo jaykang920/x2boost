@@ -11,7 +11,7 @@ BOOST_AUTO_TEST_SUITE(buffer_pool_test)
 
 BOOST_AUTO_TEST_CASE(buffer_pool_test)
 {
-    void* p;
+    byte_t* p;
 
     p = buffer_pool::acquire(4);
     BOOST_CHECK(p != 0);
@@ -26,7 +26,6 @@ BOOST_AUTO_TEST_CASE(buffer_pool_test)
     buffer_pool::release(20, p);
 
     buffer_pool::release_memory();
-    buffer_pool::purge_memory();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -7,51 +7,52 @@
 
 using namespace x2;
 
-void* buffer_pool::acquire(int size_exponent)
+byte_t* buffer_pool::acquire(int size_exponent)
 {
+    void* p = 0;
     switch (size_exponent)
     {
     case 4:
-        return boost::singleton_pool<buffer_pool, 1 << 4>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 4>::malloc();
     case 5:
-        return boost::singleton_pool<buffer_pool, 1 << 5>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 5>::malloc();
     case 6:
-        return boost::singleton_pool<buffer_pool, 1 << 6>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 6>::malloc();
     case 7:
-        return boost::singleton_pool<buffer_pool, 1 << 7>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 7>::malloc();
     case 8:
-        return boost::singleton_pool<buffer_pool, 1 << 8>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 8>::malloc();
     case 9:
-        return boost::singleton_pool<buffer_pool, 1 << 9>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 9>::malloc();
     case 10:
-        return boost::singleton_pool<buffer_pool, 1 << 10>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 10>::malloc();
     case 11:
-        return boost::singleton_pool<buffer_pool, 1 << 11>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 11>::malloc();
     case 12:
-        return boost::singleton_pool<buffer_pool, 1 << 12>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 12>::malloc();
     case 13:
-        return boost::singleton_pool<buffer_pool, 1 << 13>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 13>::malloc();
     case 14:
-        return boost::singleton_pool<buffer_pool, 1 << 14>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 14>::malloc();
     case 15:
-        return boost::singleton_pool<buffer_pool, 1 << 15>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 15>::malloc();
     case 16:
-        return boost::singleton_pool<buffer_pool, 1 << 16>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 16>::malloc();
     case 17:
-        return boost::singleton_pool<buffer_pool, 1 << 17>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 17>::malloc();
     case 18:
-        return boost::singleton_pool<buffer_pool, 1 << 18>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 18>::malloc();
     case 19:
-        return boost::singleton_pool<buffer_pool, 1 << 19>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 19>::malloc();
     case 20:
-        return boost::singleton_pool<buffer_pool, 1 << 20>::malloc();
+        p = boost::singleton_pool<buffer_pool, 1 << 20>::malloc();
     default:
         break;
     }
-    return 0;
+    return static_cast<byte_t*>(p);
 }
 
-void buffer_pool::release(int size_exponent, void* p)
+void buffer_pool::release(int size_exponent, byte_t* p)
 {
     switch (size_exponent)
     {

@@ -10,73 +10,38 @@
 
 #include <deque>
 
-#include <boost/pool/singleton_pool.hpp>
-
 namespace x2
 {
-    // A variable-length byte buffer class that provides methods to read/write
-    // primitive data types from/to byte sequences in a platform-independent way.
-    // The buffer capacity is limited to a multiple of a power of 2.
-    // [TODO] consider block pooling
+    // A variable-length byte buffer class whose capacity is limited to a
+    // multiple of a power of 2.
     class buffer
     {
     public:
-        const int exponent = 12;
-        typedef boost::uint8_t byte;
+        explicit buffer(int block_size_exponent = 12);
+        ~buffer() { cleanup(); }
 
-        buffer() : buffer(12) {}
+        // Gets the block size in bytes.
+        int block_size() const { return (1 << block_size_exponent_); }
 
-        explicit buffer(int exponent = 12)
-        {
-            if (exponent < 0 || 31 < exponent)
-            {
-                log::error() << "buffer block size exponent was " << exponent << std::endl;
-                // exceptio
-                return;
-            }
-            exponent_ = exponent;
-            mask_ = ~(~0 << exponent);
+        // Gets the maximum capacity of the buffer.
+        int capacity() const { return (int)(block_size() * blocks_.size()); }
 
-            blocks_.push_back(new byte[block_size()]);
+        // Checks whether the buffer is empty (i.e. whether its length is 0).
+        bool empty() const { return (back_ == front_); }
 
-            block_index_ = 0;
-            block_ = blocks_[block_index_];
+        // Gets the length of the buffered bytes.
+        int length() const { return (back_ - front_); }
 
-            pos_ = back_ = front_ = 0;
-            marker_ = -1;
-        }
-        ~buffer()
-        {
-            cleanup();
-        }
+        // Gets the current zero-based position.
+        int pos() const { return (pos_ - front_); }
+
+        // Sets the current zero-based position.
+        void pos(int value);
 
         //void list_available_buffers(std::vector<boost::asio::mutable_buffer>& result)
         //{
             
         //}
-
-        bool empty() const { return (back_ == front_); }
-        std::size_t length() const { return (back_ - front_); }
-        std::size_t pos() const { return pos_; }
-        void set_pos(std::size_t value)
-        {
-            if (value < front_ || back_ < value)
-            {
-                log::error() << "buffer::set_pos index of out of bound" << std::endl;
-                return;
-            }
-            pos_ = value;
-            int block_index = pos_ >> exponent_;
-            if ((block_index != 0) && ((pos_ & mask_) == 0))
-            {
-                --block_index;
-            }
-            if (block_index != block_index_)
-            {
-                block_index_ = block_index;
-                block_ = blocks_[block_index_];
-            }
-        }
 
         void read_fixed(boost::int32_t& value)
         {
@@ -90,16 +55,16 @@ namespace x2
         void write_fixed(boost::int32_t& value)
         {
             ensure_capacity_to_write(4);
-            write_byte((byte)(value >> 24));
-            write_byte((byte)(value >> 16));
-            write_byte((byte)(value >> 8));
-            write_byte((byte)value);
+            write_byte((byte_t)(value >> 24));
+            write_byte((byte_t)(value >> 16));
+            write_byte((byte_t)(value >> 8));
+            write_byte((byte_t)value);
         }
 
     private:
         void block_feed()
         {
-            if ((pos_ & mask_) == 0 && (pos_ & ~mask_) != 0)
+            if ((pos_ & remainder_mask_) == 0 && (pos_ & ~remainder_mask_) != 0)
             {
                 block_ = blocks_[++block_index_];
             }
@@ -114,56 +79,31 @@ namespace x2
             }
         }
 
-        void ensure_capacity_to_write(int n)
-        {
-            int required = pos_ + n;
-            while (required >= capacity())
-            {
-                blocks_.push_back(new byte[block_size()]);
-            }
-            if (required > back_)
-            {
-                back_ = required;
-            }
-        }
+        void cleanup();
+        void ensure_capacity_to_write(int n);
 
-        void cleanup()
-        {
-            if (blocks_.empty())
-            {
-                return;
-            }
-            for (std::size_t i = 0, count = blocks_.size(); i < count; ++i)
-            {
-                delete[] blocks_[i];
-            }
-            blocks_.clear();
-            block_ = NULL;
-        }
-
-        byte read_byte()
+        byte_t read_byte()
         {
             block_feed();
-            return block_[pos_++ & mask_];
+            return block_[pos_++ & remainder_mask_];
         }
 
-        void write_byte(byte value)
+        void write_byte(byte_t value)
         {
             block_feed();
-            block_[pos_++ & mask_] = value;
+            block_[pos_++ & remainder_mask_] = value;
         }
 
-        std::size_t block_size() { return ((std::size_t)1 << exponent_); }
-        std::size_t capacity() { return (block_size() * blocks_.size()); }
+    private:
+        std::deque<byte_t*> blocks_;
 
-        std::deque<byte*> blocks_;
-        int exponent_;
-        std::size_t mask_;
+        int block_size_exponent_;
+        int remainder_mask_;
 
-        byte* block_;
+        byte_t* block_;
         int block_index_;
 
-        std::size_t pos_, back_, front_;
+        int pos_, back_, front_;
         int marker_;
     };
 }

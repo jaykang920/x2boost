@@ -9,6 +9,7 @@ option(BUILD_SHARED_LIBS "Build x2boost as a shared library (DLL)" OFF)
 # x2boost options
 option(BUILD_FORCE_SHARED_CRT "Shared (DLL) version of C runtime library" OFF)
 option(BUILD_XPILER "Build xpiler executable" ON)
+option(BUILD_TEST "Build unit tests" OFF)
 option(BUILD_EXAMPLES "Build examples" OFF)
 
 if(WIN32)
@@ -29,8 +30,10 @@ find_package(Boost REQUIRED COMPONENTS
   filesystem
   program_options
   regex
-  system
   thread
+  unit_test_framework
+
+  system
 )
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
@@ -94,6 +97,10 @@ add_subdirectory(src)
 
 if(BUILD_XPILER)
   add_subdirectory(xpiler)
+endif()
+
+if(BUILD_TEST)
+  add_subdirectory(test)
 endif()
 
 if(BUILD_EXAMPLES)

@@ -1,8 +1,6 @@
-# CMake build script for xpiler
+# CMake build script for x2boost xpiler
 
 cmake_minimum_required(VERSION 2.8.8) # for per-target include_directories
-
-# project x2boost
 
 set(xpiler_CDEFS "${x2boost_CDEFS}")
 

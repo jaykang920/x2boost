@@ -40,6 +40,7 @@ set(x2boost_INC_QUEUES
 )
 set(x2boost_INC_UTIL
   "${x2boost_INC_DIR}/util/array_segment.hpp"
+  "${x2boost_INC_DIR}/util/buffer_pool.hpp"
   "${x2boost_INC_DIR}/util/deleter.hpp"
   "${x2boost_INC_DIR}/util/log.hpp"
   "${x2boost_INC_DIR}/util/shared_object.hpp"
@@ -74,6 +75,7 @@ set(x2boost_SRC_LINKS
   "${x2boost_SRC_DIR}/links/asio_link.cpp"
 )
 set(x2boost_SRC_UTIL
+  "${x2boost_SRC_DIR}/util/buffer_pool.cpp"
   "${x2boost_SRC_DIR}/util/log.cpp"
 )
 

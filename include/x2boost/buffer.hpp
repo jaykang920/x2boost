@@ -10,6 +10,8 @@
 
 #include <deque>
 
+#include <boost/pool/singleton_pool.hpp>
+
 namespace x2
 {
     // A variable-length byte buffer class that provides methods to read/write
@@ -19,6 +21,7 @@ namespace x2
     class buffer
     {
     public:
+        const int exponent = 12;
         typedef boost::uint8_t byte;
 
         buffer() : buffer(12) {}

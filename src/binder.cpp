@@ -90,8 +90,8 @@ std::size_t binder::build_handler_chain(event_ptr e, handler_chain_type& handler
                     {
                         event_equivalent eq(e, s, type_id);
 
-                        // Prevent it from being deleted on release
-                        // to support boost version < 1.56 lacking detach()
+                        // Prevent it from being deleted on release, to support
+                        // boost version < 1.56 lacking intrusive_ptr::detach()
                         event_ptr ptr(&eq, false);
                         
                         it = map_.find(ptr);

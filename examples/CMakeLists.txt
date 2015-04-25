@@ -1,8 +1,6 @@
-# CMake build script for examples
+# CMake build script for x2boost examples
 
 cmake_minimum_required(VERSION 2.8.8) # for per-target include_directories
-
-# project x2boost
 
 set(examples_BIN_DIR "${x2boost_SOURCE_DIR}/examples/bin")
 
@@ -57,7 +55,7 @@ set(example_TARGETS
 )
 
 foreach(target ${example_TARGETS})
-  target_link_libraries(${target} ${Boost_LIBRARIES} x2boost)
+  target_link_libraries(${target} x2boost ${Boost_LIBRARIES})
 
   set_target_properties(${target} PROPERTIES
     DEBUG_POSTFIX _d

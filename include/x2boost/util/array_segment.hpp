@@ -13,7 +13,7 @@ namespace x2
     template<typename T>
     struct X2BOOST_API array_segment
     {
-        deleter() {}
+        array_segment() {}
 
         T* base;
         std::size_t offset;

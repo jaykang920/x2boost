@@ -53,10 +53,18 @@ namespace x2
             }
             log::debug() << name() << " connected to " << session->socket().remote_endpoint() << std::endl;
 
+            session_ = session;
+
             session->start_receive();
         }
 
+        void send(event_ptr e)
+        {
+            session_->send(e);
+        }
+
     protected:
+        asio_tcp_link_session::pointer session_;
     };
 }
 

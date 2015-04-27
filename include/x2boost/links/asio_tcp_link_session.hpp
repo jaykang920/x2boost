@@ -11,6 +11,11 @@
 #include <boost/asio.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
+#include "x2boost/deserializer.hpp"
+#include "x2boost/event.hpp"
+#include "x2boost/event_factory.hpp"
+#include "x2boost/hub.hpp"
+#include "x2boost/serializer.hpp"
 #include "x2boost/links/asio_link.hpp"
 #include "x2boost/links/asio_link_session.hpp"
 
@@ -25,15 +30,30 @@ namespace x2
         static pointer _new() { return pointer(new asio_tcp_link_session); }
 
         virtual void close() {}
-        virtual void send(event_ptr e) {}
+        virtual void send(event_ptr e)
+        {
+            {
+                serializer ser(send_buffer_);
+                e->_serialize(ser);
+            }
+
+            boost::uint32_t header = 0;
+            header |= (send_buffer_.length() << 1);
+
+            boost::int32_t header_length = serializer::write_variable(header_bytes_, header);
+
+            send_buffer_list_.clear();
+            send_buffer_list_.push_back(boost::asio::buffer(header_bytes_, header_length));
+            send_buffer_.list_occupied_buffers(send_buffer_list_);
+
+            start_send();
+        }
 
         boost::asio::ip::tcp::socket& socket() { return socket_; }
 
         void start_send()
         {
-            boost::asio::streambuf::const_buffers_type const_buffers =
-                txbuf_.data();
-            socket_.async_send(boost::asio::buffer(const_buffers),
+            socket_.async_send(send_buffer_list_,
                 boost::bind(&asio_tcp_link_session::handle_send, shared_from_this(),
                 boost::asio::placeholders::error,
                 boost::asio::placeholders::bytes_transferred));
@@ -43,20 +63,17 @@ namespace x2
             std::size_t bytes_transferred)
         {
             log::info() << "sent " << bytes_transferred << " byte(s)" << std::endl;
+
+            send_buffer_.trim();
         }
 
         void start_receive()
         {
-           // boost::asio::streambuf::mutable_buffers_type mutable_buffers =
-                //rxbuf_.prepare(4096);
-
-            //log::warning() << mutable_buffers.begin() << " " << mutable_buffers.end() << std::endl;
-            //log::warning() << rxbuf_.size() << std::endl;
+            recv_buffer_list_.clear();
+            recv_buffer_.list_mutable_buffers(recv_buffer_list_);
 
             socket_.async_receive(
-                boost::asio::buffer(buf_, 4096),
-                //boost::asio::buffer(mutable_buffers),
-                //boost::asio::transfer_at_least(1),
+                recv_buffer_list_,
                 boost::bind(&asio_tcp_link_session::handle_receive, shared_from_this(),
                     boost::asio::placeholders::error,
                     boost::asio::placeholders::bytes_transferred));
@@ -71,7 +88,46 @@ namespace x2
                 return;
             }
             log::info() << "received " << bytes_transferred << " byte(s)" << std::endl;
-            //rxbuf_.commit(bytes_transferred);
+
+            // TODO FIXME temp
+            recv_buffer_.stretch((int)bytes_transferred);
+            // beginning?
+            recv_buffer_.pos(0);
+            boost::uint32_t header;
+            int header_length;
+            header_length = deserializer::read_variable_internal(recv_buffer_, header);
+            recv_buffer_.shrink(header_length);
+            int length_to_receive = (int)(header >> 1);
+
+            if (recv_buffer_.length() < length_to_receive)
+            {
+                // continue to receive more
+                //start_receive();
+                return;
+            }
+
+            // loop to process multiple events received at once
+
+            recv_buffer_.mark_to_read(length_to_receive);
+
+            {
+                deserializer des(recv_buffer_);
+                event_ptr retrieved = event_factory::create(des);
+                if (retrieved)
+                {
+                    retrieved->_deserialize(des);
+
+                    log::info() << retrieved->_string() << std::endl;
+
+                    // _handle
+                    // preproc
+                    
+                    hub::post(retrieved);
+                }
+            }
+
+            recv_buffer_.trim();
+
             start_receive();
         }
 
@@ -80,9 +136,10 @@ namespace x2
 
         boost::asio::ip::tcp::socket socket_;
 
-        boost::asio::streambuf rxbuf_;
-        boost::asio::streambuf txbuf_;
-        char buf_[4096];
+        std::vector<boost::asio::const_buffer> send_buffer_list_;
+        std::vector<boost::asio::mutable_buffer> recv_buffer_list_;
+
+        byte_t header_bytes_[5];
     };
 }
 

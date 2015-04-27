@@ -69,7 +69,7 @@ namespace x2
 
         event_factory() {}
 
-        map_type registry() { return registry_; }
+        map_type& registry() { return registry_; }
 
         map_type registry_;
     };

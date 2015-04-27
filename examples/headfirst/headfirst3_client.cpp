@@ -24,6 +24,9 @@ namespace x2 { namespace examples { namespace head_first {
             endpoint.address(boost::asio::ip::address_v4::from_string("127.0.0.1"));
             endpoint.port(6789);
             connect(endpoint);
+
+            // TODO FIXME temp
+            flow::bind((event_ptr)capitalize_req::_new(), &capitalizer_client::send, (asio_tcp_client*)this);
         }
     };
 
@@ -44,7 +47,7 @@ int main()
 
     hub::instance()
         .attach(flow_ptr(new single_threaded_flow<>())
-            ->add(case_ptr(new capitalizer_case()))
+            ->add(case_ptr(new output_case()))
             ->add(case_ptr(new capitalizer_client())));
 
     hub::flows flows;

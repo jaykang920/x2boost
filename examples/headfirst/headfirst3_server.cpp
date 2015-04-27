@@ -17,6 +17,9 @@ namespace x2 { namespace examples { namespace head_first {
         {
             asio_tcp_server::setup();
             listen(6789);
+
+            // TODO FIXME temp
+            flow::bind((event_ptr)capitalize_resp::_new(), &capitalizer_server::send, (asio_tcp_server*)this);
         }
     };
 

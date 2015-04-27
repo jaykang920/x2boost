@@ -10,6 +10,7 @@
 
 #include <boost/asio.hpp>
 
+#include "x2boost/buffer.hpp"
 #include "x2boost/link.hpp"
 
 namespace x2
@@ -20,6 +21,9 @@ namespace x2
 
     protected:
         asio_link_session() : link_session(0) {}
+
+        buffer recv_buffer_;
+        buffer send_buffer_;
     };
 }
 

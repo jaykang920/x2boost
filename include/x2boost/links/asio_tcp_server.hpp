@@ -60,12 +60,21 @@ namespace x2
 
             log::debug() << name() << " accepted " << session->socket().remote_endpoint() << std::endl;
 
+            session_ = session;
+
             session->start_receive();
             start_accept();
         }
 
+        void send(event_ptr e)
+        {
+            session_->send(e);
+        }
+
     protected:
         boost::asio::ip::tcp::acceptor acceptor_;
+
+        asio_tcp_link_session::pointer session_;
     };
 }
 

@@ -6,7 +6,9 @@
 #include <boost/functional/hash.hpp>
 #include <boost/thread/once.hpp>
 
+#include "x2boost/deserializer.hpp"
 #include "x2boost/event_factory.hpp"
+#include "x2boost/serializer.hpp"
 
 using namespace x2;
 
@@ -74,6 +76,24 @@ const cell::tag* event::_type_tag() const
 void event::_describe(std::ostream& /*stream*/) const
 {
     return;
+}
+
+void event::_deserialize(deserializer& deserializer)
+{
+    cell::_deserialize(deserializer);
+}
+
+int event::_get_encoded_length() const
+{
+    int length = serializer::get_encoded_length((boost::int32_t)_type_id());
+    length += cell::_get_encoded_length();
+    return length;
+}
+
+void event::_serialize(serializer& serializer) const
+{
+    serializer.write((boost::int32_t)_type_id());
+    cell::_serialize(serializer);
 }
 
 // EOF event.cpp

@@ -71,6 +71,10 @@ namespace x2
         // Returns the custom type tag of the current object.
         virtual const cell::tag* _type_tag() const;
 
+        virtual void _deserialize(deserializer& deserializer);
+        virtual int _get_encoded_length() const;
+        virtual void _serialize(serializer& serializer) const;
+
         // Built-in properties
         const char* _channel() const { return _channel_; }
         event& _channel(const char* value) { _channel_ = value; }

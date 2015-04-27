@@ -179,7 +179,9 @@ void boost_formatter::format_source_file(boost_formatter_context& context)
     out << "#include <boost/functional/hash.hpp>" << endl;
     out << "#include <boost/thread/once.hpp>" << endl;
     out << endl;
+    out << "#include <x2boost/serializer.hpp>" << endl;
     out << "#include <x2boost/event_factory.hpp>" << endl;
+    out << "#include <x2boost/deserializer.hpp>" << endl;
     out << endl;
 
     if (!context.doc->ns.empty())
@@ -269,6 +271,12 @@ void boost_header_formatter::format_cell(cell* def)
     indent(1); *out << "static const tag* _tag();" << endl;
     // _type_tag() member function
     indent(1); *out << "virtual const x2::cell::tag* _type_tag() const;" << endl;
+    *out << endl;
+
+    // serialize/deserialize
+    indent(1); *out << "virtual void _deserialize(deserializer& deserializer);" << endl;
+    indent(1); *out << "virtual int _get_encoded_length() const;" << endl;
+    indent(1); *out << "virtual void _serialize(serializer& serializer) const;" << endl;
     *out << endl;
 
     indent(0); *out << "protected:" << endl;
@@ -454,6 +462,64 @@ void boost_source_formatter::format_cell(cell* def)
     BOOST_FOREACH(cell::property* prop, def->properties)
     {
         indent(1); *out << "oss << \" " << prop->name << "=\" << " << prop->native_name << ";" << endl;
+    }
+    indent(0); *out << "}" << endl;
+
+    // _deserialize()
+    *out << endl;
+    indent(0); *out << "void " << def->native_name << "::_deserialize(x2::deserializer& deserializer)" << endl;
+    indent(0); *out << "{" << endl;
+    indent(1); *out << def->base_class << "::_deserialize(deserializer);" << endl;
+    if (def->has_properties())
+    {
+        indent(1); *out << "x2::capo touched(fingerprint_, _tag()->offset());" << endl;
+        for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
+        {
+            cell::property* prop = def->properties[i];
+            indent(1); *out << "if (touched[" << i << "])" << endl;
+            indent(1); *out << "{" << endl;
+            indent(2); *out << "deserializer.read(" << prop->native_name << ");" << endl;
+            indent(1); *out << "}" << endl;
+        }
+    }
+    indent(0); *out << "}" << endl;
+
+    // _get_encoded_length()
+    *out << endl;
+    indent(0); *out << "int " << def->native_name << "::_get_encoded_length() const" << endl;
+    indent(0); *out << "{" << endl;
+    indent(1); *out << "int length = " << def->base_class << "::_get_encoded_length();" << endl;
+    if (def->has_properties())
+    {
+        indent(1); *out << "x2::capo touched(fingerprint_, _tag()->offset());" << endl;
+        for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
+        {
+            cell::property* prop = def->properties[i];
+            indent(1); *out << "if (touched[" << i << "])" << endl;
+            indent(1); *out << "{" << endl;
+            indent(2); *out << "length += serializer::get_encoded_length(" << prop->native_name << ");" << endl;
+            indent(1); *out << "}" << endl;
+        }
+    }
+    indent(1); *out << "return length;" << endl;
+    indent(0); *out << "}" << endl;
+
+    // _serialize()
+    *out << endl;
+    indent(0); *out << "void " << def->native_name << "::_serialize(x2::serializer& serializer) const" << endl;
+    indent(0); *out << "{" << endl;
+    indent(1); *out << def->base_class << "::_serialize(serializer);" << endl;
+    if (def->has_properties())
+    {
+        indent(1); *out << "x2::capo touched(fingerprint_, _tag()->offset());" << endl;
+        for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
+        {
+            cell::property* prop = def->properties[i];
+            indent(1); *out << "if (touched[" << i << "])" << endl;
+            indent(1); *out << "{" << endl;
+            indent(2); *out << "serializer.write(" << prop->native_name << ");" << endl;
+            indent(1); *out << "}" << endl;
+        }
     }
     indent(0); *out << "}" << endl;
 }

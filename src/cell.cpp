@@ -120,4 +120,19 @@ void cell::_describe(std::ostream& /*stream*/) const
     return;
 }
 
+void cell::_deserialize(deserializer& deserializer)
+{
+    fingerprint_.deserialize(deserializer);
+}
+
+int cell::_get_encoded_length() const
+{
+    return fingerprint_.get_encoded_length();
+}
+
+void cell::_serialize(serializer& serializer) const
+{
+    fingerprint_.serialize(serializer);
+}
+
 // EOF cell.cpp

@@ -5,7 +5,9 @@
 #include <boost/functional/hash.hpp>
 #include <boost/thread/once.hpp>
 
+#include <x2boost/serializer.hpp>
 #include <x2boost/event_factory.hpp>
+#include <x2boost/deserializer.hpp>
 
 using namespace x2::examples::head_first;
 
@@ -91,6 +93,37 @@ void capitalize_req::_describe(std::ostringstream& oss) const
     oss << " message=" << message_;
 }
 
+void capitalize_req::_deserialize(x2::deserializer& deserializer)
+{
+    x2::event::_deserialize(deserializer);
+    x2::capo touched(fingerprint_, _tag()->offset());
+    if (touched[0])
+    {
+        deserializer.read(message_);
+    }
+}
+
+int capitalize_req::_get_encoded_length() const
+{
+    int length = x2::event::_get_encoded_length();
+    x2::capo touched(fingerprint_, _tag()->offset());
+    if (touched[0])
+    {
+        length += serializer::get_encoded_length(message_);
+    }
+    return length;
+}
+
+void capitalize_req::_serialize(x2::serializer& serializer) const
+{
+    x2::event::_serialize(serializer);
+    x2::capo touched(fingerprint_, _tag()->offset());
+    if (touched[0])
+    {
+        serializer.write(message_);
+    }
+}
+
 namespace
 {
     x2::event::tag capitalize_resp_tag;
@@ -171,6 +204,37 @@ void capitalize_resp::_describe(std::ostringstream& oss) const
 {
     x2::event::_describe(oss);
     oss << " result=" << result_;
+}
+
+void capitalize_resp::_deserialize(x2::deserializer& deserializer)
+{
+    x2::event::_deserialize(deserializer);
+    x2::capo touched(fingerprint_, _tag()->offset());
+    if (touched[0])
+    {
+        deserializer.read(result_);
+    }
+}
+
+int capitalize_resp::_get_encoded_length() const
+{
+    int length = x2::event::_get_encoded_length();
+    x2::capo touched(fingerprint_, _tag()->offset());
+    if (touched[0])
+    {
+        length += serializer::get_encoded_length(result_);
+    }
+    return length;
+}
+
+void capitalize_resp::_serialize(x2::serializer& serializer) const
+{
+    x2::event::_serialize(serializer);
+    x2::capo touched(fingerprint_, _tag()->offset());
+    if (touched[0])
+    {
+        serializer.write(result_);
+    }
 }
 
 // end of head_first.cpp

@@ -61,18 +61,9 @@ namespace x2
         // Returns the custom type tag of the current object.
         virtual const tag* _type_tag() const;
 
-        virtual void _deserialize(deserializer& deserializer)
-        {
-            fingerprint_.deserialize(deserializer);
-        }
-        virtual int _get_encoded_length()
-        {
-            return fingerprint_.get_encoded_length();
-        }
-        virtual void _serialize(serializer& serializer)
-        {
-            fingerprint_.serialize(serializer);
-        }
+        virtual void _deserialize(deserializer& deserializer);
+        virtual int _get_encoded_length() const;
+        virtual void _serialize(serializer& serializer) const;
 
         // Built-in properties
         const fingerprint& _fingerprint() { return fingerprint_; }

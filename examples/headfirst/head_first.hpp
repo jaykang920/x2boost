@@ -36,6 +36,10 @@ namespace head_first {
         static const tag* _tag();
         virtual const x2::cell::tag* _type_tag() const;
 
+        virtual void _deserialize(deserializer& deserializer);
+        virtual int _get_encoded_length() const;
+        virtual void _serialize(serializer& serializer) const;
+
     protected:
         capitalize_req(std::size_t length)
             : x2::event(length + _tag()->num_props())
@@ -79,6 +83,10 @@ namespace head_first {
         }
         static const tag* _tag();
         virtual const x2::cell::tag* _type_tag() const;
+
+        virtual void _deserialize(deserializer& deserializer);
+        virtual int _get_encoded_length() const;
+        virtual void _serialize(serializer& serializer) const;
 
     protected:
         capitalize_resp(std::size_t length)

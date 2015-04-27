@@ -46,7 +46,7 @@ namespace head_first {
         {
             _initialize();
         }
-        void _describe(std::ostringstream& oss) const;
+        virtual void _describe(std::ostringstream& oss) const;
 
     private:
         capitalize_req()
@@ -94,7 +94,7 @@ namespace head_first {
         {
             _initialize();
         }
-        void _describe(std::ostringstream& oss) const;
+        virtual void _describe(std::ostringstream& oss) const;
 
     private:
         capitalize_resp()

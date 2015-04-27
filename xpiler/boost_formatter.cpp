@@ -289,7 +289,7 @@ void boost_header_formatter::format_cell(cell* def)
     indent(1); *out << "}" << endl;
 
     // _describe() member function
-    indent(1); *out << "void _describe(std::ostringstream& oss) const;" << endl;
+    indent(1); *out << "virtual void _describe(std::ostringstream& oss) const;" << endl;
 
     *out << endl;
     indent(0); *out << "private:" << endl;

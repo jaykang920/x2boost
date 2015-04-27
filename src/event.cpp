@@ -73,7 +73,7 @@ const cell::tag* event::_type_tag() const
     return _tag();
 }
 
-void event::_describe(std::ostream& /*stream*/) const
+void event::_describe(std::ostringstream& /*oss*/) const
 {
     return;
 }

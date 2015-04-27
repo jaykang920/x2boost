@@ -115,7 +115,7 @@ bool cell::operator==(const cell& rhs) const
     return _equals(rhs);
 }
 
-void cell::_describe(std::ostream& /*stream*/) const
+void cell::_describe(std::ostringstream& /*oss*/) const
 {
     return;
 }

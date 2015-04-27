@@ -75,7 +75,7 @@ namespace x2
         explicit cell(std::size_t length) : fingerprint_(length) {}
 
         // Describes the immediate properties into the specified stream.
-        virtual void _describe(std::ostream& stream) const;
+        virtual void _describe(std::ostringstream& oss) const;
 
         fingerprint fingerprint_;
     };

@@ -9,6 +9,7 @@
 #endif
 
 #include "x2boost/buffer.hpp"
+#include "x2boost/event_factory.hpp"
 
 namespace x2
 {

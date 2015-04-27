@@ -12,7 +12,7 @@ namespace x2 { namespace examples { namespace head_first {
     {
     public:
         capitalizer_client()
-            : asio_tcp_client("capitalizer_server")
+            : asio_tcp_client("capitalizer_client")
         {
         }
     protected:

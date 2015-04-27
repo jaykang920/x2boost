@@ -10,22 +10,18 @@
 
 #include <boost/unordered_map.hpp>
 
-#include "x2boost/deserializer.hpp"
 #include "x2boost/event.hpp"
 
 namespace x2
 {
+    class deserializer;
+
     class X2BOOST_API event_factory
     {
     public:
         typedef event_ptr(*func_type)();
 
-        static event_ptr create(deserializer& deserializer)
-        {
-            boost::int32_t type_id;
-            deserializer.read(type_id);
-            return create(type_id);
-        }
+        static event_ptr create(deserializer& deserializer);
 
         static event_ptr create(boost::int32_t type_id)
         {

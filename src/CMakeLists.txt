@@ -42,11 +42,10 @@ set(x2boost_INC_QUEUES
   "${x2boost_INC_DIR}/queues/synchronized_queue.hpp"
 )
 set(x2boost_INC_UTIL
-  "${x2boost_INC_DIR}/util/array_segment.hpp"
   "${x2boost_INC_DIR}/util/buffer_pool.hpp"
   "${x2boost_INC_DIR}/util/deleter.hpp"
   "${x2boost_INC_DIR}/util/log.hpp"
-  "${x2boost_INC_DIR}/util/shared_object.hpp"
+  "${x2boost_INC_DIR}/util/ref_counted.hpp"
 )
 
 list(APPEND x2boost_ALL_INC ${x2boost_INC})

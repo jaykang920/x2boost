@@ -8,9 +8,11 @@
 #include "x2boost/pre.hpp"
 #endif
 
+#include "x2boost/util/ref_counted.hpp"
+
 namespace x2
 {
-    struct X2BOOST_API handler : public shared_object
+    struct X2BOOST_API handler : public ref_counted
     {
         virtual ~handler() {}
 

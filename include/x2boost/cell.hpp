@@ -9,12 +9,12 @@
 #endif
 
 #include "x2boost/fingerprint.hpp"
-#include "x2boost/util/shared_object.hpp"
+#include "x2boost/util/ref_counted.hpp"
 
 namespace x2
 {
     // Common base class for all custom types.
-    class X2BOOST_API cell : public shared_object
+    class X2BOOST_API cell : public ref_counted
     {
     public:
         static const bool is_event = false;

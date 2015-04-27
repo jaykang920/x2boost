@@ -5,6 +5,8 @@
 #include <boost/functional/hash.hpp>
 #include <boost/thread/once.hpp>
 
+#include <x2boost/event_factory.hpp>
+
 using namespace x2::examples::head_first;
 
 namespace
@@ -13,9 +15,18 @@ namespace
     boost::once_flag capitalize_req_once = BOOST_ONCE_INIT;
     void capitalize_req_init()
     {
-        capitalize_req_tag.set(x2::event::_tag(), 1, 1
-);
+        capitalize_req_tag.set(x2::event::_tag(), 1, 1);
     }
+
+    struct static_capitalize_req_initializer
+    {
+        static_capitalize_req_initializer()
+        {
+            x2::event_factory::enroll(1,
+                (x2::event_factory::func_type)capitalize_req::_new); 
+        }
+    };
+    static_capitalize_req_initializer static_capitalize_req_init;
 }
 
 bool capitalize_req::_equals(const x2::cell& other) const
@@ -65,7 +76,7 @@ void capitalize_req::_initialize()
 
 const x2::event::tag* capitalize_req::_tag()
 {
-    boost::call_once(&capitalize_req_init, capitalize_req_once);
+    boost::call_once(capitalize_req_init, capitalize_req_once);
     return &capitalize_req_tag;
 }
 
@@ -86,9 +97,18 @@ namespace
     boost::once_flag capitalize_resp_once = BOOST_ONCE_INIT;
     void capitalize_resp_init()
     {
-        capitalize_resp_tag.set(x2::event::_tag(), 1, 2
-);
+        capitalize_resp_tag.set(x2::event::_tag(), 1, 2);
     }
+
+    struct static_capitalize_resp_initializer
+    {
+        static_capitalize_resp_initializer()
+        {
+            x2::event_factory::enroll(2,
+                (x2::event_factory::func_type)capitalize_resp::_new); 
+        }
+    };
+    static_capitalize_resp_initializer static_capitalize_resp_init;
 }
 
 bool capitalize_resp::_equals(const x2::cell& other) const
@@ -138,7 +158,7 @@ void capitalize_resp::_initialize()
 
 const x2::event::tag* capitalize_resp::_tag()
 {
-    boost::call_once(&capitalize_resp_init, capitalize_resp_once);
+    boost::call_once(capitalize_resp_init, capitalize_resp_once);
     return &capitalize_resp_tag;
 }
 

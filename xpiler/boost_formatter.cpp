@@ -179,6 +179,8 @@ void boost_formatter::format_source_file(boost_formatter_context& context)
     out << "#include <boost/functional/hash.hpp>" << endl;
     out << "#include <boost/thread/once.hpp>" << endl;
     out << endl;
+    out << "#include <x2boost/event_factory.hpp>" << endl;
+    out << endl;
 
     if (!context.doc->ns.empty())
     {
@@ -339,10 +341,24 @@ void boost_source_formatter::format_cell(cell* def)
         << def->properties.size();
     if (def->is_event())
     {
-        *out << ", " << ((event*)def)->id << endl;
+        *out << ", " << ((event*)def)->id;
     }
     *out << ");" << endl;
     indent(1); *out << "}" << endl;
+    if (def->is_event())
+    {
+        *out << endl;
+        indent(1); *out << "struct static_" << def->native_name << "_initializer" << endl;
+        indent(1); *out << "{" << endl;
+        indent(2); *out << "static_" << def->native_name << "_initializer()" << endl;
+        indent(2); *out << "{" << endl;
+        indent(3); *out << "x2::event_factory::enroll(" << ((event*)def)->id << "," << endl;
+        indent(4); *out << "(x2::event_factory::func_type)" << def->native_name << "::_new); " << endl;
+        indent(2); *out << "}" << endl;
+        indent(1); *out << "};" << endl;
+        indent(1); *out << "static_" << def->native_name << "_initializer "
+            << "static_" << def->native_name << "_init;" << endl;
+    }
     indent(0); *out << "}" << endl;
     *out << endl;
 
@@ -418,7 +434,8 @@ void boost_source_formatter::format_cell(cell* def)
     // _tag() static member function
     indent(0); *out << "const " << root_class << "::tag* " << def->native_name << "::_tag()" << endl;
     indent(0); *out << "{" << endl;
-    indent(1); *out << "boost::call_once(&" << def->native_name << "_init, " << def->native_name << "_once);" << endl;
+    indent(1); *out << "boost::call_once(" << def->native_name << "_init, "
+        << def->native_name << "_once);" << endl;
     indent(1); *out << "return &" << def->native_name << "_tag;" << endl;
     indent(0); *out << "}" << endl;
     *out << endl;

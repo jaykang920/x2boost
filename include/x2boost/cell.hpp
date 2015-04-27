@@ -17,6 +17,8 @@ namespace x2
     class X2BOOST_API cell : public shared_object
     {
     public:
+        static const bool is_event = false;
+
         // Supports custom type hierarchy for cell and its subclasses.
         class tag
         {
@@ -58,6 +60,19 @@ namespace x2
         static const tag* _tag();
         // Returns the custom type tag of the current object.
         virtual const tag* _type_tag() const;
+
+        virtual void _deserialize(deserializer& deserializer)
+        {
+            fingerprint_.deserialize(deserializer);
+        }
+        virtual int _get_encoded_length()
+        {
+            return fingerprint_.get_encoded_length();
+        }
+        virtual void _serialize(serializer& serializer)
+        {
+            fingerprint_.serialize(serializer);
+        }
 
         // Built-in properties
         const fingerprint& _fingerprint() { return fingerprint_; }

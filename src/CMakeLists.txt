@@ -11,7 +11,9 @@ set(x2boost_INC
   "${x2boost_INC_DIR}/buffer.hpp"
   "${x2boost_INC_DIR}/case.hpp"
   "${x2boost_INC_DIR}/cell.hpp"
+  "${x2boost_INC_DIR}/deserializer.hpp"
   "${x2boost_INC_DIR}/event.hpp"
+  "${x2boost_INC_DIR}/event_factory.hpp"
   "${x2boost_INC_DIR}/event_sink.hpp"
   "${x2boost_INC_DIR}/fingerprint.hpp"
   "${x2boost_INC_DIR}/flow.hpp"
@@ -20,6 +22,7 @@ set(x2boost_INC
   "${x2boost_INC_DIR}/link.hpp"
   "${x2boost_INC_DIR}/pre.hpp"
   "${x2boost_INC_DIR}/queue.hpp"
+  "${x2boost_INC_DIR}/serializer.hpp"
   "${x2boost_INC_DIR}/x2boost.hpp"
 )
 set(x2boost_INC_FLOWS
@@ -61,11 +64,14 @@ set(x2boost_SRC
   "${x2boost_SRC_DIR}/buffer.cpp"
   "${x2boost_SRC_DIR}/case.cpp"
   "${x2boost_SRC_DIR}/cell.cpp"
+  "${x2boost_SRC_DIR}/deserializer.cpp"
   "${x2boost_SRC_DIR}/event.cpp"
+  "${x2boost_SRC_DIR}/event_factory.cpp"
   "${x2boost_SRC_DIR}/fingerprint.cpp"
   "${x2boost_SRC_DIR}/flow.cpp"
   "${x2boost_SRC_DIR}/hub.cpp"
   "${x2boost_SRC_DIR}/main.cpp"
+  "${x2boost_SRC_DIR}/serializer.cpp"
 )
 set(x2boost_SRC_FLOWS
   "${x2boost_SRC_DIR}/flows/event_based_flow.cpp"

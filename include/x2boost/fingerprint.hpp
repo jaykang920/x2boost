@@ -10,6 +10,9 @@
 
 namespace x2
 {
+    class deserializer;
+    class serializer;
+
     // Manages a fixed-length compact array of bit values.
     class X2BOOST_API fingerprint
     {
@@ -67,6 +70,10 @@ namespace x2
         // Gets the number of effective bits in this fingerprint.
         std::size_t length() const { return length_; }
 
+        void deserialize(deserializer& deserializer);
+        int get_encoded_length() const;
+        void serialize(serializer& serializer) const;
+
         // The copy assignment operator.
         fingerprint& operator=(const fingerprint& other)
         {
@@ -105,7 +112,7 @@ namespace x2
 
         // Gets the minimum number of bytes required to hold all the effective
         // bits in this fingerprint.
-        std::size_t length_in_bytes() const
+        int length_in_bytes() const
         {
             return (length_ == 0 ? 0 :
                 ((length_ - 1) >> byte_exp) + 1);
@@ -113,13 +120,13 @@ namespace x2
 
         // Gets the minimum number of additional blocks required to hold all
         // the effective bits in this fingerprint.
-        std::size_t num_additional_blocks() const
+        int num_additional_blocks() const
         {
             return (length_ <= bits_per_block ? 0 :
                 ((length_ - (bits_per_block + 1)) >> block_exp) + 1);
         }
 
-        std::size_t length_;
+        boost::int32_t length_;
         std::size_t block_;
         std::size_t* blocks_;
     };

@@ -17,6 +17,8 @@ namespace x2
     class X2BOOST_API event : public cell
     {
     public:
+        static const bool is_event = true;
+
         // Supports custom type hierarchy for event and its subclasses.
         class tag : public cell::tag
         {

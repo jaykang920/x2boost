@@ -19,7 +19,7 @@ namespace x2
 {
     // A variable-length byte buffer class whose capacity is limited to a
     // multiple of a power of 2.
-    class buffer
+    class X2BOOST_API buffer
     {
     public:
         explicit buffer(int block_size_exponent = 12);
@@ -31,8 +31,25 @@ namespace x2
         // Gets the maximum capacity of the buffer.
         int capacity() const { return (int)(block_size() * blocks_.size()); }
 
+        void check_length_to_read(std::size_t n)
+        {
+            int limit = (marker_ >= 0 ? marker_ : back_);
+            if ((pos_ + n) > limit)
+            {
+                // error
+            }
+        }
+
         // Checks whether the buffer is empty (i.e. whether its length is 0).
         bool empty() const { return (back_ == front_); }
+
+        void ensure_capacity_to_write(int n);
+
+        byte_t get_byte()
+        {
+            block_feed();
+            return block_[pos_++ & remainder_mask_];
+        }
 
         // Gets the length of the buffered bytes.
         int length() const { return (back_ - front_); }
@@ -57,6 +74,10 @@ namespace x2
         }
         // Retrieves the occupied const buffers with the specified range.
         void list_const_buffers(std::vector<boost::asio::const_buffer>& result, int begin, int end) const;
+        void list_const_buffers(std::vector<boost::asio::const_buffer>& result, int length) const
+        {
+            list_const_buffers(result, pos_, pos_ + length);
+        }
         // Retrieves the available mutable buffers.
         void list_mutable_buffers(std::vector<boost::asio::mutable_buffer>& result);
 
@@ -68,6 +89,12 @@ namespace x2
                 return;
             }
             marker_ = front_ + length;
+        }
+
+        void put_byte(byte_t value)
+        {
+            block_feed();
+            block_[pos_++ & remainder_mask_] = value;
         }
 
         // Reads a sequence of bytes from the buffer and advances the position.
@@ -114,29 +141,7 @@ namespace x2
             }
         }
 
-        void check_length_to_read(std::size_t n)
-        {
-            int limit = (marker_ >= 0 ? marker_ : back_);
-            if ((pos_ + n) > limit)
-            {
-                // error
-            }
-        }
-
         void cleanup();
-        void ensure_capacity_to_write(int n);
-
-        byte_t get_byte()
-        {
-            block_feed();
-            return block_[pos_++ & remainder_mask_];
-        }
-
-        void put_byte(byte_t value)
-        {
-            block_feed();
-            block_[pos_++ & remainder_mask_] = value;
-        }
 
     private:
         std::deque<byte_t*> blocks_;

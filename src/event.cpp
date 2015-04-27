@@ -6,6 +6,8 @@
 #include <boost/functional/hash.hpp>
 #include <boost/thread/once.hpp>
 
+#include "x2boost/event_factory.hpp"
+
 using namespace x2;
 
 namespace
@@ -17,6 +19,15 @@ namespace
     {
         event_tag.set(NULL, 0, 0);
     }
+
+    struct static_event_initializer
+    {
+        static_event_initializer()
+        {
+            event_factory::enroll(0, event::_new);
+        }
+    };
+    static_event_initializer static_event_init;
 }
 
 bool event::_equals(const cell& other) const
@@ -51,7 +62,7 @@ std::size_t event::_hash_code(const fingerprint& fp, boost::int32_t type_id) con
 
 const event::tag* event::_tag()
 {
-    boost::call_once(&event_init, event_once);
+    boost::call_once(event_init, event_once);
     return &event_tag;
 }
 

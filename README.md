@@ -17,8 +17,9 @@ Requirements
  * filesystem
  * program_options
  * regex
- * system
  * thread
+ * unit_test_framework (for test)
+ * system
 
 License
 -------

@@ -14,6 +14,7 @@
 
 namespace x2
 {
+    // Common base class for concrete asio-based links.
     class X2BOOST_API asio_link : public link
     {
     public:

@@ -22,7 +22,7 @@ namespace x2
 
         virtual void close()
         {
-            //acceptor_.close();
+            //session.close();
         }
 
         void connect(const boost::asio::ip::tcp::endpoint& ep)
@@ -36,15 +36,20 @@ namespace x2
         {
             asio_tcp_link_session::pointer session = asio_tcp_link_session::_new();
 
+            log::debug() << "calling async_connect()" << std::endl;
+
             session->socket().async_connect(ep,
                 boost::bind(&asio_tcp_client::handle_connect, this, session,
                 boost::asio::placeholders::error)
                 );
+
+            log::debug() << "async_connect() returned" << std::endl;
         }
 
         void handle_connect(asio_tcp_link_session::pointer session,
             const boost::system::error_code& error)
         {
+            log::info() << "entered handle_connect()" << std::endl;
             //
             if (error)
             {

@@ -4,6 +4,7 @@
 #include "x2boost/links/asio_link.hpp"
 
 #include <boost/atomic.hpp>
+#include <boost/math/special_functions/round.hpp>
 #include <boost/thread.hpp>
 
 using namespace x2;
@@ -13,17 +14,25 @@ boost::asio::io_service asio_link::io_service_;
 namespace
 {
     volatile bool should_stop = false;
-    boost::atomic<int> ref_count;
-    boost::thread* worker = NULL;
-    //boost::thread_group workers;
+    boost::atomic<int> ref_count(0);
+    boost::thread_group workers;
 
-    void work()
+    std::auto_ptr<boost::asio::io_service::work> work(new boost::asio::io_service::work(asio_link::io_service()));
+
+    void run()
     {
+        log::debug("asio_worker begin");
+
         while (!should_stop)
         {
             try
             {
-                asio_link::io_service().run();
+                boost::system::error_code ec;
+                asio_link::io_service().run(ec);
+                if (ec)
+                {
+                    log::error(ec.message());
+                }
             }
             catch (std::exception& e)
             {
@@ -31,29 +40,30 @@ namespace
             }
             boost::this_thread::sleep_for(boost::chrono::milliseconds(1));
         }
+
+        log::debug("asio_worker end");
     }
 
     void asio_start()
     {
-        worker = new boost::thread(work);
-        /*
-        int num_workers = boost::thread::hardware_concurrency();
-        if (num_workers > 2) { num_workers /= 2; }
+        log::info("asio_start");
 
-        for (int i = 0; i < num_workers; ++i)
+        int n = (int)boost::thread::hardware_concurrency();
+        n = (int)boost::math::round((double)n * 0.66);
+        for (int i = 0; i < n; ++i)
         {
-            workers.create_thread(work);
+            workers.create_thread(run);
         }
-        */
     }
 
     void asio_stop()
     {
         should_stop = true;
-        asio_link::io_service().stop();
-        //workers.join_all();
-        worker->join();
-        delete worker;
+        work.reset();
+        asio_link::io_service().stop();  // TODO FIXME rely on socket close
+        workers.join_all();
+
+        log::info("asio_stop");
     }
 }
 

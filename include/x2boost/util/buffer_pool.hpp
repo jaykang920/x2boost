@@ -10,7 +10,7 @@
 
 namespace x2
 {
-    // Static pool of 2^n length byte buffer blocks.
+    // Singleton pool of 2^n length byte buffer blocks.
     class X2BOOST_API buffer_pool
     {
     public:
@@ -26,6 +26,9 @@ namespace x2
         static void release_memory();
         // Force to release every memory block.
         static void purge_memory();
+
+    private:
+        buffer_pool() { }
     };
 }
 

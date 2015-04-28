@@ -45,6 +45,7 @@ set(x2boost_INC_UTIL
   "${x2boost_INC_DIR}/util/buffer_pool.hpp"
   "${x2boost_INC_DIR}/util/deleter.hpp"
   "${x2boost_INC_DIR}/util/log.hpp"
+  "${x2boost_INC_DIR}/util/ranged_int_pool.hpp"
   "${x2boost_INC_DIR}/util/ref_counted.hpp"
 )
 

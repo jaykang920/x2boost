@@ -9,7 +9,6 @@
 #endif
 
 #include "x2boost/cell.hpp"
-#include "x2boost/util/deleter.hpp"
 
 namespace x2
 {

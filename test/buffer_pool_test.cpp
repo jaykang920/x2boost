@@ -9,23 +9,32 @@ using namespace x2;
 
 BOOST_AUTO_TEST_SUITE(buffer_pool_test)
 
-BOOST_AUTO_TEST_CASE(buffer_pool_test)
+BOOST_AUTO_TEST_CASE(buffer_pool_test_acquire_release)
 {
     byte_t* p;
 
     p = buffer_pool::acquire(4);
-    BOOST_CHECK(p != 0);
+    BOOST_CHECK(p != NULL);
     buffer_pool::release(4, p);
 
     p = buffer_pool::acquire(12);
-    BOOST_CHECK(p != 0);
+    BOOST_CHECK(p != NULL);
     buffer_pool::release(12, p);
 
     p = buffer_pool::acquire(20);
-    BOOST_CHECK(p != 0);
+    BOOST_CHECK(p != NULL);
     buffer_pool::release(20, p);
+}
 
-    buffer_pool::release_memory();
+BOOST_AUTO_TEST_CASE(buffer_pool_test_invalid_acquire)
+{
+    byte_t* p;
+    
+    p = buffer_pool::acquire(0);
+    BOOST_CHECK(p == NULL);
+
+    p = buffer_pool::acquire(32);
+    BOOST_CHECK(p == NULL);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

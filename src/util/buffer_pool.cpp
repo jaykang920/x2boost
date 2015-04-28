@@ -26,14 +26,7 @@ namespace
         }
         ~static_inirializer()
         {
-            boost::mutex::scoped_lock lock(mutex);
-            for (int i = 0; i < size; ++i)
-            {
-                boost::pool<>* pool = pools[i];
-                if (pool == NULL) { continue; }
-                pools[i] = NULL;
-                delete pool;
-            }
+            buffer_pool::purge_memory();
         }
     };
     static_inirializer static_init;
@@ -66,13 +59,19 @@ void buffer_pool::release(int size_exponent, byte_t* p)
     {
         return;
     }
-    boost::mutex::scoped_lock lock(mutex);
-    boost::pool<>* pool = pools[size_exponent - min_size_exponent];
-    if (pool == NULL)
+    try
     {
-        return;
+        boost::mutex::scoped_lock lock(mutex);
+        boost::pool<>* pool = pools[size_exponent - min_size_exponent];
+        if (pool == NULL)
+        {
+            return;
+        }
+        pool->free(p);
     }
-    pool->free(p);
+    catch (...)
+    {
+    }
 }
 
 void buffer_pool::release_memory()
@@ -93,7 +92,9 @@ void buffer_pool::purge_memory()
     {
         boost::pool<>* pool = pools[i];
         if (pool == NULL) { continue; }
+        pools[i] = NULL;
         pool->purge_memory();
+        delete pool;
     }
 }
 

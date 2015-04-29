@@ -43,6 +43,8 @@ namespace x2
 
         // Determines whether this cell is equal to the other.
         virtual bool _equals(const cell& other) const;
+        // Determines whether this cell is equivalent to the other.
+        virtual bool _equivalent(const cell& other) const;
         // Returns the hash code for the current object.
         virtual std::size_t _hash_code() const;
         // Returns the hash code based on the specified fingerprint.

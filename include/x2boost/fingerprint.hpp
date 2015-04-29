@@ -74,6 +74,11 @@ namespace x2
         int get_encoded_length() const;
         void serialize(serializer& serializer) const;
 
+        bool operator[](std::size_t index) const
+        {
+            return get(index);
+        }
+
         // The copy assignment operator.
         fingerprint& operator=(const fingerprint& other)
         {

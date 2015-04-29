@@ -38,7 +38,28 @@ bool event::_equals(const cell& other) const
     {
         return false;
     }
-    // channel?
+    const event& o = static_cast<const event&>(other);
+    if (_handle_ != o._handle_)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool event::_equivalent(const cell& other) const
+{
+    if (!cell::_equivalent(other))
+    {
+        return false;
+    }
+    const event& o = static_cast<const event&>(other);
+    if (fingerprint_[_tag()->offset() + 0])
+    {
+        if (_handle_ != o._handle_)
+        {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -50,7 +71,10 @@ std::size_t event::_hash_code() const
 std::size_t event::_hash_code(const fingerprint& fp) const
 {
     std::size_t value = cell::_hash_code(fp);
-    //boost::hash_combine(value, x)
+    if (fingerprint_[_tag()->offset() + 0])
+    {
+        boost::hash_combine(value, _handle_);
+    }
     return value;
 }
 

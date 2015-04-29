@@ -17,7 +17,7 @@
 #include "x2boost/event_factory.hpp"
 #include "x2boost/hub.hpp"
 #include "x2boost/serializer.hpp"
-#include "x2boost/links/asio_link.hpp"
+#include "x2boost/links/asio_tcp_link.hpp"
 
 namespace x2
 {
@@ -27,7 +27,10 @@ namespace x2
     public:
         typedef boost::shared_ptr<asio_tcp_link_session> pointer;
 
-        static pointer _new() { return pointer(new asio_tcp_link_session); }
+        asio_tcp_link_session(asio_tcp_link* link)
+            : link_(link), socket_(asio_link::io_service()) { }
+
+        //static pointer _new() { return pointer(new asio_tcp_link_session); }
 
         virtual void close() {}
         virtual void send(event_ptr e)
@@ -85,6 +88,7 @@ namespace x2
             if (bytes_transferred == 0)
             {
                 // disconnect
+                on_disconnect();
                 return;
             }
             log::info() << "received " << bytes_transferred << " byte(s)" << std::endl;
@@ -137,7 +141,13 @@ namespace x2
         }
 
     protected:
-        asio_tcp_link_session() : socket_(asio_link::io_service()) {}
+        virtual void on_disconnect()
+        {
+            log::info() << link_->name() << " " << handle() << " disconnected" << std::endl;
+            link_->on_disconnect(shared_from_this());
+        }
+
+        asio_tcp_link* link_;
 
         boost::asio::ip::tcp::socket socket_;
 

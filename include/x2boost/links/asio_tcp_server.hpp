@@ -10,16 +10,16 @@
 
 #include <boost/bind.hpp>
 
-#include "x2boost/links/asio_link.hpp"
+#include "x2boost/links/asio_tcp_link.hpp"
 #include "x2boost/links/asio_tcp_link_session.hpp"
 
 namespace x2
 {
-    class X2BOOST_API asio_tcp_server : public asio_link
+    class X2BOOST_API asio_tcp_server : public asio_tcp_link
     {
     public:
         explicit asio_tcp_server(const std::string& name)
-            : asio_link(name), acceptor_(io_service_) {}
+            : asio_tcp_link(name), acceptor_(io_service_) {}
 
         virtual void close()
         {
@@ -41,7 +41,7 @@ namespace x2
 
         void start_accept()
         {
-            asio_tcp_link_session::pointer session = asio_tcp_link_session::_new();
+            asio_tcp_link_session::pointer session(new asio_tcp_link_session(this));
 
             acceptor_.async_accept(session->socket(),
                 boost::bind(&asio_tcp_server::handle_accept, this, session,
@@ -74,8 +74,9 @@ namespace x2
             start_accept();
         }
 
-        void on_disconnect(asio_tcp_link_session::pointer session)
+        virtual void on_disconnect(asio_tcp_link_session::pointer session)
         {
+            asio_tcp_link::on_disconnect(session);
             boost::unique_lock<boost::shared_mutex> wlock(shared_mutex_);
             sessions_.erase(session->handle());
         }

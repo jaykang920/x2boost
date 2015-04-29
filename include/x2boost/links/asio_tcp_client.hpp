@@ -10,15 +10,15 @@
 
 #include <boost/bind.hpp>
 
-#include "x2boost/links/asio_link.hpp"
+#include "x2boost/links/asio_tcp_link.hpp"
 #include "x2boost/links/asio_tcp_link_session.hpp"
 
 namespace x2
 {
-    class X2BOOST_API asio_tcp_client : public asio_link
+    class X2BOOST_API asio_tcp_client : public asio_tcp_link
     {
     public:
-        explicit asio_tcp_client(const std::string& name) : asio_link(name) {}
+        explicit asio_tcp_client(const std::string& name) : asio_tcp_link(name) {}
 
         virtual void close()
         {
@@ -42,7 +42,7 @@ namespace x2
 
         void start_connect(const boost::asio::ip::tcp::endpoint& ep)
         {
-            asio_tcp_link_session::pointer session = asio_tcp_link_session::_new();
+            asio_tcp_link_session::pointer session(new asio_tcp_link_session(this));
 
             log::debug() << "calling async_connect()" << std::endl;
 
@@ -74,6 +74,11 @@ namespace x2
             }
 
             session->start_receive();
+        }
+
+        virtual void on_disconnect(asio_tcp_link_session::pointer session)
+        {
+            asio_tcp_link::on_disconnect(session);
         }
 
         void send(event_ptr e)

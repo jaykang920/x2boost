@@ -17,7 +17,8 @@ namespace x2
     class X2BOOST_API ranged_int_pool
     {
     public:
-        ranged_int_pool(bool advancing) : offset_(0), advancing_(advancing) { }
+        explicit ranged_int_pool(bool advancing = false)
+            : offset_(0), advancing_(advancing) { }
 
         // Gets the next available value from the pool.
         int acquire()

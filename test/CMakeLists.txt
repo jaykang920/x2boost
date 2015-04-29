@@ -15,6 +15,7 @@ set(x2test_INC
 set(x2test_SRC
   "${x2test_SRC_DIR}/buffer_pool_test.cpp"
   "${x2test_SRC_DIR}/buffer_test.cpp"
+  "${x2test_SRC_DIR}/ranged_int_pool_test.cpp"
 
   "${x2test_SRC_DIR}/main.cpp"
 )

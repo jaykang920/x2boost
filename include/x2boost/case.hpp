@@ -28,16 +28,18 @@ namespace x2
     class X2BOOST_API caze : public event_sink, public case_interface
     {
     public:
-        virtual ~caze() {}
+        virtual ~caze() { }
 
         virtual void setup(flow_ptr holder);
         virtual void teardown(flow_ptr holder);
 
     protected:
-        caze() {}
+        caze() { }
 
-        virtual void setup() {};
-        virtual void teardown() {};
+        // Intializes this case on startup.
+        virtual void setup() { }
+        // Cleans up this case on shutdown.
+        virtual void teardown() { }
     };
 
     class X2BOOST_API case_stack : public case_interface

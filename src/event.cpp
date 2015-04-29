@@ -19,7 +19,7 @@ namespace
 
     void event_init()
     {
-        event_tag.set(NULL, 0, 0);
+        event_tag.set(NULL, 1, 0);
     }
 
     struct static_event_initializer

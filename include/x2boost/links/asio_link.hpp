@@ -32,6 +32,7 @@ namespace x2
             stop();
         }
 
+        // Gets the reference to the global boost::asio::io_service object.
         static boost::asio::io_service& io_service() { return io_service_; }
 
     protected:

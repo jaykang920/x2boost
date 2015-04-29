@@ -7,7 +7,7 @@ using namespace x2;
 
 void serializer::write(const std::string& value)
 {
-    int length = (int)value.length();
+    boost::int32_t length = (boost::int32_t)value.length();
     write_variable_nonnegative(length);
     buffer_.ensure_capacity_to_write(length);
     for (int i = 0; i < length; ++i)

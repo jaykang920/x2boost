@@ -76,7 +76,13 @@ namespace x2
 
         // Built-in properties
         const char* _channel() const { return _channel_; }
-        event& _channel(const char* value) { _channel_ = value; }
+        void _channel(const char* value) { _channel_ = value; }
+        int _handle() const {return _handle_; }
+        void _handle(int value)
+        {
+            fingerprint_.touch(_tag()->offset() + 0);
+            _handle_ = value;
+        }
     
     protected:
         event() : cell(_tag()->num_props())
@@ -94,6 +100,7 @@ namespace x2
 
     private:
         const char* _channel_;
+        int _handle_;
     };
 
     class event_equivalent : public event, private boost::noncopyable

@@ -143,7 +143,7 @@ namespace x2
     protected:
         virtual void on_disconnect()
         {
-            log::info() << link_->name() << " " << handle() << " disconnected" << std::endl;
+            log::info() << link_->name() << " " << handle() << " disconnected from " << socket_.remote_endpoint() << std::endl;
             link_->on_disconnect(shared_from_this());
         }
 

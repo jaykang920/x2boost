@@ -11,18 +11,18 @@
 #include <boost/asio.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
+#include "x2boost/buffer.hpp"
 #include "x2boost/deserializer.hpp"
 #include "x2boost/event.hpp"
 #include "x2boost/event_factory.hpp"
 #include "x2boost/hub.hpp"
 #include "x2boost/serializer.hpp"
 #include "x2boost/links/asio_link.hpp"
-#include "x2boost/links/asio_link_session.hpp"
 
 namespace x2
 {
     class X2BOOST_API asio_tcp_link_session
-        : public asio_link_session, public boost::enable_shared_from_this<asio_tcp_link_session>
+        : public boost::enable_shared_from_this<asio_tcp_link_session>
     {
     public:
         typedef boost::shared_ptr<asio_tcp_link_session> pointer;
@@ -135,6 +135,9 @@ namespace x2
         asio_tcp_link_session() : socket_(asio_link::io_service()) {}
 
         boost::asio::ip::tcp::socket socket_;
+
+        buffer recv_buffer_;
+        buffer send_buffer_;
 
         std::vector<boost::asio::const_buffer> send_buffer_list_;
         std::vector<boost::asio::mutable_buffer> recv_buffer_list_;

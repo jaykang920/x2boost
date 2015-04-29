@@ -62,6 +62,11 @@ namespace x2
 
             session_ = session;
 
+            {
+                boost::asio::ip::tcp::no_delay no_delay(true);
+                session->socket().set_option(no_delay);
+            }
+
             session->start_receive();
             start_accept();
         }

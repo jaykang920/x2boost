@@ -32,7 +32,6 @@ set(x2boost_INC_FLOWS
 )
 set(x2boost_INC_LINKS
   "${x2boost_INC_DIR}/links/asio_link.hpp"
-  "${x2boost_INC_DIR}/links/asio_link_session.hpp"
   "${x2boost_INC_DIR}/links/asio_tcp_client.hpp"
   "${x2boost_INC_DIR}/links/asio_tcp_link_session.hpp"
   "${x2boost_INC_DIR}/links/asio_tcp_server.hpp"

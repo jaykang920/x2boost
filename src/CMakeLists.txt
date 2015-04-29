@@ -69,6 +69,7 @@ set(x2boost_SRC
   "${x2boost_SRC_DIR}/fingerprint.cpp"
   "${x2boost_SRC_DIR}/flow.cpp"
   "${x2boost_SRC_DIR}/hub.cpp"
+  "${x2boost_SRC_DIR}/link.cpp"
   "${x2boost_SRC_DIR}/main.cpp"
   "${x2boost_SRC_DIR}/serializer.cpp"
 )

@@ -71,18 +71,20 @@ std::size_t event::_hash_code() const
 std::size_t event::_hash_code(const fingerprint& fp) const
 {
     std::size_t value = cell::_hash_code(fp);
+    /*
     if (fingerprint_[_tag()->offset() + 0])
     {
         boost::hash_combine(value, _handle_);
     }
+    */
     return value;
 }
 
 std::size_t event::_hash_code(const fingerprint& fp, boost::int32_t type_id) const
 {
-    std::size_t value = 0;
-    boost::hash_combine(value, type_id);
+    std::size_t value = 17;
     boost::hash_combine(value, _hash_code(fp));
+    boost::hash_combine(value, type_id);
     return value;
 }
 

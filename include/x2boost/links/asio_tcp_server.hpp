@@ -24,6 +24,7 @@ namespace x2
         virtual void close()
         {
             acceptor_.close();
+            sessions_.clear();
         }
 
         void listen(int port)
@@ -46,7 +47,6 @@ namespace x2
                 boost::bind(&asio_tcp_server::handle_accept, this, session,
                     boost::asio::placeholders::error)
                 );
-
         }
 
         void handle_accept(asio_tcp_link_session::pointer session,
@@ -54,13 +54,16 @@ namespace x2
         {
             if (error)
             {
-                log::error() << name() << " accept error " << error.message() << std::endl;
+                log::error() << name() << " " << session->handle() << " accept error " << error.value() << " " << error.message() << std::endl;
                 return;
             }
 
-            log::debug() << name() << " accepted " << session->socket().remote_endpoint() << std::endl;
+            log::debug() << name() << " " << session->handle() << " accepted " << session->socket().remote_endpoint() << std::endl;
 
-            session_ = session;
+            {
+                boost::unique_lock<boost::shared_mutex> wlock(shared_mutex_);
+                sessions_.insert(map_type::value_type(session->handle(), session));
+            }
 
             {
                 boost::asio::ip::tcp::no_delay no_delay(true);
@@ -71,15 +74,35 @@ namespace x2
             start_accept();
         }
 
+        void on_disconnect(asio_tcp_link_session::pointer session)
+        {
+            boost::unique_lock<boost::shared_mutex> wlock(shared_mutex_);
+            sessions_.erase(session->handle());
+        }
+
         void send(event_ptr e)
         {
-            session_->send(e);
+            if (e->_handle() == 0)
+            {
+                return;
+            }
+            boost::shared_lock<boost::shared_mutex> rlock(shared_mutex_);
+            map_type::iterator it = sessions_.find(e->_handle());
+            if (it == sessions_.end())
+            {
+                return;
+            }
+            it->second->send(e);
         }
 
     protected:
+        typedef boost::unordered_map<int, asio_tcp_link_session::pointer> map_type;
+
         boost::asio::ip::tcp::acceptor acceptor_;
 
-        asio_tcp_link_session::pointer session_;
+        map_type sessions_;
+
+        mutable boost::shared_mutex shared_mutex_;
     };
 }
 

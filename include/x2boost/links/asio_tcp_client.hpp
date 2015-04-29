@@ -22,7 +22,15 @@ namespace x2
 
         virtual void close()
         {
-            //session.close();
+            if (!session_)
+            {
+                return;
+            }
+            if (session_->socket().is_open())
+            {
+                session_->socket().close();
+            }
+            session_.reset();
         }
 
         void connect(const boost::asio::ip::tcp::endpoint& ep)
@@ -56,7 +64,7 @@ namespace x2
                 log::error() << name() << " connect error " << error.message() << std::endl;
                 return;
             }
-            log::debug() << name() << " connected to " << session->socket().remote_endpoint() << std::endl;
+            log::debug() << name() << " " << session->handle() << " connected to " << session->socket().remote_endpoint() << std::endl;
 
             session_ = session;
 
@@ -70,6 +78,10 @@ namespace x2
 
         void send(event_ptr e)
         {
+            if (!session_)
+            {
+                return;
+            }
             session_->send(e);
         }
 

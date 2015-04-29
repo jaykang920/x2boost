@@ -29,6 +29,7 @@ namespace x2
         virtual void teardown()
         {
             link::teardown();
+            close();
             stop();
         }
 

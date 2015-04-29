@@ -9,6 +9,7 @@
 #endif
 
 #include "x2boost/case.hpp"
+#include "x2boost/util/ranged_int_pool.hpp"
 
 namespace x2
 {
@@ -33,16 +34,20 @@ namespace x2
     class X2BOOST_API link_session
     {
     public:
-        explicit link_session(int handle) : handle_(handle) {}
+        explicit link_session() : handle_(handle_pool_.acquire()) {}
+        virtual ~link_session() { handle_pool_.release(handle_); }
 
-        int handle() { return handle_; }
+        int handle() const { return handle_; }
 
         virtual void close() = 0;
 
         virtual void send(event_ptr e) = 0;
     
-    private:
+    protected:
         int handle_;
+
+    private:
+        static ranged_int_pool<1, 65536> handle_pool_;
     };
 }
 

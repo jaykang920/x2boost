@@ -55,6 +55,7 @@ namespace x2
         void _initialize()
         {
             _channel_ = NULL;
+            _handle_ = 0;
         }
         // Instantiates a new event object.
         static event_ptr _new()

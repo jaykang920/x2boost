@@ -22,7 +22,7 @@
 namespace x2
 {
     class X2BOOST_API asio_tcp_link_session
-        : public boost::enable_shared_from_this<asio_tcp_link_session>
+        : public link_session, public boost::enable_shared_from_this<asio_tcp_link_session>
     {
     public:
         typedef boost::shared_ptr<asio_tcp_link_session> pointer;
@@ -119,10 +119,15 @@ namespace x2
 
                     log::info() << retrieved->_string() << std::endl;
 
-                    // _handle
+                    retrieved->_handle(handle_);
+
                     // preproc
                     
                     hub::post(retrieved);
+                }
+                else
+                {
+                    log::error("event retrieval error");
                 }
             }
 

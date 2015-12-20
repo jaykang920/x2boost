@@ -8,7 +8,7 @@
 #include "x2boost/pre.hpp"
 #endif
 
-#include <deque>
+#include <queue>
 
 #include <boost/thread/locks.hpp>
 #include <boost/thread/mutex.hpp>
@@ -46,15 +46,18 @@ namespace x2
                 cond_.wait(lock);
             }
             value = store_.front();
-            store_.pop_front();
+            store_.pop();
             return value;
         }
 
         virtual bool enqueue(T value)
         {
             boost::mutex::scoped_lock lock(mutex_);
-            store_.push_back(value);
-            cond_.notify_one();
+            store_.push(value);
+            if (store_.size() == 1)
+            {
+                cond_.notify_one();
+            }
             return true;
         }
 
@@ -68,14 +71,14 @@ namespace x2
                 return false;
             }
             *value = store_.front();
-            store_.pop_front();
+            store_.pop();
             return true;
         }
 
         virtual size_t size() const { return store_.size(); }
 
     protected:
-        std::deque<T> store_;
+        std::queue<T> store_;
         volatile bool closing_;
 
         mutable boost::mutex mutex_;

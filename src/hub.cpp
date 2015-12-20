@@ -63,7 +63,12 @@ void hub::feed(event_ptr e) const
         }
         flows = &(it->second);
     }
-    std::for_each(flows->begin(), flows->end(), boost::bind(&flow::feed, _1, e));
+    list_type::const_iterator it(flows->begin());
+    list_type::const_iterator end(flows->end());
+    for (; it != end; ++it)
+    {
+        (*it)->feed(e);
+    }
 }
 
 void hub::start_attached_flows() const

@@ -42,6 +42,7 @@ x2boost provides several custom option flags that can be configured through cmak
  * BUILD_XPILER (ON by default) : Build xpiler executable
  * BUILD_TEST (OFF by default) : Build unit tests
  * BUILD_EXAMPLES (OFF by default) : Build examples
+
 On command-line, you can set an option flag as follows:
 ```
 cmake -D BUILD_TEST=ON ..

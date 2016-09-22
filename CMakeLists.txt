@@ -13,7 +13,7 @@ option(BUILD_TEST "Build unit tests" OFF)
 option(BUILD_EXAMPLES "Build examples" OFF)
 
 if(WIN32)
-    SET(CMAKE_USE_RELATIVE_PATHS true)
+  SET(CMAKE_USE_RELATIVE_PATHS true)
 endif()
 
 set(CMAKE_THREAD_PREFER_PTHREAD true)

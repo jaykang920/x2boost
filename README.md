@@ -26,7 +26,7 @@ Installation
 
 ### CMake
 
-* Be sure that you have the environment variable *Boost_DIR* indicating your Boost library root directory.
+* Make sure that that you have the environment variable *Boost_DIR* indicating your Boost library root directory.
 * Create a new dedicated build directory under the x2boost home. You can usually name it *build*.
 * Move to the *build* (or whatever you named in the previous step) directory.
 * Run *cmake* command to get ready to build on your platform.

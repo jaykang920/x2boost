@@ -18,7 +18,7 @@ Requirements
  * program_options
  * regex
  * thread
- * unit_test_framework (for test only)
+ * unit_test_framework (for test)
  * system
 
 Installation

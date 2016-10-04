@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2015 Jae-jun Kang
+// Copyright (c) 2014-2016 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_RANGED_INT_POOL_HPP_

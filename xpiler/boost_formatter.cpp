@@ -79,24 +79,24 @@ bool boost_formatter::is_up_to_date(const boost::filesystem::path& path)
 
 void boost_formatter::setup()
 {
-    types::set_native_type("bool", "bool");
-    types::set_native_type("int8", "boost::int8_t");
-    types::set_native_type("int16", "boost::int16_t");
-    types::set_native_type("int32", "boost::int32_t");
-    types::set_native_type("int64", "boost::int64_t");
-    types::set_native_type("float32", "boost::float32_t");
-    types::set_native_type("float64", "boost::float64_t");
-    types::set_native_type("string", "std::string");
-    types::set_native_type("list", "std::vector");
+    types::native_type("bool", "bool");
+    types::native_type("int8", "boost::int8_t");
+    types::native_type("int16", "boost::int16_t");
+    types::native_type("int32", "boost::int32_t");
+    types::native_type("int64", "boost::int64_t");
+    types::native_type("float32", "boost::float32_t");
+    types::native_type("float64", "boost::float64_t");
+    types::native_type("string", "std::string");
+    types::native_type("list", "std::vector");
 
-    types::set_default_value("bool", "false");
-    types::set_default_value("int8", "0");
-    types::set_default_value("int16", "0");
-    types::set_default_value("int32", "0");
-    types::set_default_value("int64", "0");
-    types::set_default_value("float32", ".0f");
-    types::set_default_value("float64", ".0");
-    types::set_default_value("string", "\"\"");
+    types::default_value("bool", "false");
+    types::default_value("int8", "0");
+    types::default_value("int16", "0");
+    types::default_value("int32", "0");
+    types::default_value("int64", "0");
+    types::default_value("float32", ".0f");
+    types::default_value("float64", ".0");
+    types::default_value("string", "\"\"");
 }
 
 void boost_formatter::format_header_file(boost_formatter_context& context)
@@ -318,7 +318,7 @@ void boost_header_formatter::format_consts(consts* def)
     BOOST_FOREACH(consts::element* elem, def->elements)
     {
         indent(1); *out << "const " << def->native_type << " " << elem->native_name;
-        if (types::is_integral(def->type))
+        if (types::is_integer(def->type))
         {
             *out << " = " << elem->value;
         }
@@ -526,7 +526,7 @@ void boost_source_formatter::format_cell(cell* def)
 
 void boost_source_formatter::format_consts(consts* def)
 {
-    if (types::is_integral(def->type)) { return; }
+    if (types::is_integer(def->type)) { return; }
 
     BOOST_FOREACH(consts::element* elem, def->elements)
     {

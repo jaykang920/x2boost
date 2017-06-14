@@ -18,17 +18,7 @@ namespace xpiler
 
     struct document;
 
-    struct formatter_context
-    {
-        virtual void format_cell(cell* def) = 0;
-        virtual void format_consts(consts* def) = 0;
-        virtual void format_reference(reference* def) = 0;
-
-        document* doc;
-        std::ostream* out;
-        std::string target;
-    };
-
+    /// Abstract base class for output file formatters.
     struct formatter
     {
         virtual bool format(document* doc, const std::string& out_dir) = 0;
@@ -38,6 +28,18 @@ namespace xpiler
         virtual void setup() = 0;
 
         virtual const char* description() = 0;
+    };
+
+    /// Abstract base class for concrete formatter contexts.
+    struct formatter_context
+    {
+        virtual void format_cell(cell* def) = 0;
+        virtual void format_consts(consts* def) = 0;
+        virtual void format_reference(reference* def) = 0;
+
+        document* doc;
+        std::ostream* out;
+        std::string target;
     };
 }
 

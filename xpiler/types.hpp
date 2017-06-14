@@ -26,7 +26,7 @@ namespace xpiler
     {
         type_traits() {}
 
-        bool is_integral;
+        bool is_integer;
         bool is_primitive;
 
         std::string native_type;
@@ -41,11 +41,11 @@ namespace xpiler
             return (types_.count(type) != 0);
         }
 
-        static bool is_integral(const std::string& type)
+        static bool is_integer(const std::string& type)
         {
             map_type::iterator it = types_.find(type);
             if (it == types_.end()) { return false; }
-            return it->second.is_integral;
+            return it->second.is_integer;
         }
 
         static bool is_primitive(const std::string& type)
@@ -60,10 +60,10 @@ namespace xpiler
         static bool parse_details(const std::string& s, std::vector<type_spec>* details, int* index);
 
         static const char* native_type(const std::string& type);
-        static void set_native_type(const std::string& type, const char* native_type);
+        static void native_type(const std::string& type, const char* native_type);
 
         static const char* default_value(const std::string& type);
-        static void set_default_value(const std::string& type, const char* default_value);
+        static void default_value(const std::string& type, const char* default_value);
 
         struct static_initializer
         {
@@ -77,7 +77,7 @@ namespace xpiler
 
         static map_type types_;
 
-        static static_initializer static_init_;
+        static static_initializer static_initializer_;
     };
 }
 

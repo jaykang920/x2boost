@@ -11,7 +11,7 @@ using namespace std;
 using namespace xpiler;
 
 types::map_type types::types_;
-types::static_initializer static_init_;
+types::static_initializer static_initializer_;
 
 string type_spec::string() const
 {
@@ -106,7 +106,7 @@ const char* types::native_type(const std::string& type)
     return (it == types_.end() ? type.c_str() : it->second.native_type.c_str());
 }
 
-void types::set_native_type(const std::string& type, const char* native_type)
+void types::native_type(const std::string& type, const char* native_type)
 {
     map_type::iterator it = types_.find(type);
     if (it == types_.end()) { return; }
@@ -120,7 +120,7 @@ const char* types::default_value(const std::string& type)
     return (it == types_.end() ? NULL : it->second.default_value.c_str());
 }
 
-void types::set_default_value(const std::string& type, const char* default_value)
+void types::default_value(const std::string& type, const char* default_value)
 {
     map_type::iterator it = types_.find(type);
     if (it == types_.end()) { return; }
@@ -133,18 +133,18 @@ types::static_initializer::static_initializer()
     type_traits t;
 
     t.is_primitive = true;
-    t.is_integral = false;
+    t.is_integer = false;
     
     types_.insert(map_type::value_type("bool", t));
 
-    t.is_integral = true;
+    t.is_integer = true;
 
     types_.insert(map_type::value_type("int8", t));
     types_.insert(map_type::value_type("int16", t));
     types_.insert(map_type::value_type("int32", t));
     types_.insert(map_type::value_type("int64", t));
 
-    t.is_integral = false;
+    t.is_integer = false;
 
     types_.insert(map_type::value_type("float32", t));
     types_.insert(map_type::value_type("float64", t));

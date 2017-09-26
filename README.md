@@ -11,15 +11,13 @@ Requirements
 
 * CMake 2.8.8 or newer (and C++ compiler, of course) to build
 * Boost C++ libraries with the following modules built
- * atomic
- * chrono
- * date_time
- * filesystem
- * program_options
- * regex
- * thread
- * unit_test_framework (for test)
- * system
+  * atomic
+  * chrono
+  * filesystem
+  * program_options
+  * regex
+  * thread
+  * unit_test_framework (for test)
 
 Installation
 ------------

@@ -26,14 +26,11 @@ unset(Boost_LIBRARIES CACHE)
 find_package(Boost REQUIRED COMPONENTS
   atomic
   chrono
-  date_time
   filesystem
   program_options
   regex
   thread
   unit_test_framework
-
-  system
 )
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})

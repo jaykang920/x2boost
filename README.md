@@ -10,7 +10,7 @@ Requirements
 ------------
 
 * CMake 2.8.8 or newer (and C++ compiler, of course) to build
-* Boost C++ libraries with the following modules built
+* Boost C++ libraries (1.53 or newer) with the following modules built
   * atomic
   * chrono
   * filesystem
@@ -21,6 +21,45 @@ Requirements
 
 Installation
 ------------
+
+### Boost
+
+Since x2boost depends on a few Boost libraries that require compilation, you
+should have those libraries built on your machine.
+
+https://theboostcpplibraries.com/introduction-installation
+
+#### Windows
+
+Follows an example case building Boost on Windows:
+
+* Open your Visual Studio developer command prompt.
+* Run `bootstrap.bat` to prepare Boost build system.
+* Determine your toolset version and run the following commands.
+  * Visual Studio 11 2012: msvc-11.0
+  * Visual Studio 12 2013: msvc-12.0
+  * Visual Studio 14 2015: msvc-14.0
+  * Visual Studio 15 2017: msvc-14.1
+
+```
+rem your toolset spec here
+set toolset=msvc-12.0
+
+.\b2 --build-type=complete --stagedir=stage/x86 toolset=%toolset% address-model=32 link=static threading=multi runtime-link=static stage
+.\b2 --build-type=complete --stagedir=stage/x64 toolset=%toolset% address-model=64 link=static threading=multi runtime-link=static stage
+.\b2 --build-type=complete --stagedir=stage/x86 toolset=%toolset% address-model=32 link=static threading=multi runtime-link=shared stage
+.\b2 --build-type=complete --stagedir=stage/x64 toolset=%toolset% address-model=64 link=static threading=multi runtime-link=shared stage
+.\b2 --build-type=complete --stagedir=stage/x86 toolset=%toolset% address-model=32 link=shared threading=multi runtime-link=static stage
+.\b2 --build-type=complete --stagedir=stage/x64 toolset=%toolset% address-model=64 link=shared threading=multi runtime-link=static stage
+.\b2 --build-type=complete --stagedir=stage/x86 toolset=%toolset% address-model=32 link=shared threading=multi runtime-link=shared stage
+.\b2 --build-type=complete --stagedir=stage/x64 toolset=%toolset% address-model=64 link=shared threading=multi runtime-link=shared stage
+
+```
+
+#### Unix Variants
+
+You might find a binary distribution of Boost libraries for your platform, in
+which case you don't have to get into any trouble trying to build them.
 
 ### CMake
 

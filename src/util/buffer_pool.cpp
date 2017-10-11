@@ -43,7 +43,7 @@ byte_t* buffer_pool::acquire(int size_exponent)
     boost::pool<>* pool = pools[index];
     if (pool == NULL)
     {
-        pool = new boost::pool<>(1 << size_exponent);
+        pool = new boost::pool<>((size_t)1 << size_exponent);
         pools[index] = pool;
     }
     return static_cast<byte_t*>(pool->malloc());

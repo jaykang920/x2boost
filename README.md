@@ -83,7 +83,7 @@ x2boost provides several custom option flags that can be configured through CMak
  * BUILD_FORCE_SHARED_CRT (OFF by default) : Target shared (DLL on Windows) version of C runtime library
  * BUILD_XPILER (ON by default) : Build xpiler executable
  * BUILD_TEST (OFF by default) : Build unit tests
- * BUILD_EXAMPLES (OFF by default) : Build examples
+ * BUILD_SAMPLES (OFF by default) : Build samples
 
 On command-line, you can set an option flag as follows:
 ```

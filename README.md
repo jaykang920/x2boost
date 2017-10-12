@@ -9,7 +9,7 @@ and [Boost](http://www.boost.org/) libraries.
 Requirements
 ------------
 
-* CMake 2.8.8 or newer (and C++ compiler, of course) to build
+* [CMake](https://cmake.org/) 2.8.8 or newer (and C++ compiler, of course) to build
 * Boost C++ libraries (1.53 or newer) with the following modules built
   * atomic
   * chrono
@@ -24,7 +24,7 @@ Installation
 
 ### Boost
 
-Since x2boost depends on a few Boost libraries that require compilation, you
+x2boost depends on a few Boost libraries that require compilation, and you
 should have those libraries built on your machine.
 
 https://theboostcpplibraries.com/introduction-installation
@@ -34,7 +34,7 @@ https://theboostcpplibraries.com/introduction-installation
 Follows an example case building Boost on Windows:
 
 * Open your Visual Studio developer command prompt.
-* Run `bootstrap.bat` to prepare Boost build system.
+* Run *bootstrap.bat* to prepare Boost build system.
 * Determine your toolset version and run the following commands.
   * Visual Studio 11 2012: msvc-11.0
   * Visual Studio 12 2013: msvc-12.0
@@ -63,18 +63,22 @@ which case you don't have to get into any trouble trying to build them.
 
 ### CMake
 
-* Make sure that that you have the environment variable *Boost_DIR* indicating your Boost library root directory.
-* Create a new dedicated build directory under the x2boost home. You can usually name it *build*.
-* Move to the *build* (or whatever you named in the previous step) directory.
-* Run *cmake* command to get ready to build on your platform.
+* Get to the [build](https://github.com/jaykang920/x2boost/tree/master/build)
+subdirectory.
+* Create a new subdirectory that will hold your CMake output files. You might
+want to give it a meaningful name.
+* Get into the new subdirectory just created, and run *cmake* command.
 ```
-cmake ..
+cmake ../..
 ```
-You may specify additional options to tune your build. For example, if you're using Visual Studio 2013 on Windows and want 64-bit build, use the following generator specification. For more cmake option details, please look up the cmake command help.
+You may specify additional options to tune your build. For example, if you're
+using Visual Studio 2013 on Windows and want 64-bit build, use the following
+generator specification. For more CMake option details, please look up the cmake
+command help.
 ```
-cmake -G "Visual Studio 12 2013 Win64" ..
+cmake -G "Visual Studio 12 2013 Win64" ..\..
 ```
-x2boost provides several custom option flags that can be configured through cmake command-line or GUI.
+x2boost provides several custom option flags that can be configured through CMake command-line or GUI.
  * BUILD_SHARED_LIBS (OFF by default) : Build x2boost as a shared library (DLL on Windows)
  * BUILD_FORCE_SHARED_CRT (OFF by default) : Target shared (DLL on Windows) version of C runtime library
  * BUILD_XPILER (ON by default) : Build xpiler executable
@@ -83,7 +87,30 @@ x2boost provides several custom option flags that can be configured through cmak
 
 On command-line, you can set an option flag as follows:
 ```
-cmake -D BUILD_TEST=ON ..
+cmake -D BUILD_TEST=ON ../..
+```
+
+#### Build Scripts
+
+The *build* subdirectory contains some sample scripts that run CMake to generate
+build environments. You also may create your own build scripts here.
+
+##### Windows
+
+Unlike unix variant platforms, Windows doesn't have common library installation
+locations. So you need to pass CMake hints to find Boost libraries, either as
+environment variables or as cmake option definitions.
+
+About configuring environment variables to help find Boost, please take a look at
+[build/boostvars.bat](https://github.com/jaykang920/x2boost/blob/master/build/boostvars.bat)
+.
+
+##### Unix Variants
+
+When you generate Unix Makefiles using CMake, you may want to specify the build
+type option as follows:
+```
+cmake -D CMAKE_BUILD_TYPE=Release ../..
 ```
 
 License

@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_ASIO_TCP_SESSION_HPP_
@@ -19,7 +19,7 @@
 #include "x2boost/serializer.hpp"
 #include "x2boost/links/asio_tcp_link.hpp"
 
-namespace x2
+namespace x2boost
 {
     class X2BOOST_API asio_tcp_link_session
         : public link_session, public boost::enable_shared_from_this<asio_tcp_link_session>

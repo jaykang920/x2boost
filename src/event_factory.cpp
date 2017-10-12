@@ -1,11 +1,11 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #include "x2boost/event_factory.hpp"
 
 #include "x2boost/deserializer.hpp"
 
-using namespace x2;
+using namespace x2boost;
 
 event_ptr event_factory::create(deserializer& deserializer)
 {

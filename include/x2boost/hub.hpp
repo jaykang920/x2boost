@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_HUB_HPP_
@@ -11,7 +11,7 @@
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/unordered_map.hpp>
 
-namespace x2
+namespace x2boost
 {
     /// Represents the singleton event distribution bus.
     class X2BOOST_API hub : private boost::noncopyable

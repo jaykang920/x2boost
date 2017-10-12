@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #include "x2boost/buffer.hpp"
@@ -10,7 +10,7 @@
 
 #include "x2boost/util/buffer_pool.hpp"
 
-using namespace x2;
+using namespace x2boost;
 
 buffer::buffer(int block_size_exponent)
 {

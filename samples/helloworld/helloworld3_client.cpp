@@ -6,7 +6,7 @@
 #include "hello_world.hpp"
 #include "helloworld_cases.hpp"
 
-namespace x2 { namespace samples { namespace hello_world {
+namespace x2boost { namespace samples { namespace hello_world {
 
     class hello_client : public asio_tcp_client
     {
@@ -30,10 +30,10 @@ namespace x2 { namespace samples { namespace hello_world {
         }
     };
 
-} } }  // namespace x2::samples::hello_world
+} } }  // namespace x2boost::samples::hello_world
 
-using namespace x2;
-using namespace x2::samples::hello_world;
+using namespace x2boost;
+using namespace x2boost::samples::hello_world;
 
 void log_handler(int level, const std::string& message)
 {

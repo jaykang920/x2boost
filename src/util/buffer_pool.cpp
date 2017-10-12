@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #include "x2boost/util/buffer_pool.hpp"
@@ -6,7 +6,7 @@
 #include <boost/pool/pool.hpp>
 #include <boost/thread/mutex.hpp>
 
-using namespace x2;
+using namespace x2boost;
 
 namespace
 {
@@ -43,7 +43,7 @@ byte_t* buffer_pool::acquire(int size_exponent)
     boost::pool<>* pool = pools[index];
     if (pool == NULL)
     {
-        pool = new boost::pool<>((size_t)1 << size_exponent);
+        pool = new boost::pool<>((std::size_t)1 << size_exponent);
         pools[index] = pool;
     }
     return static_cast<byte_t*>(pool->malloc());

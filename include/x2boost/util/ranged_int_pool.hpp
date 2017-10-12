@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_RANGED_INT_POOL_HPP_
@@ -10,7 +10,7 @@
 
 #include <bitset>
 
-namespace x2
+namespace x2boost
 {
     // Compact pool of consecutive integer values in a finite range.
     template<int Min, int Max>

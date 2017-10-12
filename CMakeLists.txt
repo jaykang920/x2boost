@@ -49,7 +49,7 @@ if(Boost_FOUND)
 endif()
 
 if(BUILD_SHARED_LIBS)
-  list(APPEND x2boost_CDEFS "X2_AS_SHARED_LIB")
+  list(APPEND x2boost_CDEFS "X2BOOST_AS_SHARED_LIB")
   if (MSVC)
     # Suppress warnings about DLL interface.
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275")

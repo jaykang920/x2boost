@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #include "x2boost/links/asio_link.hpp"
@@ -7,7 +7,7 @@
 #include <boost/math/special_functions/round.hpp>
 #include <boost/thread.hpp>
 
-using namespace x2;
+using namespace x2boost;
 
 boost::asio::io_service asio_link::io_service_;
 

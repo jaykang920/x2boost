@@ -3,8 +3,8 @@
 #include "hello_world.hpp"
 #include "helloworld_cases.hpp"
 
-using namespace x2;
-using namespace x2::samples::hello_world;
+using namespace x2boost;
+using namespace x2boost::samples::hello_world;
 
 int main()
 {

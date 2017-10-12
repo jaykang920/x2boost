@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #include "x2boost/fingerprint.hpp"
@@ -8,7 +8,7 @@
 #include "x2boost/deserializer.hpp"
 #include "x2boost/serializer.hpp"
 
-using namespace x2;
+using namespace x2boost;
 
 fingerprint::fingerprint(std::size_t length)
   : length_((int)length),

@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_EVENT_BASED_FLOW_HPP_
@@ -11,7 +11,7 @@
 #include "x2boost/flow.hpp"
 #include "x2boost/queues/synchronized_queue.hpp"
 
-namespace x2
+namespace x2boost
 {
     template<class Q = synchronized_event_queue>
     class X2BOOST_API event_based_flow : public flow

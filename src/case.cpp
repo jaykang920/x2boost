@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #include "x2boost/case.hpp"
@@ -8,14 +8,14 @@
 
 #include "x2boost/flow.hpp"
 
-using namespace x2;
+using namespace x2boost;
 
 void caze::setup(flow_ptr holder)
 {
     set_flow(holder);
 
-    boost::thread_specific_ptr<x2::flow>& current_flow = flow::current_flow();
-    x2::flow* backup = current_flow.release();
+    boost::thread_specific_ptr<x2boost::flow>& current_flow = flow::current_flow();
+    x2boost::flow* backup = current_flow.release();
     current_flow.reset(holder.get());
 
     setup();
@@ -26,8 +26,8 @@ void caze::setup(flow_ptr holder)
 
 void caze::teardown(flow_ptr holder)
 {
-    boost::thread_specific_ptr<x2::flow>& current_flow = flow::current_flow();
-    x2::flow* backup = current_flow.release();
+    boost::thread_specific_ptr<x2boost::flow>& current_flow = flow::current_flow();
+    x2boost::flow* backup = current_flow.release();
     current_flow.reset(holder.get());
 
     teardown();

@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_ASIO_TCP_SERVER_HPP_
@@ -13,7 +13,7 @@
 #include "x2boost/links/asio_tcp_link.hpp"
 #include "x2boost/links/asio_tcp_link_session.hpp"
 
-namespace x2
+namespace x2boost
 {
     class X2BOOST_API asio_tcp_server : public asio_tcp_link
     {

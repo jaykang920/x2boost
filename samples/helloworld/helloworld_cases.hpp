@@ -1,5 +1,5 @@
-#ifndef X2_SAMPLES_HELLOWORLD_HELLOWORLD_CASES_HPP_
-#define X2_SAMPLES_HELLOWORLD_HELLOWORLD_CASES_HPP_
+#ifndef X2BOOST_SAMPLES_HELLOWORLD_HELLOWORLD_CASES_HPP_
+#define X2BOOST_SAMPLES_HELLOWORLD_HELLOWORLD_CASES_HPP_
 
 #include <boost/algorithm/string.hpp>
 
@@ -7,9 +7,9 @@
 
 #include "hello_world.hpp"
 
-//using namespace x2;
+//using namespace x2boost;
 
-namespace x2 {
+namespace x2boost {
 namespace samples {
 namespace hello_world {
 
@@ -46,6 +46,6 @@ namespace hello_world {
 
 }  // namespace hello_world
 }  // namespace samples
-}  // namespace x2
+}  // namespace x2boost
 
-#endif  // X2_SAMPLES_HELLOWORLD_HELLOWORLD_CASES_HPP_
+#endif  // X2BOOST_SAMPLES_HELLOWORLD_HELLOWORLD_CASES_HPP_

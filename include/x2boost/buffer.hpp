@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_BUFFER_HPP_
@@ -15,7 +15,7 @@ namespace boost { namespace asio {
     class mutable_buffer;
 } }
 
-namespace x2
+namespace x2boost
 {
     // A variable-length byte buffer class whose capacity is limited to a
     // multiple of a power of 2.

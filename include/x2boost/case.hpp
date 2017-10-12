@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_CASE_HPP_
@@ -12,7 +12,7 @@
 
 #include "x2boost/event_sink.hpp"
 
-namespace x2
+namespace x2boost
 {
     struct X2BOOST_API case_interface
     {

@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_CELL_HPP_
@@ -11,7 +11,7 @@
 #include "x2boost/fingerprint.hpp"
 #include "x2boost/util/ref_counted.hpp"
 
-namespace x2
+namespace x2boost
 {
     // Common base class for all custom types.
     class X2BOOST_API cell : public ref_counted

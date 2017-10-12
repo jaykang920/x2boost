@@ -65,13 +65,13 @@ which case you don't have to get into any trouble trying to build them.
 
 * Get to the [build](https://github.com/jaykang920/x2boost/tree/master/build)
 subdirectory.
-* Create a new subdirectory that will hold your CMake output files. You might
+* Create a new subdirectory that will hold your CMake output files. You probably
 want to give it a meaningful name.
 * Get into the new subdirectory just created, and run *cmake* command.
 ```
 cmake ../..
 ```
-You may specify additional options to tune your build. For example, if you're
+You can specify additional options to tune your build. For example, if you're
 using Visual Studio 2013 on Windows and want 64-bit build, use the following
 generator specification. For more CMake option details, please look up the cmake
 command help.

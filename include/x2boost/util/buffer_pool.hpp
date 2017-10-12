@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_BUFFER_POOL_HPP_
@@ -8,7 +8,7 @@
 #include "x2boost/pre.hpp"
 #endif
 
-namespace x2
+namespace x2boost
 {
     // Singleton pool of 2^n length byte buffer blocks.
     class X2BOOST_API buffer_pool

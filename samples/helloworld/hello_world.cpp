@@ -9,31 +9,31 @@
 #include <x2boost/event_factory.hpp>
 #include <x2boost/deserializer.hpp>
 
-using namespace x2::samples::hello_world;
+using namespace x2boost::samples::hello_world;
 
 namespace
 {
-    x2::event::tag hello_req_tag;
+    x2boost::event::tag hello_req_tag;
     boost::once_flag hello_req_once = BOOST_ONCE_INIT;
     void hello_req_init()
     {
-        hello_req_tag.set(x2::event::_tag(), 1, 1);
+        hello_req_tag.set(x2boost::event::_tag(), 1, 1);
     }
 
     struct static_hello_req_initializer
     {
         static_hello_req_initializer()
         {
-            x2::event_factory::enroll(1,
-                (x2::event_factory::func_type)hello_req::_new); 
+            x2boost::event_factory::enroll(1,
+                (x2boost::event_factory::func_type)hello_req::_new); 
         }
     };
     static_hello_req_initializer static_hello_req_init;
 }
 
-bool hello_req::_equals(const x2::cell& other) const
+bool hello_req::_equals(const x2boost::cell& other) const
 {
-    if (!x2::event::_equals(other))
+    if (!x2boost::event::_equals(other))
     {
         return false;
     }
@@ -45,14 +45,14 @@ bool hello_req::_equals(const x2::cell& other) const
     return true;
 }
 
-bool hello_req::_equivalent(const x2::cell& other) const
+bool hello_req::_equivalent(const x2boost::cell& other) const
 {
-    if (!x2::event::_equivalent(other))
+    if (!x2boost::event::_equivalent(other))
     {
         return false;
     }
     const hello_req& o = static_cast<const hello_req&>(other);
-    x2::capo touched(x2::cell::fingerprint_, _tag()->offset());
+    x2boost::capo touched(x2boost::cell::fingerprint_, _tag()->offset());
     if (touched[0] && name_ != o.name_)
     {
         return false;
@@ -60,10 +60,10 @@ bool hello_req::_equivalent(const x2::cell& other) const
     return true;
 }
 
-std::size_t hello_req::_hash_code(const x2::fingerprint& fp) const
+std::size_t hello_req::_hash_code(const x2boost::fingerprint& fp) const
 {
-    std::size_t value = x2::event::_hash_code(fp);
-    x2::capo touched(fp, _tag()->offset());
+    std::size_t value = x2boost::event::_hash_code(fp);
+    x2boost::capo touched(fp, _tag()->offset());
     if (touched[0])
     {
         boost::hash_combine(value, name_);
@@ -76,27 +76,27 @@ void hello_req::_initialize()
     name_ = "";
 }
 
-const x2::event::tag* hello_req::_tag()
+const x2boost::event::tag* hello_req::_tag()
 {
     boost::call_once(hello_req_init, hello_req_once);
     return &hello_req_tag;
 }
 
-const x2::cell::tag* hello_req::_type_tag() const
+const x2boost::cell::tag* hello_req::_type_tag() const
 {
     return _tag();
 }
 
 void hello_req::_describe(std::ostringstream& oss) const
 {
-    x2::event::_describe(oss);
+    x2boost::event::_describe(oss);
     oss << " name=" << name_;
 }
 
-void hello_req::_deserialize(x2::deserializer& deserializer)
+void hello_req::_deserialize(x2boost::deserializer& deserializer)
 {
-    x2::event::_deserialize(deserializer);
-    x2::capo touched(fingerprint_, _tag()->offset());
+    x2boost::event::_deserialize(deserializer);
+    x2boost::capo touched(fingerprint_, _tag()->offset());
     if (touched[0])
     {
         deserializer.read(name_);
@@ -105,8 +105,8 @@ void hello_req::_deserialize(x2::deserializer& deserializer)
 
 int hello_req::_get_encoded_length() const
 {
-    int length = x2::event::_get_encoded_length();
-    x2::capo touched(fingerprint_, _tag()->offset());
+    int length = x2boost::event::_get_encoded_length();
+    x2boost::capo touched(fingerprint_, _tag()->offset());
     if (touched[0])
     {
         length += serializer::get_encoded_length(name_);
@@ -114,10 +114,10 @@ int hello_req::_get_encoded_length() const
     return length;
 }
 
-void hello_req::_serialize(x2::serializer& serializer) const
+void hello_req::_serialize(x2boost::serializer& serializer) const
 {
-    x2::event::_serialize(serializer);
-    x2::capo touched(fingerprint_, _tag()->offset());
+    x2boost::event::_serialize(serializer);
+    x2boost::capo touched(fingerprint_, _tag()->offset());
     if (touched[0])
     {
         serializer.write(name_);
@@ -126,27 +126,27 @@ void hello_req::_serialize(x2::serializer& serializer) const
 
 namespace
 {
-    x2::event::tag hello_resp_tag;
+    x2boost::event::tag hello_resp_tag;
     boost::once_flag hello_resp_once = BOOST_ONCE_INIT;
     void hello_resp_init()
     {
-        hello_resp_tag.set(x2::event::_tag(), 1, 2);
+        hello_resp_tag.set(x2boost::event::_tag(), 1, 2);
     }
 
     struct static_hello_resp_initializer
     {
         static_hello_resp_initializer()
         {
-            x2::event_factory::enroll(2,
-                (x2::event_factory::func_type)hello_resp::_new); 
+            x2boost::event_factory::enroll(2,
+                (x2boost::event_factory::func_type)hello_resp::_new); 
         }
     };
     static_hello_resp_initializer static_hello_resp_init;
 }
 
-bool hello_resp::_equals(const x2::cell& other) const
+bool hello_resp::_equals(const x2boost::cell& other) const
 {
-    if (!x2::event::_equals(other))
+    if (!x2boost::event::_equals(other))
     {
         return false;
     }
@@ -158,14 +158,14 @@ bool hello_resp::_equals(const x2::cell& other) const
     return true;
 }
 
-bool hello_resp::_equivalent(const x2::cell& other) const
+bool hello_resp::_equivalent(const x2boost::cell& other) const
 {
-    if (!x2::event::_equivalent(other))
+    if (!x2boost::event::_equivalent(other))
     {
         return false;
     }
     const hello_resp& o = static_cast<const hello_resp&>(other);
-    x2::capo touched(x2::cell::fingerprint_, _tag()->offset());
+    x2boost::capo touched(x2boost::cell::fingerprint_, _tag()->offset());
     if (touched[0] && message_ != o.message_)
     {
         return false;
@@ -173,10 +173,10 @@ bool hello_resp::_equivalent(const x2::cell& other) const
     return true;
 }
 
-std::size_t hello_resp::_hash_code(const x2::fingerprint& fp) const
+std::size_t hello_resp::_hash_code(const x2boost::fingerprint& fp) const
 {
-    std::size_t value = x2::event::_hash_code(fp);
-    x2::capo touched(fp, _tag()->offset());
+    std::size_t value = x2boost::event::_hash_code(fp);
+    x2boost::capo touched(fp, _tag()->offset());
     if (touched[0])
     {
         boost::hash_combine(value, message_);
@@ -189,27 +189,27 @@ void hello_resp::_initialize()
     message_ = "";
 }
 
-const x2::event::tag* hello_resp::_tag()
+const x2boost::event::tag* hello_resp::_tag()
 {
     boost::call_once(hello_resp_init, hello_resp_once);
     return &hello_resp_tag;
 }
 
-const x2::cell::tag* hello_resp::_type_tag() const
+const x2boost::cell::tag* hello_resp::_type_tag() const
 {
     return _tag();
 }
 
 void hello_resp::_describe(std::ostringstream& oss) const
 {
-    x2::event::_describe(oss);
+    x2boost::event::_describe(oss);
     oss << " message=" << message_;
 }
 
-void hello_resp::_deserialize(x2::deserializer& deserializer)
+void hello_resp::_deserialize(x2boost::deserializer& deserializer)
 {
-    x2::event::_deserialize(deserializer);
-    x2::capo touched(fingerprint_, _tag()->offset());
+    x2boost::event::_deserialize(deserializer);
+    x2boost::capo touched(fingerprint_, _tag()->offset());
     if (touched[0])
     {
         deserializer.read(message_);
@@ -218,8 +218,8 @@ void hello_resp::_deserialize(x2::deserializer& deserializer)
 
 int hello_resp::_get_encoded_length() const
 {
-    int length = x2::event::_get_encoded_length();
-    x2::capo touched(fingerprint_, _tag()->offset());
+    int length = x2boost::event::_get_encoded_length();
+    x2boost::capo touched(fingerprint_, _tag()->offset());
     if (touched[0])
     {
         length += serializer::get_encoded_length(message_);
@@ -227,10 +227,10 @@ int hello_resp::_get_encoded_length() const
     return length;
 }
 
-void hello_resp::_serialize(x2::serializer& serializer) const
+void hello_resp::_serialize(x2boost::serializer& serializer) const
 {
-    x2::event::_serialize(serializer);
-    x2::capo touched(fingerprint_, _tag()->offset());
+    x2boost::event::_serialize(serializer);
+    x2boost::capo touched(fingerprint_, _tag()->offset());
     if (touched[0])
     {
         serializer.write(message_);

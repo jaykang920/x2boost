@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_EVENT_SINK_HPP_
@@ -10,7 +10,7 @@
 
 #include <boost/weak_ptr.hpp>
 
-namespace x2
+namespace x2boost
 {
     class X2BOOST_API event_sink
     {
@@ -33,7 +33,7 @@ namespace x2
         }
 
     private:
-        boost::weak_ptr<x2::flow> f;
+        boost::weak_ptr<x2boost::flow> f;
     };
 }
 

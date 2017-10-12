@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #include "x2boost/cell.hpp"
@@ -9,7 +9,7 @@
 
 #include <boost/thread/once.hpp>
 
-using namespace x2;
+using namespace x2boost;
 
 namespace
 {

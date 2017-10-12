@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #include "boost_formatter.hpp"
@@ -255,11 +255,11 @@ void boost_header_formatter::format_cell(cell* def)
     }
 
     // _equals() member function
-    indent(1); *out << "virtual bool _equals(const x2::cell& other) const;" << endl;
+    indent(1); *out << "virtual bool _equals(const x2boost::cell& other) const;" << endl;
     // _equivalent() member function
-    indent(1); *out << "virtual bool _equivalent(const x2::cell& other) const;" << endl;
+    indent(1); *out << "virtual bool _equivalent(const x2boost::cell& other) const;" << endl;
     // _hash_code() member function
-    indent(1); *out << "virtual std::size_t _hash_code(const x2::fingerprint& fp) const;" << endl;
+    indent(1); *out << "virtual std::size_t _hash_code(const x2boost::fingerprint& fp) const;" << endl;
     // _initialize() member function
     indent(1); *out << "void _initialize();" << endl;
     // _new() static member function
@@ -270,7 +270,7 @@ void boost_header_formatter::format_cell(cell* def)
     // _tag() static member function
     indent(1); *out << "static const tag* _tag();" << endl;
     // _type_tag() member function
-    indent(1); *out << "virtual const x2::cell::tag* _type_tag() const;" << endl;
+    indent(1); *out << "virtual const x2boost::cell::tag* _type_tag() const;" << endl;
     *out << endl;
 
     // serialize/deserialize
@@ -335,7 +335,7 @@ void boost_header_formatter::format_reference(reference* def)
 
 void boost_source_formatter::format_cell(cell* def)
 {
-    const char* root_class = (def->is_event() ? "x2::event" : "x2::cell");
+    const char* root_class = (def->is_event() ? "x2boost::event" : "x2boost::cell");
 
     // static type tag
     indent(0); *out << "namespace" << endl;
@@ -360,8 +360,8 @@ void boost_source_formatter::format_cell(cell* def)
         indent(1); *out << "{" << endl;
         indent(2); *out << "static_" << def->native_name << "_initializer()" << endl;
         indent(2); *out << "{" << endl;
-        indent(3); *out << "x2::event_factory::enroll(" << ((event*)def)->id << "," << endl;
-        indent(4); *out << "(x2::event_factory::func_type)" << def->native_name << "::_new); " << endl;
+        indent(3); *out << "x2boost::event_factory::enroll(" << ((event*)def)->id << "," << endl;
+        indent(4); *out << "(x2boost::event_factory::func_type)" << def->native_name << "::_new); " << endl;
         indent(2); *out << "}" << endl;
         indent(1); *out << "};" << endl;
         indent(1); *out << "static_" << def->native_name << "_initializer "
@@ -371,7 +371,7 @@ void boost_source_formatter::format_cell(cell* def)
     *out << endl;
 
     // _equals() member function
-    indent(0); *out << "bool " << def->native_name << "::_equals(const x2::cell& other) const" << endl;
+    indent(0); *out << "bool " << def->native_name << "::_equals(const x2boost::cell& other) const" << endl;
     indent(0); *out << "{" << endl;
     indent(1); *out << "if (!" << def->base_class << "::_equals(other))" << endl;
     indent(1); *out << "{" << endl;
@@ -391,7 +391,7 @@ void boost_source_formatter::format_cell(cell* def)
     *out << endl;
 
     // _equivalent() member function
-    indent(0); *out << "bool " << def->native_name << "::_equivalent(const x2::cell& other) const" << endl;
+    indent(0); *out << "bool " << def->native_name << "::_equivalent(const x2boost::cell& other) const" << endl;
     indent(0); *out << "{" << endl;
     indent(1); *out << "if (!" << def->base_class << "::_equivalent(other))" << endl;
     indent(1); *out << "{" << endl;
@@ -399,7 +399,7 @@ void boost_source_formatter::format_cell(cell* def)
     indent(1); *out << "}" << endl;
     indent(1); *out << "const " << def->native_name << "& o = static_cast<const "
         << def->native_name << "&>(other);" << endl;
-    indent(1); *out << "x2::capo touched(x2::cell::fingerprint_, _tag()->offset());" << endl;
+    indent(1); *out << "x2boost::capo touched(x2boost::cell::fingerprint_, _tag()->offset());" << endl;
     for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
     {
         cell::property* prop = def->properties[i];
@@ -413,10 +413,10 @@ void boost_source_formatter::format_cell(cell* def)
     *out << endl;
 
     // _hash_code() member function
-    indent(0); *out << "std::size_t " << def->native_name << "::_hash_code(const x2::fingerprint& fp) const" << endl;
+    indent(0); *out << "std::size_t " << def->native_name << "::_hash_code(const x2boost::fingerprint& fp) const" << endl;
     indent(0); *out << "{" << endl;
     indent(1); *out << "std::size_t value = " << def->base_class << "::_hash_code(fp);" << endl;
-    indent(1); *out << "x2::capo touched(fp, _tag()->offset());" << endl;
+    indent(1); *out << "x2boost::capo touched(fp, _tag()->offset());" << endl;
     for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
     {
         cell::property* prop = def->properties[i];
@@ -449,7 +449,7 @@ void boost_source_formatter::format_cell(cell* def)
     *out << endl;
 
     // _type_tag() member function
-    indent(0); *out << "const x2::cell::tag* " << def->native_name << "::_type_tag() const" << endl;
+    indent(0); *out << "const x2boost::cell::tag* " << def->native_name << "::_type_tag() const" << endl;
     indent(0); *out << "{" << endl;
     indent(1); *out << "return _tag();" << endl;
     indent(0); *out << "}" << endl;
@@ -467,12 +467,12 @@ void boost_source_formatter::format_cell(cell* def)
 
     // _deserialize()
     *out << endl;
-    indent(0); *out << "void " << def->native_name << "::_deserialize(x2::deserializer& deserializer)" << endl;
+    indent(0); *out << "void " << def->native_name << "::_deserialize(x2boost::deserializer& deserializer)" << endl;
     indent(0); *out << "{" << endl;
     indent(1); *out << def->base_class << "::_deserialize(deserializer);" << endl;
     if (def->has_properties())
     {
-        indent(1); *out << "x2::capo touched(fingerprint_, _tag()->offset());" << endl;
+        indent(1); *out << "x2boost::capo touched(fingerprint_, _tag()->offset());" << endl;
         for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
         {
             cell::property* prop = def->properties[i];
@@ -491,7 +491,7 @@ void boost_source_formatter::format_cell(cell* def)
     indent(1); *out << "int length = " << def->base_class << "::_get_encoded_length();" << endl;
     if (def->has_properties())
     {
-        indent(1); *out << "x2::capo touched(fingerprint_, _tag()->offset());" << endl;
+        indent(1); *out << "x2boost::capo touched(fingerprint_, _tag()->offset());" << endl;
         for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
         {
             cell::property* prop = def->properties[i];
@@ -506,12 +506,12 @@ void boost_source_formatter::format_cell(cell* def)
 
     // _serialize()
     *out << endl;
-    indent(0); *out << "void " << def->native_name << "::_serialize(x2::serializer& serializer) const" << endl;
+    indent(0); *out << "void " << def->native_name << "::_serialize(x2boost::serializer& serializer) const" << endl;
     indent(0); *out << "{" << endl;
     indent(1); *out << def->base_class << "::_serialize(serializer);" << endl;
     if (def->has_properties())
     {
-        indent(1); *out << "x2::capo touched(fingerprint_, _tag()->offset());" << endl;
+        indent(1); *out << "x2boost::capo touched(fingerprint_, _tag()->offset());" << endl;
         for (std::size_t i = 0, count = def->properties.size(); i < count; ++i)
         {
             cell::property* prop = def->properties[i];
@@ -565,7 +565,7 @@ namespace
         if (!type_spec.details.empty())
         {
             oss << '<';
-            for (size_t i = 0, count = type_spec.details.size(); i < count; ++i)
+            for (std::size_t i = 0, count = type_spec.details.size(); i < count; ++i)
             {
                 if (i != 0) { oss << ", "; }
                 oss << format_type_spec(type_spec.details[i]);
@@ -589,7 +589,7 @@ namespace
     {
         def->native_name = MixedCase2lower_case(def->name);
         def->base_class = (def->base.empty() ?
-            (def->is_event() ? "x2::event" : "x2::cell") :
+            (def->is_event() ? "x2boost::event" : "x2boost::cell") :
             MixedCase2lower_case(def->base_class));
 
         int index = 0;

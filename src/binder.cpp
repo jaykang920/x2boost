@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #include "x2boost/binder.hpp"
@@ -19,7 +19,7 @@ namespace
     };
 }
 
-using namespace x2;
+using namespace x2boost;
 
 void binder::bind(event_ptr e, handler_ptr handler)
 {

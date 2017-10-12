@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_ASIO_LINK_HPP_
@@ -12,7 +12,7 @@
 
 #include "x2boost/link.hpp"
 
-namespace x2
+namespace x2boost
 {
     // Common base class for concrete asio-based links.
     class X2BOOST_API asio_link : public link

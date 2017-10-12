@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_FINGERPRINT_HPP_
@@ -8,7 +8,7 @@
 #include "x2boost/pre.hpp"
 #endif
 
-namespace x2
+namespace x2boost
 {
     class deserializer;
     class serializer;
@@ -111,7 +111,7 @@ namespace x2
     private:
         static const std::size_t bits_per_byte = 8;
         static const std::size_t byte_exp = 3;
-        static const std::size_t bits_per_block = sizeof(size_t) * bits_per_byte;
+        static const std::size_t bits_per_block = sizeof(std::size_t) * bits_per_byte;
         static const std::size_t block_exp = (bits_per_block == 64 ? 6 : 5);
         static const std::size_t block_mask = bits_per_block - 1;
 

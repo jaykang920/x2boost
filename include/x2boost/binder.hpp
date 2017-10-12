@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_BINDER_HPP_
@@ -18,16 +18,16 @@
 namespace boost
 {
     template<>
-    struct hash<x2::event_ptr>
+    struct hash<x2boost::event_ptr>
     {
-        std::size_t operator()(x2::event_ptr const& x) const
+        std::size_t operator()(x2boost::event_ptr const& x) const
         {
             return x->_hash_code();
         }
     };
 }
 
-namespace x2
+namespace x2boost
 {
     class binder
     {

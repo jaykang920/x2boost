@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_LINK_HPP_
@@ -11,7 +11,7 @@
 #include "x2boost/case.hpp"
 #include "x2boost/util/ranged_int_pool.hpp"
 
-namespace x2
+namespace x2boost
 {
     // Abstract base class for concrete link cases.
     class X2BOOST_API link : public caze

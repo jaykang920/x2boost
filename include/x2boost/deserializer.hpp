@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_DESERIALIZER_HPP_
@@ -11,7 +11,7 @@
 #include "x2boost/buffer.hpp"
 #include "x2boost/event_factory.hpp"
 
-namespace x2
+namespace x2boost
 {
     class buffer;
 

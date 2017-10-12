@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_SYNCHRONIZED_QUEUE_HPP_
@@ -16,7 +16,7 @@
 
 #include "x2boost/queue.hpp"
 
-namespace x2
+namespace x2boost
 {
     template<typename T>
     class X2BOOST_API synchronized_queue : public queue_interface<T>

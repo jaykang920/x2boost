@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<x2 namespace="x2/Samples/HelloWorld">
+<x2 namespace="x2boost/Samples/HelloWorld">
     <event name="HelloReq" id="1">
         <property name="Name" type="string"/>
     </event>

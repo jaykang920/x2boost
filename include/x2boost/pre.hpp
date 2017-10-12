@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_PRE_HPP_
 #define X2BOOST_PRE_HPP_
 
-#ifdef X2_AS_SHARED_LIB
+#ifdef X2BOOST_AS_SHARED_LIB
 #if defined(_WIN32)
 #if defined(X2BOOST_EXPORTS)
 #define X2BOOST_API __declspec(dllexport)
@@ -12,7 +12,7 @@
 #define X2BOOST_API __declspec(dllimport)
 #endif
 #endif
-#endif  // X2_AS_SHARED_LIB
+#endif  // X2BOOST_AS_SHARED_LIB
 
 #ifndef X2BOOST_API
 #define X2BOOST_API
@@ -29,7 +29,7 @@
 
 #include "x2boost/util/log.hpp"
 
-namespace x2
+namespace x2boost
 {
     struct case_interface;
     class cell;

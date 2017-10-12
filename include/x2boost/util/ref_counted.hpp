@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #ifndef X2BOOST_REF_COUNTED_HPP_
@@ -10,7 +10,7 @@
 
 #include <boost/atomic.hpp>
 
-namespace x2
+namespace x2boost
 {
     // Provides intrusive reference counting for boost::intrusive_ptr<>
     class X2BOOST_API ref_counted

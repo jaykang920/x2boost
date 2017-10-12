@@ -1,11 +1,11 @@
-// Copyright (c) 2014-2016 Jae-jun Kang
+// Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
 #include <boost/test/unit_test.hpp>
 
 #include <x2boost/util/ranged_int_pool.hpp>
 
-using namespace x2;
+using namespace x2boost;
 
 BOOST_AUTO_TEST_SUITE(ranged_int_pool_test)
 

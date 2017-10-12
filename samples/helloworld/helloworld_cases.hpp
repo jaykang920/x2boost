@@ -25,7 +25,7 @@ namespace hello_world {
         {
             hello_resp_ptr resp = hello_resp::_new();
             resp->_handle(req->_handle());
-            resp->message(boost::to_upper_copy(req->name()));
+            resp->message("hello, " + req->name());
             hub::post(resp);
         }
     };

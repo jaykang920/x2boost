@@ -9,6 +9,6 @@ if exist "%OUTDIR%" (
 mkdir "%OUTDIR%"
 
 pushd "%OUTDIR%"
-cmake -G "Visual Studio 15 2017 Win64" -D BUILD_TEST=ON -D BUILD_EXAMPLES=ON ..\..
+cmake -G "Visual Studio 15 2017 Win64" -D BUILD_TEST=ON -D BUILD_SAMPLES=ON ..\..
 popd
 endlocal

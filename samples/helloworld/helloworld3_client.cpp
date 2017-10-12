@@ -3,16 +3,16 @@
 #include <x2boost/flows/single_threaded_flow.hpp>
 #include <x2boost/links/asio_tcp_client.hpp>
 
-#include "head_first.hpp"
-#include "headfirst_cases.hpp"
+#include "hello_world.hpp"
+#include "helloworld_cases.hpp"
 
-namespace x2 { namespace examples { namespace head_first {
+namespace x2 { namespace samples { namespace hello_world {
 
-    class capitalizer_client : public asio_tcp_client
+    class hello_client : public asio_tcp_client
     {
     public:
-        capitalizer_client()
-            : asio_tcp_client("capitalizer_client")
+        hello_client()
+            : asio_tcp_client("hello_client")
         {
         }
     protected:
@@ -26,14 +26,14 @@ namespace x2 { namespace examples { namespace head_first {
             connect(endpoint);
 
             // TODO FIXME temp
-            flow::bind((event_ptr)capitalize_req::_new(), &capitalizer_client::send, (asio_tcp_client*)this);
+            flow::bind((event_ptr)hello_req::_new(), &hello_client::send, (asio_tcp_client*)this);
         }
     };
 
-} } }  // namespace x2::examples::head_first
+} } }  // namespace x2::samples::hello_world
 
 using namespace x2;
-using namespace x2::examples::head_first;
+using namespace x2::samples::hello_world;
 
 void log_handler(int level, const std::string& message)
 {
@@ -48,7 +48,7 @@ int main()
     hub::instance()
         .attach(flow_ptr(new single_threaded_flow<>())
             ->add(case_ptr(new output_case()))
-            ->add(case_ptr(new capitalizer_client())));
+            ->add(case_ptr(new hello_client())));
 
     hub::flows flows;
     flows.startup();
@@ -63,8 +63,8 @@ int main()
         }
         else
         {
-            capitalize_req_ptr req = capitalize_req::_new();
-            req->message(message);
+            hello_req_ptr req = hello_req::_new();
+            req->name(message);
             hub::post(req);
         }
     }

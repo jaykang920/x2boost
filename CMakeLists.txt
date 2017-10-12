@@ -10,7 +10,7 @@ option(BUILD_SHARED_LIBS "Build x2boost as a shared library (DLL)" OFF)
 option(BUILD_FORCE_SHARED_CRT "Shared (DLL) version of C runtime library" OFF)
 option(BUILD_XPILER "Build xpiler executable" ON)
 option(BUILD_TEST "Build unit tests" OFF)
-option(BUILD_EXAMPLES "Build examples" OFF)
+option(BUILD_SAMPLES "Build samples" OFF)
 
 if(WIN32)
   SET(CMAKE_USE_RELATIVE_PATHS true)
@@ -112,8 +112,8 @@ if(BUILD_TEST)
   add_subdirectory(test)
 endif()
 
-if(BUILD_EXAMPLES)
-  add_subdirectory(examples)
+if(BUILD_SAMPLES)
+  add_subdirectory(samples)
 endif()
 
 # EOF CMakeLists.txt

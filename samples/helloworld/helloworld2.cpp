@@ -1,16 +1,17 @@
 #include <x2boost/flows/single_threaded_flow.hpp>
 
-#include "head_first.hpp"
-#include "headfirst_cases.hpp"
+#include "hello_world.hpp"
+#include "helloworld_cases.hpp"
 
 using namespace x2;
-using namespace x2::examples::head_first;
+using namespace x2::samples::hello_world;
 
 int main()
 {
     hub::instance()
         .attach(flow_ptr(new single_threaded_flow<>())
-            ->add(case_ptr(new capitalizer_case()))
+            ->add(case_ptr(new capitalizer_case())))
+        .attach(flow_ptr(new single_threaded_flow<>())
             ->add(case_ptr(new output_case())));
 
     hub::flows flows;
@@ -26,8 +27,8 @@ int main()
         }
         else
         {
-            capitalize_req_ptr req = capitalize_req::_new();
-            req->message(message);
+            hello_req_ptr req = hello_req::_new();
+            req->name(message);
             hub::post(req);
         }
     }

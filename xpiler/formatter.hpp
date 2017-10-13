@@ -14,9 +14,8 @@ namespace xpiler
 {
     struct cell;
     struct consts;
-    struct reference;
-
-    struct document;
+	struct document;
+	struct reference;
 
     /// Abstract base class for output file formatters.
     struct formatter

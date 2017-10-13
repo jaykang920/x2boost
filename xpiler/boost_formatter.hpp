@@ -14,6 +14,7 @@
 
 namespace xpiler
 {
+	struct unit;
     class boost_formatter_context;
 
     struct boost_formatter : public formatter
@@ -26,7 +27,7 @@ namespace xpiler
 
         virtual const char* description()
         {
-            return "C++ with Boost";
+            return "C++98 with Boost";
         }
 
     private:

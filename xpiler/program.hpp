@@ -1,8 +1,8 @@
 // Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
-#ifndef X2BOOST_XPILER_XPILER_HPP_
-#define X2BOOST_XPILER_XPILER_HPP_
+#ifndef X2BOOST_XPILER_PROGRAM_HPP_
+#define X2BOOST_XPILER_PROGRAM_HPP_
 
 #ifndef X2BOOST_XPILER_PRE_HPP_
 #include "pre.hpp"
@@ -18,13 +18,13 @@
 
 namespace xpiler
 {
-    class xpiler
+    class program
     {
     public:
         typedef std::map<std::string, handler*> handler_map_type;
         typedef std::map<std::string, formatter*> formatter_map_type;
 
-        xpiler();
+        program();
 
         void process(const std::string& path);
 
@@ -53,4 +53,4 @@ namespace xpiler
     };
 }
 
-#endif  // X2BOOST_XPILER_XPILER_HPP_
+#endif  // X2BOOST_XPILER_PROGRAM_HPP_

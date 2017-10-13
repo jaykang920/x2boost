@@ -8,7 +8,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 
-#include "document.hpp"
+#include "definition.hpp"
 
 using namespace std;
 using namespace xpiler;
@@ -26,8 +26,8 @@ bool xml_handler::handle(const string& path, document** doc)
         pt::ptree& root = p.get_child("x2");
         if (root.empty())
         {
-            return true;
-        }
+            return true;  // not an x2 definition file
+		}
         document* d = *doc = new document;
         BOOST_FOREACH(pt::ptree::value_type const& v, root)
         {
@@ -36,64 +36,92 @@ bool xml_handler::handle(const string& path, document** doc)
                 d->ns = v.second.get("namespace", "");
                 boost::trim(d->ns);
             }
-            else if (v.first == "ref")
-            {
-                reference* ref = new reference;
-                ref->target = v.second.get<string>("<xmlattr>.target");
-                d->references.push_back(ref);
-            }
-            else if (v.first == "consts")
-            {
-                consts* def = new consts;
+			else if (v.first == "references")
+			{
+				BOOST_FOREACH(pt::ptree::value_type const& v2, v.second)
+				{
+                    reference* ref = new reference;
+                    ref->type = unknown_ref_type;
+
+					if (v2.first == "namespace")
+					{
+                        ref->type = namespace_ref_type;
+					}
+					else if (v2.first == "file")
+					{
+                        ref->type = file_ref_type;
+                    }
+
+                    if (ref->type == unknown_ref_type)
+                    {
+                        delete ref;
+                    }
+                    else
+                    {
+                        ref->target = v2.second.get<string>("<xmlattr>.target");
+                        boost::trim(ref->target);
+                        d->references.push_back(ref);
+                    }
+				}
+			}
+			else if (v.first == "definitions")
+			{
                 BOOST_FOREACH(pt::ptree::value_type const& v2, v.second)
                 {
-                    if (v2.first == "<xmlattr>")
+                    if (v2.first == "consts")
                     {
-                        def->name = v2.second.get<string>("name");
-                        def->type = v2.second.get<string>("type", "int32");
+                        consts* def = new consts;
+                        BOOST_FOREACH(pt::ptree::value_type const& v3, v2.second)
+                        {
+                            if (v3.first == "<xmlattr>")
+                            {
+                                def->name = v3.second.get<string>("name");
+                                def->type = v3.second.get<string>("type", "int32");
+                            }
+                            else if (v3.first == "const")
+                            {
+                                consts::constant* constant = new consts::constant;
+                                constant->name = v3.second.get<string>("<xmlattr>.name");
+                                constant->value = v3.second.get_value<string>();
+                                boost::trim(constant->value);
+                                def->constants.push_back(constant);
+                            }
+                        }
+                        d->definitions.push_back(def);
                     }
-                    else if (v2.first == "const")
+                    else if (v2.first == "cell" || v2.first == "event")
                     {
-                        consts::element* element = new consts::element;
-                        element->name = v2.second.get<string>("<xmlattr>.name");
-                        element->value = v2.second.get_value<string>();
-                        boost::trim(element->value);
-                        def->elements.push_back(element);
+                        bool is_event = (v2.first == "event");
+                        cell* def;
+                        def = (is_event ? new event : new cell);
+                        BOOST_FOREACH(pt::ptree::value_type const& v3, v2.second)
+                        {
+                            if (v3.first == "<xmlattr>")
+                            {
+                                def->name = v3.second.get<string>("name");
+                                def->base = v3.second.get("base", "");
+                                if (is_event)
+                                {
+                                    ((event*)def)->id = v3.second.get<string>("id");
+                                }
+                            }
+                            else if (v3.first == "property")
+                            {
+                                cell::property* property = new cell::property;
+                                property->name = v3.second.get<string>("<xmlattr>.name");
+                                if (!types::parse(v3.second.get<string>("<xmlattr>.type"), &(property->type)))
+                                {
+                                    // error parsing type spec
+                                    return false;
+                                }
+                                property->default_value = v3.second.get_value<string>();
+                                boost::trim(property->default_value);
+                                def->properties.push_back(property);
+                            }
+                        }
+                        d->definitions.push_back(def);
                     }
                 }
-                d->definitions.push_back(def);
-            }
-            else if (v.first == "cell" || v.first == "event")
-            {
-                bool is_event = (v.first == "event");
-                cell* def;
-                def = (is_event ? new event : new cell);
-                BOOST_FOREACH(pt::ptree::value_type const& v2, v.second)
-                {
-                    if (v2.first == "<xmlattr>")
-                    {
-                        def->name = v2.second.get<string>("name");
-                        def->base = v2.second.get("base", "");
-                        if (is_event)
-                        {
-                            ((event*)def)->id = v2.second.get<string>("id");
-                        }
-                    }
-                    else if (v2.first == "property")
-                    {
-                        cell::property* property = new cell::property;
-                        property->name = v2.second.get<string>("<xmlattr>.name");
-                        if (!types::parse(v2.second.get<string>("<xmlattr>.type"), &(property->type)))
-                        {
-                            // error parsing type spec
-                            return false;
-                        }
-                        property->default_value = v2.second.get_value<string>();
-                        boost::trim(property->default_value);
-                        def->properties.push_back(property);
-                    }
-                }
-                d->definitions.push_back(def);
             }
         }
         return true;
@@ -105,7 +133,7 @@ bool xml_handler::handle(const string& path, document** doc)
             delete *doc;
             *doc = NULL;
         }
-        cout << e.what() << endl;
+        cerr << e.what() << endl;
         return false;
     }
 }

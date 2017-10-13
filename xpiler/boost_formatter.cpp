@@ -9,7 +9,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 
-#include "document.hpp"
+#include "definition.hpp"
 #include "types.hpp"
 
 using namespace std;
@@ -57,7 +57,7 @@ bool boost_formatter::format(document* doc, const string& out_dir)
     }
     catch (std::exception& e)
     {
-        cout << e.what() << endl;
+        cerr << e.what() << endl;
         return false;
     }
 }
@@ -127,6 +127,16 @@ void boost_formatter::format_header_file(boost_formatter_context& context)
 
     out << endl;
     out << "#include <x2boost/x2boost.hpp>" << endl;
+
+    if (context.doc->references.empty() == false)
+    {
+        out << endl;
+    }
+    BOOST_FOREACH(reference* ref, context.doc->references)
+    {
+        ref->format(context);
+    }
+    
     out << endl;
 
     vector<string> namespaces;
@@ -315,12 +325,12 @@ void boost_header_formatter::format_consts(consts* def)
     indent(0); *out << "struct " << def->native_name << endl;
     indent(0); *out << "{" << endl;
     
-    BOOST_FOREACH(consts::element* elem, def->elements)
+    BOOST_FOREACH(consts::constant* constant, def->constants)
     {
-        indent(1); *out << "const " << def->native_type << " " << elem->native_name;
+        indent(1); *out << "const " << def->native_type << " " << constant->native_name;
         if (types::is_integer(def->type))
         {
-            *out << " = " << elem->value;
+            *out << " = " << constant->value;
         }
         *out << ";" << endl;
     }
@@ -330,7 +340,34 @@ void boost_header_formatter::format_consts(consts* def)
 
 void boost_header_formatter::format_reference(reference* def)
 {
-
+    if (def->target.empty())
+    {
+        return;
+    }
+    if (def->type == file_ref_type)  // file target
+    {
+        string path;
+        string filename = def->target;
+        size_t index = filename.find_last_of('/');
+        if (index != string::npos)
+        {
+            path = filename.substr(0, index);
+            filename = filename.substr(index);
+            filename = MixedCase2lower_case(filename);
+            filename = path + filename;
+        }
+        else
+        {
+            filename = MixedCase2lower_case(filename);
+        }
+        *out << "#include \"" << filename << ".hpp\"" << endl;
+    }
+    else if (def->type == namespace_ref_type)  // namespace target
+    {
+        string ns = def->target;
+        boost::replace_all(ns, "/", "::");
+        *out << "using namespace " << MixedCase2lower_case(ns) << ';' << endl;
+    }
 }
 
 void boost_source_formatter::format_cell(cell* def)
@@ -528,12 +565,12 @@ void boost_source_formatter::format_consts(consts* def)
 {
     if (types::is_integer(def->type)) { return; }
 
-    BOOST_FOREACH(consts::element* elem, def->elements)
+    BOOST_FOREACH(consts::constant* constant, def->constants)
     {
         indent(0); *out << def->native_type << " " << def->native_name << "::"
-            << elem->native_name << " = ";
+            << constant->native_name << " = ";
         if (def->type == "string") { *out << "\""; }
-        *out << elem->value;
+        *out << constant->value;
         if (def->type == "string") { *out << "\""; }
         else if (def->type == "float32") { *out << "f"; }
         *out << ";" << endl;
@@ -579,9 +616,9 @@ namespace
         def->native_name = MixedCase2lower_case(def->name);
         def->native_type = types::native_type(def->type);
 
-        BOOST_FOREACH(consts::element* elem, def->elements)
+        BOOST_FOREACH(consts::constant* constant, def->constants)
         {
-            elem->native_name = MixedCase2lower_case(elem->name);
+            constant->native_name = MixedCase2lower_case(constant->name);
         }
     }
 

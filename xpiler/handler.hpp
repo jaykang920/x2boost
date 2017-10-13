@@ -12,6 +12,7 @@ namespace xpiler
 {
     struct document;
 
+	/// Definition document file handler interface.
     struct handler
     {
         virtual bool handle(const std::string& path, document** doc) = 0;

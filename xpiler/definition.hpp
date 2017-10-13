@@ -15,6 +15,28 @@
 
 namespace xpiler
 {
+    enum reference_type
+    {
+        unknown_ref_type,
+        namespace_ref_type,
+        file_ref_type
+    };
+
+    /// Represents a reference specification.
+	struct reference
+	{
+        reference() {}
+
+        reference_type type;
+		std::string target;
+
+		void format(formatter_context& context)
+		{
+			context.format_reference(this);
+		}
+    };
+
+	/// Represents an abstract definition.
     struct definition
     {
         definition() {}
@@ -26,21 +48,20 @@ namespace xpiler
         std::string native_name;
     };
 
+	/// Represents a set of constants.
     struct consts : public definition
     {
-        struct element
+        struct constant
         {
             std::string name;
             std::string value;
             std::string native_name;
         };
 
-        typedef boost::shared_ptr<element> element_ptr;
-
         consts() {}
         virtual ~consts()
         {
-            BOOST_FOREACH(element* p, elements) { delete p; }
+            BOOST_FOREACH(constant* p, constants) { delete p; }
         }
 
         virtual void format(formatter_context& context)
@@ -50,9 +71,10 @@ namespace xpiler
 
         std::string type;
         std::string native_type;
-        std::vector<element*> elements;
+        std::vector<constant*> constants;
     };
 
+	/// Represents a cell definition.
     struct cell : public definition
     {
         struct property
@@ -64,8 +86,6 @@ namespace xpiler
             std::string native_name;
             std::string native_type;
         };
-
-        typedef boost::shared_ptr<property> property_ptr;
 
         cell() {}
         virtual ~cell()
@@ -87,6 +107,7 @@ namespace xpiler
         std::vector<property*> properties;
     };
 
+	/// Represents an event definition.
     struct event : public cell
     {
         event() {}
@@ -97,17 +118,22 @@ namespace xpiler
         std::string id;
     };
 
-    struct reference
-    {
-        reference() {}
+	/// Represents a single definition document.
+	struct document
+	{
+		document() {}
+		~document()
+		{
+			BOOST_FOREACH(reference* p, references) { delete p; }
+			BOOST_FOREACH(definition* p, definitions) { delete p; }
+		}
 
-        std::string target;
+		std::string basename;
+		std::string ns;
 
-        void format(formatter_context& context)
-        {
-            context.format_reference(this);
-        }
-    };
+		std::vector<reference*> references;
+		std::vector<definition*> definitions;
+	};
 }
 
 #endif  // X2BOOST_XPILER_DEFINITION_HPP_

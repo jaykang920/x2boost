@@ -9,23 +9,22 @@ set(xpiler_SRC_DIR "${x2boost_SOURCE_DIR}/xpiler")
 set(xpiler_INC
   "${xpiler_SRC_DIR}/boost_formatter.hpp"
   "${xpiler_SRC_DIR}/definition.hpp"
-  "${xpiler_SRC_DIR}/document.hpp"
+  "${xpiler_SRC_DIR}/formatter.hpp"
   "${xpiler_SRC_DIR}/handler.hpp"
   "${xpiler_SRC_DIR}/options.hpp"
-  "${xpiler_SRC_DIR}/formatter.hpp"
   "${xpiler_SRC_DIR}/pre.hpp"
+  "${xpiler_SRC_DIR}/program.hpp"
   "${xpiler_SRC_DIR}/types.hpp"
   "${xpiler_SRC_DIR}/xml_handler.hpp"
-  "${xpiler_SRC_DIR}/xpiler.hpp"
 )
 
 set(xpiler_SRC
   "${xpiler_SRC_DIR}/boost_formatter.cpp"
   "${xpiler_SRC_DIR}/main.cpp"
   "${xpiler_SRC_DIR}/options.cpp"
+  "${xpiler_SRC_DIR}/program.cpp"
   "${xpiler_SRC_DIR}/types.cpp"
   "${xpiler_SRC_DIR}/xml_handler.cpp"
-  "${xpiler_SRC_DIR}/xpiler.cpp"
 )
 
 add_executable(xpiler ${xpiler_SRC} ${xpiler_INC})

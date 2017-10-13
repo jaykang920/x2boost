@@ -1,12 +1,12 @@
 // Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
-#include "xpiler.hpp"
+#include "program.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 
-#include "document.hpp"
+#include "definition.hpp"
 
 #include "boost_formatter.hpp"
 #include "xml_handler.hpp"
@@ -17,14 +17,14 @@ namespace fs = boost::filesystem;
 
 namespace xpiler
 {
-    options xpiler::opts;
+    options program::opts;
 
-    xpiler::handler_map_type xpiler::handlers_;
-    xpiler::formatter_map_type xpiler::formatters_;
+    program::handler_map_type program::handlers_;
+    program::formatter_map_type program::formatters_;
 
-    xpiler::static_initializer xpiler::static_init_;
+    program::static_initializer program::static_init_;
 
-    xpiler::xpiler()
+    program::program()
     {
         error = false;
 
@@ -32,7 +32,7 @@ namespace xpiler
         formatter_->setup();
     }
 
-    void xpiler::process(const string& path)
+    void program::process(const string& path)
     {
         if (fs::is_directory(path))
         {
@@ -49,7 +49,7 @@ namespace xpiler
         }
     }
 
-    void xpiler::process_dir(const fs::path& path)
+    void program::process_dir(const fs::path& path)
     {
         cout << "Directory " << fs::canonical(path).string() << endl;
 
@@ -77,7 +77,7 @@ namespace xpiler
         }
     }
 
-    void xpiler::process_file(const fs::path& path)
+    void program::process_file(const fs::path& path)
     {
         fs::path filename = path.filename();
         string extension = path.extension().string();
@@ -131,13 +131,13 @@ namespace xpiler
         delete doc;
     }
 
-    xpiler::static_initializer::static_initializer()
+    program::static_initializer::static_initializer()
     {
         handlers_[".xml"] = new xml_handler;
         formatters_["boost"] = new boost_formatter;
     }
 
-    xpiler::static_initializer::~static_initializer()
+    program::static_initializer::~static_initializer()
     {
         BOOST_FOREACH(handler_map_type::value_type& pair, handlers_)
         {
@@ -150,4 +150,4 @@ namespace xpiler
     }
 }
 
-// EOF xpiler.cpp
+// EOF program.cpp

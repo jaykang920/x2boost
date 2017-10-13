@@ -3,21 +3,24 @@
 
 #include <boost/foreach.hpp>
 
-#include "xpiler.hpp"
+#include "program.hpp"
+
+using namespace std;
+using namespace xpiler;
 
 int main(int argc, char* argv[])
 {
-    if (!xpiler::xpiler::opts.parse(argc, argv))
+    if (!program::opts.parse(argc, argv))
     {
         return 2;
     }
 
-    xpiler::xpiler xpiler;
-    BOOST_FOREACH(const std::string& path, xpiler::xpiler::opts.input)
+    program program;
+    BOOST_FOREACH(const string& path, program::opts.input)
     {
-        xpiler.process(path);
+		program.process(path);
     }
-    return (xpiler.error ? 1 : 0);
+	return (program.error ? 1 : 0);
 }
 
 // EOF main.cpp

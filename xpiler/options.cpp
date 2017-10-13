@@ -9,7 +9,7 @@
 #include <boost/program_options.hpp>
 
 #include "formatter.hpp"
-#include "xpiler.hpp"
+#include "program.hpp"
 
 using namespace std;
 using namespace xpiler;
@@ -45,8 +45,8 @@ bool options::parse(int argc, char* argv[])
             cout << "  usage: xpiler [options] path..." << endl;
             cout << options << endl;
             cout << "specs:" << endl;
-            BOOST_FOREACH(const xpiler::formatter_map_type::value_type& pair,
-                xpiler::formatters())
+            BOOST_FOREACH(const program::formatter_map_type::value_type& pair,
+                program::formatters())
             {
                 cout << setw(21) << pair.first << " : "
                     << pair.second->description();
@@ -65,7 +65,7 @@ bool options::parse(int argc, char* argv[])
         }
         else
         {
-            cout << "error: at least one input path required" << endl;
+            cerr << "error: at least one input path required" << endl;
             return false;
         }
 
@@ -84,11 +84,11 @@ bool options::parse(int argc, char* argv[])
         if (variables.count("spec"))
         {
             spec = variables["spec"].as<string>();
-            const xpiler::formatter_map_type& formatters = xpiler::formatters();
-            xpiler::formatter_map_type::const_iterator it = formatters.find(spec);
+            const program::formatter_map_type& formatters = program::formatters();
+            program::formatter_map_type::const_iterator it = formatters.find(spec);
             if (it == formatters.end())
             {
-                cout << "error: unknown target formatter specified: "
+                cerr << "error: unknown target formatter specified: "
                     << spec << endl;
                 return false;
             }
@@ -99,7 +99,7 @@ bool options::parse(int argc, char* argv[])
     }
     catch (po::error& e)
     {
-        cout << "error: " << e.what() << endl;
+        cerr << "error: " << e.what() << endl;
         return false;
     }
 }

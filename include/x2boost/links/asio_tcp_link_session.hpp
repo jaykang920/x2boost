@@ -65,7 +65,7 @@ namespace x2boost
         void handle_send(const boost::system::error_code& error,
             std::size_t bytes_transferred)
         {
-            log::info() << "sent " << bytes_transferred << " byte(s)" << std::endl;
+            trace::info() << "sent " << bytes_transferred << " byte(s)" << std::endl;
 
             send_buffer_.trim();
         }
@@ -91,7 +91,7 @@ namespace x2boost
                 on_disconnect();
                 return;
             }
-            log::info() << "received " << bytes_transferred << " byte(s)" << std::endl;
+            trace::info() << "received " << bytes_transferred << " byte(s)" << std::endl;
 
             // TODO FIXME temp
             recv_buffer_.stretch((int)bytes_transferred);
@@ -121,7 +121,7 @@ namespace x2boost
                 {
                     retrieved->_deserialize(des);
 
-                    log::info() << retrieved->_string() << std::endl;
+                    trace::info() << retrieved->_string() << std::endl;
 
                     retrieved->_handle(handle_);
 
@@ -131,7 +131,7 @@ namespace x2boost
                 }
                 else
                 {
-                    log::error("event retrieval error");
+                    trace::error("event retrieval error");
                 }
             }
 
@@ -143,7 +143,7 @@ namespace x2boost
     protected:
         virtual void on_disconnect()
         {
-            log::info() << link_->name() << " " << handle() << " disconnected from " << socket_.remote_endpoint() << std::endl;
+            trace::info() << link_->name() << " " << handle() << " disconnected from " << socket_.remote_endpoint() << std::endl;
             link_->on_disconnect(shared_from_this());
         }
 

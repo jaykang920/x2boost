@@ -27,7 +27,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/version.hpp>
 
-#include "x2boost/util/log.hpp"
+#include "x2boost/util/trace.hpp"
 
 namespace x2boost
 {

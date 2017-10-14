@@ -13,7 +13,7 @@ namespace x2boost
     class deserializer;
     class serializer;
 
-    // Manages a fixed-length compact array of bit values.
+    /// Manages a fixed-length compact array of bit values.
     class X2BOOST_API fingerprint
     {
     public:
@@ -172,6 +172,7 @@ namespace x2boost
         int ref_count_;
     };
 
+    /// Provides an offset-based indexer for the underlying fingerprint object.
     class X2BOOST_API capo : private boost::noncopyable
     {
     public:

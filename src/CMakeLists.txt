@@ -14,6 +14,7 @@ set(x2boost_INC
   "${x2boost_INC_DIR}/deserializer.hpp"
   "${x2boost_INC_DIR}/event.hpp"
   "${x2boost_INC_DIR}/event_factory.hpp"
+  "${x2boost_INC_DIR}/event_queue.hpp"
   "${x2boost_INC_DIR}/event_sink.hpp"
   "${x2boost_INC_DIR}/fingerprint.hpp"
   "${x2boost_INC_DIR}/flow.hpp"
@@ -21,7 +22,6 @@ set(x2boost_INC
   "${x2boost_INC_DIR}/hub.hpp"
   "${x2boost_INC_DIR}/link.hpp"
   "${x2boost_INC_DIR}/pre.hpp"
-  "${x2boost_INC_DIR}/queue.hpp"
   "${x2boost_INC_DIR}/serializer.hpp"
   "${x2boost_INC_DIR}/x2boost.hpp"
 )
@@ -38,13 +38,12 @@ set(x2boost_INC_LINKS
   "${x2boost_INC_DIR}/links/asio_tcp_server.hpp"
 )
 set(x2boost_INC_QUEUES
-  "${x2boost_INC_DIR}/queues/lockfree_queue.hpp"
-  "${x2boost_INC_DIR}/queues/synchronized_queue.hpp"
+  "${x2boost_INC_DIR}/queues/synchronized_event_queue.hpp"
 )
 set(x2boost_INC_UTIL
   "${x2boost_INC_DIR}/util/buffer_pool.hpp"
   "${x2boost_INC_DIR}/util/deleter.hpp"
-  "${x2boost_INC_DIR}/util/log.hpp"
+  "${x2boost_INC_DIR}/util/trace.hpp"
   "${x2boost_INC_DIR}/util/ranged_int_pool.hpp"
   "${x2boost_INC_DIR}/util/ref_counted.hpp"
 )
@@ -83,7 +82,7 @@ set(x2boost_SRC_LINKS
 )
 set(x2boost_SRC_UTIL
   "${x2boost_SRC_DIR}/util/buffer_pool.cpp"
-  "${x2boost_SRC_DIR}/util/log.cpp"
+  "${x2boost_SRC_DIR}/util/trace.cpp"
 )
 
 list(APPEND x2boost_ALL_SRC ${x2boost_SRC})

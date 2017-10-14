@@ -12,7 +12,7 @@
 
 namespace x2boost
 {
-    // Provides intrusive reference counting for boost::intrusive_ptr<>
+    /// Provides intrusive reference counting for boost::intrusive_ptr<>.
     class X2BOOST_API ref_counted
     {
     public:

@@ -34,7 +34,7 @@ namespace x2boost
             acceptor_.bind(ep);
             acceptor_.listen();
 
-            log::info() << name() << " listening on " << port << std::endl;
+            trace::info() << name() << " listening on " << port << std::endl;
 
             start_accept();
         }
@@ -54,11 +54,11 @@ namespace x2boost
         {
             if (error)
             {
-                log::error() << name() << " " << session->handle() << " accept error " << error.value() << " " << error.message() << std::endl;
+                trace::error() << name() << " " << session->handle() << " accept error " << error.value() << " " << error.message() << std::endl;
                 return;
             }
 
-            log::debug() << name() << " " << session->handle() << " accepted " << session->socket().remote_endpoint() << std::endl;
+            trace::debug() << name() << " " << session->handle() << " accepted " << session->socket().remote_endpoint() << std::endl;
 
             {
                 boost::unique_lock<boost::shared_mutex> wlock(shared_mutex_);

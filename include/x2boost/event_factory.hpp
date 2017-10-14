@@ -28,7 +28,7 @@ namespace x2boost
             map_type::iterator it = instance().registry().find(type_id);
             if (it == instance().registry().end())
             {
-                log::error()
+                trace::error()
                     << "event_factory::create : unknown event type id "
                     << type_id << std::endl;
                 return event_ptr();
@@ -51,7 +51,7 @@ namespace x2boost
             {
                 if (it->second != func)
                 {
-                    log::error()
+                    trace::error()
                         << "event type id " << type_id << " conflicted"
                         << std::endl;
                 }

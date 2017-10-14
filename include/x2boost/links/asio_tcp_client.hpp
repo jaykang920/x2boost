@@ -35,7 +35,7 @@ namespace x2boost
 
         void connect(const boost::asio::ip::tcp::endpoint& ep)
         {
-            log::info() << name() << " connecting to " << ep << std::endl;
+            trace::info() << name() << " connecting to " << ep << std::endl;
 
             start_connect(ep);
         }
@@ -44,27 +44,27 @@ namespace x2boost
         {
             asio_tcp_link_session::pointer session(new asio_tcp_link_session(this));
 
-            log::debug() << "calling async_connect()" << std::endl;
+            trace::debug() << "calling async_connect()" << std::endl;
 
             session->socket().async_connect(ep,
                 boost::bind(&asio_tcp_client::handle_connect, this, session,
                 boost::asio::placeholders::error)
                 );
 
-            log::debug() << "async_connect() returned" << std::endl;
+            trace::debug() << "async_connect() returned" << std::endl;
         }
 
         void handle_connect(asio_tcp_link_session::pointer session,
             const boost::system::error_code& error)
         {
-            log::info() << "entered handle_connect()" << std::endl;
+            trace::info() << "entered handle_connect()" << std::endl;
             //
             if (error)
             {
-                log::error() << name() << " connect error " << error.message() << std::endl;
+                trace::error() << name() << " connect error " << error.message() << std::endl;
                 return;
             }
-            log::debug() << name() << " " << session->handle() << " connected to " << session->socket().remote_endpoint() << std::endl;
+            trace::debug() << name() << " " << session->handle() << " connected to " << session->socket().remote_endpoint() << std::endl;
 
             session_ = session;
 

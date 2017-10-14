@@ -1,8 +1,8 @@
 // Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
-#ifndef X2BOOST_SYNCHRONIZED_QUEUE_HPP_
-#define X2BOOST_SYNCHRONIZED_QUEUE_HPP_
+#ifndef X2BOOST_SYNCHRONIZED_EVENT_QUEUE_HPP_
+#define X2BOOST_SYNCHRONIZED_EVENT_QUEUE_HPP_
 
 #ifndef X2BOOST_PRE_HPP_
 #include "x2boost/pre.hpp"
@@ -14,28 +14,28 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 
-#include "x2boost/queue.hpp"
+#include "x2boost/event_queue.hpp"
 
 namespace x2boost
 {
-    template<typename T>
-    class X2BOOST_API synchronized_queue : public queue_interface<T>
+    class X2BOOST_API synchronized_event_queue : public event_queue
     {
     public:
-        synchronized_queue() : closing_(false) {}
+        synchronized_event_queue() : closing_(false) {}
 
-        virtual ~synchronized_queue() {}
+        virtual ~synchronized_event_queue() {}
 
         virtual void close()
         {
+            boost::mutex::scoped_lock lock(mutex_);
             if (closing_) { return; }
             closing_ = true;
             cond_.notify_all();
         }
 
-        virtual T dequeue()
+        virtual event_ptr dequeue()
         {
-            T value;
+            event_ptr value;
             boost::mutex::scoped_lock lock(mutex_);
             while (store_.empty())
             {
@@ -50,7 +50,7 @@ namespace x2boost
             return value;
         }
 
-        virtual bool enqueue(T value)
+        virtual bool enqueue(const event_ptr& value)
         {
             boost::mutex::scoped_lock lock(mutex_);
             store_.push(value);
@@ -61,12 +61,12 @@ namespace x2boost
             return true;
         }
 
-        virtual bool try_dequeue(T* value)
+        virtual bool try_dequeue(event_ptr* value)
         {
             boost::mutex::scoped_lock lock(mutex_);
             if (store_.empty())
             {
-                T empty;
+                event_ptr empty;
                 *value = empty;
                 return false;
             }
@@ -78,14 +78,12 @@ namespace x2boost
         virtual size_t size() const { return store_.size(); }
 
     protected:
-        std::queue<T> store_;
+        std::queue<event_ptr> store_;
         volatile bool closing_;
 
         mutable boost::mutex mutex_;
         mutable boost::condition_variable cond_;
     };
-
-    typedef synchronized_queue<event_ptr> synchronized_event_queue;
 }
 
-#endif  // X2BOOST_SYNCHRONIZED_QUEUE_HPP_
+#endif  // X2BOOST_SYNCHRONIZED_EVENT_QUEUE_HPP_

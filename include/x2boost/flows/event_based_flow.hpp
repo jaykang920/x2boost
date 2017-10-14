@@ -9,7 +9,7 @@
 #endif
 
 #include "x2boost/flow.hpp"
-#include "x2boost/queues/synchronized_queue.hpp"
+#include "x2boost/queues/synchronized_event_queue.hpp"
 
 namespace x2boost
 {

@@ -131,15 +131,14 @@ void buffer::pos(int value)
     pos_ = adjusted;
 
     int block_index = pos_ >> block_size_exponent_;
+    // Prepare for block_feed() in get_byte/put_byte.
     if ((block_index != 0) && ((pos_ & remainder_mask_) == 0))
     {
         --block_index;
     }
-    if (block_index != block_index_)
-    {
-        block_index_ = block_index;
-        block_ = blocks_[block_index_];
-    }
+    // Force to update the current block.
+    block_index_ = block_index;
+    block_ = blocks_[block_index_];
 }
 
 void buffer::read(byte_t* buffer, int offset, int count)

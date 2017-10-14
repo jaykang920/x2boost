@@ -21,7 +21,7 @@ namespace
 
     void run()
     {
-        log::debug("asio_worker begin");
+        trace::debug("asio_worker begin");
 
         while (!should_stop)
         {
@@ -31,22 +31,22 @@ namespace
                 asio_link::io_service().run(ec);
                 if (ec)
                 {
-                    log::error(ec.message());
+                    trace::error(ec.message());
                 }
             }
             catch (std::exception& e)
             {
-                log::error(e.what());
+                trace::error(e.what());
             }
             boost::this_thread::sleep_for(boost::chrono::milliseconds(1));
         }
 
-        log::debug("asio_worker end");
+        trace::debug("asio_worker end");
     }
 
     void asio_start()
     {
-        log::info("asio_start");
+        trace::info("asio_start");
 
         int n = (int)boost::thread::hardware_concurrency();
         n = (int)boost::math::round((double)n * 0.66);
@@ -63,7 +63,7 @@ namespace
         asio_link::io_service().stop();  // TODO FIXME rely on socket close
         workers.join_all();
 
-        log::info("asio_stop");
+        trace::info("asio_stop");
     }
 }
 

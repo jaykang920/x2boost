@@ -10,18 +10,18 @@
 
 namespace x2boost
 {
-    template<typename T>
-    struct X2BOOST_API queue_interface
+    /// Abstract base class for blocking event queue implementations.
+    struct X2BOOST_API event_queue
     {
-        virtual ~queue_interface() {}
+        virtual ~event_queue() {}
 
         virtual void close() = 0;
 
-        virtual T dequeue() = 0;
+        virtual event_ptr dequeue() = 0;
 
-        virtual bool enqueue(T value) = 0;
+        virtual bool enqueue(const event_ptr& value) = 0;
 
-        virtual bool try_dequeue(T* value) = 0;
+        virtual bool try_dequeue(event_ptr* value) = 0;
 
         virtual size_t size() const = 0;
     };

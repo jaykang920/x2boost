@@ -12,7 +12,7 @@
 
 namespace x2boost
 {
-    // Compact pool of consecutive integer values in a finite range.
+    /// Compact pool of consecutive integer values in a finite range.
     template<int Min, int Max>
     class X2BOOST_API ranged_int_pool
     {
@@ -20,7 +20,7 @@ namespace x2boost
         explicit ranged_int_pool(bool advancing = false)
             : offset_(0), advancing_(advancing) { }
 
-        // Gets the next available value from the pool.
+        /// Gets the next available value from the pool.
         int acquire()
         {
             for (int i = 0, index = offset_, l = length(); i < l; ++i, ++index)
@@ -46,7 +46,7 @@ namespace x2boost
             return (Min - 1);  // our of resource
         }
 
-        // Marks the specified value as used in the pool.
+        /// Marks the specified value as used in the pool.
         bool claim(int value)
         {
             int index = value - Min;
@@ -58,10 +58,10 @@ namespace x2boost
             return true;
         }
 
-        // Gets the number of consecutive integers handled by this pool.
+        /// Gets the number of consecutive integers handled by this pool.
         int length() const { return (int)bitset_.size(); }
 
-        // Returns the specified value to the pool.
+        /// Returns the specified value to the pool.
         void release(int value)
         {
             int index = value - Min;

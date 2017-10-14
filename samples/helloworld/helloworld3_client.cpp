@@ -37,13 +37,13 @@ using namespace x2boost::samples::hello_world;
 
 void log_handler(int level, const std::string& message)
 {
-    std::cout << "[x2] " << log_level::string(level) << " " << message << std::endl;
+    std::cout << "[x2] " << trace_level::string(level) << " " << message << std::endl;
 }
 
 int main()
 {
-    log::level = log_level::all;
-    log::handler = log_handler;
+    trace::level = trace_level::all;
+    trace::handler = log_handler;
 
     hub::instance()
         .attach(flow_ptr(new single_threaded_flow<>())

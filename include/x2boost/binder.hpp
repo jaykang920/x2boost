@@ -15,18 +15,6 @@
 #include "x2boost/fingerprint.hpp"
 #include "x2boost/handler.hpp"
 
-namespace boost
-{
-    template<>
-    struct hash<x2boost::event_ptr>
-    {
-        std::size_t operator()(x2boost::event_ptr const& x) const
-        {
-            return x->_hash_code();
-        }
-    };
-}
-
 namespace x2boost
 {
     class binder

@@ -1,8 +1,8 @@
 // Copyright (c) 2014-2017 Jae-jun Kang
 // See the file LICENSE for details.
 
-#ifndef X2BOOST_QUEUE_HPP_
-#define X2BOOST_QUEUE_HPP_
+#ifndef X2BOOST_EVENT_QUEUE_HPP_
+#define X2BOOST_EVENT_QUEUE_HPP_
 
 #ifndef X2BOOST_PRE_HPP_
 #include "x2boost/pre.hpp"
@@ -27,4 +27,4 @@ namespace x2boost
     };
 }
 
-#endif  // X2BOOST_QUEUE_HPP_
+#endif  // X2BOOST_EVENT_QUEUE_HPP_

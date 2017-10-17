@@ -13,13 +13,13 @@
 
 namespace x2boost
 {
-    class buffer;
-
-    // Binary wire foramt deserializer.
+    /// Binary wire format deserializer.
     class X2BOOST_API deserializer
     {
     public:
-        deserializer(buffer& buffer) : buffer_(buffer), marker_(-1) { }
+        /// Constructs a new deserializer object that works on the specified
+        /// buffer.
+        deserializer(buffer& buffer) : buffer_(buffer) {}
 
         // Overloaded read for primitive types
 
@@ -62,6 +62,16 @@ namespace x2boost
             return bytes;
         }
 
+        // Decodes a 32-bit non-negative integer out of the underlying buffer.
+        int read_nonnegative(boost::int32_t& value)
+        {
+            boost::uint32_t u;
+            int bytes = read_variable(u);
+            u &= 0x7fffffffU;
+            value = (boost::int32_t)u;
+            return bytes;
+        }
+
         // Decodes a 64-bit signed integer out of the underlying buffer.
         int read(boost::int64_t& value)
         {
@@ -92,58 +102,40 @@ namespace x2boost
         void read(std::string& value);
 
         // Decodes a datetime value out of the underlying buffer.
-        /*
-        void read(DateTime value)
+        void read(boost::posix_time::ptime& value)
         {
-            long usecs;
-            read_fixed_big_endian(usecs);
-            DateTime unixEpoch = new DateTime(621355968000000000);
-            value = unixEpoch.AddTicks(usecs * 10);
+            boost::int64_t msecs;
+            read_fixed_big_endian(msecs);
+            boost::posix_time::ptime unix_epoch(boost::gregorian::date(1970, 1, 1));
+            value = unix_epoch + boost::posix_time::milliseconds(msecs);
         }
-        */
 
         // Overloaded read for composite types
 
-        /*
         // Decodes an array of bytes out of the underlying buffer.
-        void read(byte[] value)
+        void read(byte_t*& value)
         {
-            int length;
-            read_variableNonnegative(length);
+            boost::int32_t length;
+            read_nonnegative(length);
             buffer_.check_length_to_read(length);
-            value = new byte[length];
+            value = new byte_t[length];
             buffer_.read(value, 0, length);
         }
 
-        // Decodes an ordered list of Int32 values out of the underlying buffer.
-        void read(List<int> value)
-        {
-            int count;
-            read_variableNonnegative(count);
-            value = new List<int>();
-            for (int i = 0; i < count; ++i)
-            {
-                int element;
-                read(element);
-                value.Add(element);
-            }
-        }
-
         // Decodes an ordered list of Cell-derived objects out of the
-        // underlying buffer_.
-        void read<T>(List<T> value) where T : Cell, new()
+        // underlying buffer.
+        template<typename T>
+        void read(std::vector<T>& value)
         {
-            int count;
-            read_variableNonnegative(count);
-            value = new List<T>();
+            boost::int32_t count;
+            read_nonnegative(count);
             for (int i = 0; i < count; ++i)
             {
                 T element;
                 read(element);
-                value.Add(element);
+                value.push_back(element);
             }
         }
-        */
 
         // Decodes a Cell-derived objects out of the underlying buffer.
         template<class T>  // T : cell
@@ -151,32 +143,18 @@ namespace x2boost
         {
             *value = NULL;
             int length;
-            read_variable_nonnegative(length);
+            read_nonnegative(length);
             if (length == 0) { return; }
 
-            int marker_saved = marker_;
-            marker_ = buffer_.pos() + length;
+            int marker = buffer_.pos() + length;
 
-            // try
-            if (T::is_event)
-            {
-                *value = event_factory::create(*this);
-            }
-            else
-            {
-                *value = new T();
-            }
-            if (*value != NULL)
-            {
-                (*value)->deserialize(*this);
-            }
-            // catch
+            *value = new T();
+            (*value)->deserialize(*this);
 
-            if (buffer_.pos() != marker_)
+            if (buffer_.pos() != marker)
             {
-                buffer_.pos(marker_);
+                buffer_.pos(marker);
             }
-            marker_ = marker_saved;
         }
 
     private:
@@ -282,19 +260,8 @@ namespace x2boost
             return (i < 10 ? (i + 1) : 10);
         }
 
-        // Decodes a 32-bit non-negative integer out of the underlying buffer.
-        int read_variable_nonnegative(boost::int32_t& value)
-        {
-            boost::uint32_t u;
-            int result = read_variable(u);
-            //if (u & 0x80000000U != 0) { return 0; }
-            value = (boost::int32_t)u;
-            return result;
-        }
-
     private:
         buffer& buffer_;  // underlying buffer
-        int marker_;      // read limit marker (zero-based)
     };
 }
 

@@ -74,9 +74,9 @@ void buffer::copy_to(int pos, byte_t* buffer, int offset, int count) const
     }
 }
 
-void buffer::ensure_capacity_to_write(int n)
+void buffer::ensure_capacity(int num_bytes)
 {
-    int required = pos_ + n;
+    int required = pos_ + num_bytes;
     while (required >= capacity())
     {
         blocks_.push_back(buffer_pool::acquire(block_size_exponent_));
@@ -221,7 +221,7 @@ void buffer::trim()
 
 void buffer::write(byte_t* buffer, int offset, int count)
 {
-    ensure_capacity_to_write(count);
+    ensure_capacity(count);
     copy_from(pos_, buffer, offset, count);
     pos(pos() + count);
 }

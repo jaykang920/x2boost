@@ -85,6 +85,10 @@ namespace x2boost
     {
         return x._hash_code();
     }
+    inline std::size_t hash_value(const cell_ptr& x)
+    {
+        return x->_hash_code();
+    }
 }
 
 #endif  // X2BOOST_CELL_HPP_

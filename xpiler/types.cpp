@@ -136,6 +136,7 @@ types::static_initializer::static_initializer()
     t.is_integer = false;
     
     types_.insert(map_type::value_type("bool", t));
+    types_.insert(map_type::value_type("bytes", t));
 
     t.is_integer = true;
 
@@ -152,6 +153,7 @@ types::static_initializer::static_initializer()
     t.is_primitive = false;
 
     types_.insert(map_type::value_type("string", t));
+    types_.insert(map_type::value_type("datetime", t));
 
     types_.insert(map_type::value_type("list", t));
 }

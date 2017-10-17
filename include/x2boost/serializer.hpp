@@ -12,13 +12,13 @@
 
 namespace x2boost
 {
-    class buffer;
-
-    // Binary wire foramt serializer.
+    /// Binary wire format serializer.
     class X2BOOST_API serializer
     {
     public:
-        serializer(buffer& buffer) : buffer_(buffer) { }
+        /// Constructs a new serializer object that works on the specified
+        /// buffer.
+        serializer(buffer& buffer) : buffer_(buffer) {}
 
         // Overloaded write for primitive types
 
@@ -28,7 +28,7 @@ namespace x2boost
         // Encodes a boolean value into the underlying buffer.
         void write(bool value)
         {
-            buffer_.ensure_capacity_to_write(1);
+            buffer_.ensure_capacity(1);
             buffer_.put_byte((byte_t)(value ? 1 : 0));
         }
 
@@ -38,7 +38,7 @@ namespace x2boost
         // Encodes a single byte into the underlying buffer.
         void write(byte_t value)
         {
-            buffer_.ensure_capacity_to_write(1);
+            buffer_.ensure_capacity(1);
             buffer_.put_byte(value);
         }
 
@@ -48,7 +48,7 @@ namespace x2boost
         // Encodes an 8-bit signed integer into the underlying buffer.
         void write(boost::int8_t value)
         {
-            buffer_.ensure_capacity_to_write(1);
+            buffer_.ensure_capacity(1);
             buffer_.put_byte((byte_t)value);
         }
 
@@ -58,7 +58,7 @@ namespace x2boost
         // Encodes a 16-bit signed integer into the underlying buffer.
         void write(boost::int16_t value)
         {
-            buffer_.ensure_capacity_to_write(2);
+            buffer_.ensure_capacity(2);
             buffer_.put_byte((byte_t)(value >> 8));
             buffer_.put_byte((byte_t)value);
         }
@@ -75,6 +75,20 @@ namespace x2boost
         {
             // Zigzag encoding
             write_variable((boost::uint32_t)((value << 1) ^ (value >> 31)));
+        }
+
+        // Gets the number of bytes required to encode the specified 32-bit
+        // non-negative integer.
+        static int get_encoded_length_nonnegative(boost::int32_t value)
+        {
+            value &= 0x7fffffff;
+            return get_encoded_length_variable((boost::uint32_t)value);
+        }
+        // Encodes a 32-bit non-negative integer into the underlying buffer.
+        void write_nonnegative(boost::int32_t value)
+        {
+            value &= 0x7fffffff;
+            write_variable((boost::uint32_t)value);
         }
 
         // Gets the number of bytes required to encode the specified 64-bit
@@ -114,87 +128,75 @@ namespace x2boost
         static int get_encoded_length(const std::string& value)
         {
             boost::int32_t length = (boost::int32_t)value.length();
-            return get_encoded_length_variable_nonnegative(length) + length;
+            return get_encoded_length_nonnegative(length) + length;
         }
         // Encodes a text string into the underlying buffer.
         void write(const std::string& value);
 
-        /*
         // Gets the number of bytes required to encode the specified datetime
         // value.
-        public static int GetEncodedLength(DateTime value) { return 8; }
-        // Encodes a datetime value into the underlying buffer.
-        void write(DateTime value)
+        static int get_encoded_length(const boost::posix_time::ptime& value)
         {
-            long usecs = (value.Ticks - 621355968000000000) / 10;
-            writeFixedBigEndian(usecs);
+            return 8;
+        }
+        // Encodes a datetime value into the underlying buffer.
+        void write(const boost::posix_time::ptime& value)
+        {
+            boost::posix_time::ptime unix_epoch(boost::gregorian::date(1970, 1, 1));
+            boost::int64_t msecs = (value - unix_epoch).total_milliseconds();
+            write_fixed_big_endian(msecs);
         }
 
         // Overloaded write for composite types
 
         // Gets the number of bytes required to encode the specified array of
         // bytes.
-        public static int GetEncodedLength(byte[] value)
+        static int get_encoded_length(byte_t* buf)
         {
-            int length = Object.ReferenceEquals(value, null) ? 0 : value.Length;
-            return GetEncodedLengthVariableNonnegative(length) + length;
+            return get_encoded_length(buf, 0, (int)(sizeof(buf) / sizeof(byte_t)));
         }
         // Encodes an array of bytes into the underlying buffer.
-        void write(byte[] value)
+        void write(byte_t* buf)
         {
-            int length = Object.ReferenceEquals(value, null) ? 0 : value.Length;
-            writeVariableNonnegative(length);
-            buffer.write(value, 0, length);
+            write(buf, 0, (int)(sizeof(buf) / sizeof(byte_t)));
         }
-
-        // Gets the number of bytes required to encode the specified ordered
-        // list of Int32 values.
-        public static int GetEncodedLength(List<int> value)
+        static int get_encoded_length(byte_t* buf, int offset, int count)
         {
-            int count = Object.ReferenceEquals(value, null) ? 0 : value.Count;
-            int length = GetEncodedLengthVariableNonnegative(count);
-            for (int i = 0; i < count; ++i)
-            {
-                length += GetEncodedLength(value[i]);
-            }
-            return length;
+            boost::int32_t length = (buf == 0 ? 0 : count);
+            return get_encoded_length_nonnegative(length) + length;
         }
-        // Encodes an ordered list of Cell-derived objects into the underlying
-        // stream.
-        void write(List<int> value)
+        void write(byte_t* buf, int offset, int count)
         {
-            int count = Object.ReferenceEquals(value, null) ? 0 : value.Count;
-            writeVariableNonnegative(count);
-            for (int i = 0; i < count; ++i)
-            {
-                write(value[i]);
-            }
+            boost::int32_t length = (buf == 0 ? 0 : count);
+            write_nonnegative(length);
+            buffer_.write(buf, offset, count);
         }
 
         // Gets the number of bytes required to encode the specified ordered
         // list of Cell-derived objects.
-        public static int GetEncodedLength<T>(List<T> value) where T : Cell
+        template<typename T>
+        static int get_encoded_length(const std::vector<T>& value)
         {
-            int count = Object.ReferenceEquals(value, null) ? 0 : value.Count;
-            int length = GetEncodedLengthVariableNonnegative(count);
+            boost::int32_t count = value.size();
+            int length = get_encoded_length_nonnegative(count);
             for (int i = 0; i < count; ++i)
             {
-                length += GetEncodedLength(value[i]);
+                length += get_encoded_length(value[i]);
             }
             return length;
         }
         // Encodes an ordered list of Cell-derived objects into the underlying
         // stream.
-        void write<T>(List<T> value) where T : Cell
+        template<typename T>
+        void write(const std::vector<T>& value)
         {
-            int count = Object.ReferenceEquals(value, null) ? 0 : value.Count;
-            writeVariableNonnegative(count);
+            boost::int32_t count = value.size();
+            write_nonnegative(count);
             for (int i = 0; i < count; ++i)
             {
                 write(value[i]);
             }
         }
-        */
 
         // Gets the number of bytes required to encode the specified
         // Cell-derived object.
@@ -202,18 +204,18 @@ namespace x2boost
         static int get_encoded_length(T** value)
         {
             boost::int32_t length = *value == 0 ? 0 : (*value)->get_encoded_length();
-            return get_encoded_length_variable_nonnegative(length) + length;
+            return get_encoded_length_nonnegative(length) + length;
         }
-            // Encodes a Cell-derived objects into the underlying buffer.
+        // Encodes a Cell-derived objects into the underlying buffer.
         template<class T>  // T : cell
         void write(T** value)
         {
             bool is_null = (*value == 0);
             boost::int32_t length = is_null ? 0 : (*value)->get_encoded_length();
-            write_variable_nonnegative(length);
+            write_nonnegative(length);
             if (!is_null)
             {
-                //value.Serialize(this);
+                (*value)->serialize(*this);;
             }
         }
 
@@ -224,7 +226,7 @@ namespace x2boost
         // by fixed-width big-endian byte order.
         void write_fixed_big_endian(boost::int32_t value)
         {
-            buffer_.ensure_capacity_to_write(4);
+            buffer_.ensure_capacity(4);
             buffer_.put_byte((byte_t)(value >> 24));
             buffer_.put_byte((byte_t)(value >> 16));
             buffer_.put_byte((byte_t)(value >> 8));
@@ -235,7 +237,7 @@ namespace x2boost
         // by fixed-width big-endian byte order.
         void write_fixed_big_endian(boost::int64_t value)
         {
-            buffer_.ensure_capacity_to_write(8);
+            buffer_.ensure_capacity(8);
             buffer_.put_byte((byte_t)(value >> 56));
             buffer_.put_byte((byte_t)(value >> 48));
             buffer_.put_byte((byte_t)(value >> 40));
@@ -250,7 +252,7 @@ namespace x2boost
         // by fixed-width little-endian byte order.
         void write_fixed_little_endian(boost::int32_t value)
         {
-            buffer_.ensure_capacity_to_write(4);
+            buffer_.ensure_capacity(4);
             buffer_.put_byte((byte_t)value);
             buffer_.put_byte((byte_t)(value >> 8));
             buffer_.put_byte((byte_t)(value >> 16));
@@ -261,7 +263,7 @@ namespace x2boost
         // by fixed-width little-endian byte order.
         void write_fixed_little_endian(boost::int64_t value)
         {
-            buffer_.ensure_capacity_to_write(8);
+            buffer_.ensure_capacity(8);
             buffer_.put_byte((byte_t)value);
             buffer_.put_byte((byte_t)(value >> 8));
             buffer_.put_byte((byte_t)(value >> 16));
@@ -289,7 +291,7 @@ namespace x2boost
         {
             do
             {
-                buffer_.ensure_capacity_to_write(1);
+                buffer_.ensure_capacity(1);
                 byte_t b = (byte_t)(value & 0x7f);
                 value >>= 7;
                 if (value != 0)
@@ -337,7 +339,7 @@ namespace x2boost
         {
             do
             {
-                buffer_.ensure_capacity_to_write(1);
+                buffer_.ensure_capacity(1);
                 byte_t b = (byte_t)(value & 0x7f);
                 value >>= 7;
                 if (value != 0)
@@ -346,20 +348,6 @@ namespace x2boost
                 }
                 buffer_.put_byte(b);
             } while (value != 0);
-        }
-
-        // Gets the number of bytes required to encode the specified 32-bit
-        // non-negative integer.
-        static int get_encoded_length_variable_nonnegative(boost::int32_t value)
-        {
-            //if (value < 0) { throw new ArgumentOutOfRangeException(); }
-            return get_encoded_length_variable((boost::uint32_t)value);
-        }
-        // Encodes a 32-bit non-negative integer into the underlying buffer.
-        void write_variable_nonnegative(boost::int32_t value)
-        {
-            //if (value < 0) { throw new ArgumentOutOfRangeException(); }
-            write_variable((boost::uint32_t)value);
         }
 
     private:

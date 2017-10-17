@@ -22,6 +22,7 @@
 #include <vector>
 
 #include <boost/cstdint.hpp>
+#include <boost/date_time.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
@@ -44,6 +45,20 @@ namespace x2boost
     typedef boost::intrusive_ptr<handler> handler_ptr;
 
     typedef boost::uint8_t byte_t;
+}
+
+namespace boost
+{
+    template<>
+    struct hash<boost::posix_time::ptime>
+    {
+        std::size_t operator()(boost::posix_time::ptime const& x) const
+        {
+            boost::posix_time::ptime unix_epoch(boost::gregorian::date(1970, 1, 1));
+            boost::int64_t msecs = (x - unix_epoch).total_milliseconds();
+            return (std::size_t)msecs;
+        }
+    };
 }
 
 #endif  // X2BOOST_PRE_HPP_

@@ -43,7 +43,7 @@ namespace x2boost
         // Checks whether the buffer is empty (i.e. whether its length is 0).
         bool empty() const { return (back_ == front_); }
 
-        void ensure_capacity_to_write(int n);
+        void ensure_capacity(int num_bytes);
 
         byte_t get_byte()
         {

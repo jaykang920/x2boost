@@ -162,7 +162,7 @@ std::size_t fingerprint::hash_code() const
 void fingerprint::deserialize(deserializer& deserializer)
 {
     boost::int32_t length;
-    deserializer.read_variable_nonnegative(length);
+    deserializer.read_nonnegative(length);
     int length_in_bytes = ((length - 1) >> 3) + 1;
     int length_in_blocks = ((length_in_bytes - 1) >> 2) + 1;
     int effective_bytes = this->length_in_bytes();
@@ -199,13 +199,13 @@ void fingerprint::deserialize(deserializer& deserializer)
 
 int fingerprint::get_encoded_length() const
 {
-    return serializer::get_encoded_length_variable_nonnegative(length_)
+    return serializer::get_encoded_length_nonnegative(length_)
         + length_in_bytes();
 }
 
 void fingerprint::serialize(serializer& serializer) const
 {
-    serializer.write_variable_nonnegative(length_);
+    serializer.write_nonnegative(length_);
     int length_in_bytes = this->length_in_bytes();
     int num_additional_blocks = this->num_additional_blocks();
 

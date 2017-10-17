@@ -87,6 +87,8 @@ void boost_formatter::setup()
     types::native_type("float32", "boost::float32_t");
     types::native_type("float64", "boost::float64_t");
     types::native_type("string", "std::string");
+    types::native_type("datetime", "boost::posix_time::ptime");
+    types::native_type("bytes", "byte_t*");
     types::native_type("list", "std::vector");
 
     types::default_value("bool", "false");
@@ -96,7 +98,9 @@ void boost_formatter::setup()
     types::default_value("int64", "0");
     types::default_value("float32", ".0f");
     types::default_value("float64", ".0");
-    types::default_value("string", "\"\"");
+    types::default_value("string", "");
+    types::default_value("datetime", "boost::posix_time::ptime(boost::gregorian::date(1970, 1, 1))");
+    types::default_value("bytes", "NULL");
 }
 
 void boost_formatter::format_header_file(boost_formatter_context& context)
@@ -648,6 +652,10 @@ namespace
             else if (prop->type.type == "string")
             {
                 prop->default_value = "\"" + prop->default_value + "\"";
+            }
+            else
+            {
+                prop->default_value = types::default_value(prop->type.type);
             }
         }
     }

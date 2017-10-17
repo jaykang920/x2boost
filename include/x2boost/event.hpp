@@ -132,6 +132,12 @@ namespace x2boost
     {
         return lhs->_equals(*rhs);
     }
+
+    // Extending boost::hash for event-derived objects
+    inline std::size_t hash_value(const event_ptr& x)
+    {
+        return x->_hash_code();
+    }
 }
 
 #endif  // X2BOOST_EVENT_HPP_

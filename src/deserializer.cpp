@@ -8,8 +8,8 @@ using namespace x2boost;
 void deserializer::read(std::string& value)
 {
     value.clear();
-    int length;
-    read_variable_nonnegative(length);
+    boost::int32_t length;
+    read_nonnegative(length);
     if (length == 0)
     {
         return;

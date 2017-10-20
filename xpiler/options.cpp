@@ -42,8 +42,8 @@ bool options::parse(int argc, char* argv[])
 
         if (variables.count("help"))
         {
-            cout << "  usage: xpiler [options] path..." << endl;
-            cout << options << endl;
+            cout << "usage: xpiler [options] path..." << endl;
+            cout << options;
             cout << "specs:" << endl;
             BOOST_FOREACH(const program::formatter_map_type::value_type& pair,
                 program::formatters())

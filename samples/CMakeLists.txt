@@ -12,7 +12,7 @@ set(helloworld_INCLUDES "${x2boost_INCLUDES}")
 set(helloworld_SRC_DIR "${x2boost_SOURCE_DIR}/samples/helloworld")
 
 add_custom_target(helloworld_xpiled
-  xpiler ${helloworld_SRC_DIR}
+  x2boost.xpiler ${helloworld_SRC_DIR}
 )
 
 set(helloworld_INC

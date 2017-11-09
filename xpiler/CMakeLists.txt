@@ -27,10 +27,10 @@ set(xpiler_SRC
   "${xpiler_SRC_DIR}/xml_handler.cpp"
 )
 
-add_executable(xpiler ${xpiler_SRC} ${xpiler_INC})
-target_link_libraries(xpiler ${Boost_LIBRARIES})
+add_executable(x2boost.xpiler ${xpiler_SRC} ${xpiler_INC})
+target_link_libraries(x2boost.xpiler ${Boost_LIBRARIES})
 
-set_target_properties(xpiler PROPERTIES
+set_target_properties(x2boost.xpiler PROPERTIES
   DEBUG_POSTFIX _d
   MINSIZEREL_POSTFIX _mr
   RELWITHDEBINFO_POSTFIX _rd

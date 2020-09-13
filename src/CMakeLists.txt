@@ -43,9 +43,10 @@ set(x2boost_INC_QUEUES
 set(x2boost_INC_UTIL
   "${x2boost_INC_DIR}/util/buffer_pool.hpp"
   "${x2boost_INC_DIR}/util/deleter.hpp"
-  "${x2boost_INC_DIR}/util/trace.hpp"
   "${x2boost_INC_DIR}/util/ranged_int_pool.hpp"
   "${x2boost_INC_DIR}/util/ref_counted.hpp"
+  "${x2boost_INC_DIR}/util/string.hpp"
+  "${x2boost_INC_DIR}/util/trace.hpp"
 )
 
 list(APPEND x2boost_ALL_INC ${x2boost_INC})

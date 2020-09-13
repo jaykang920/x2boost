@@ -205,9 +205,10 @@ void boost_formatter::format_source_file(boost_formatter_context& context)
     out << "#include <boost/functional/hash.hpp>" << endl;
     out << "#include <boost/thread/once.hpp>" << endl;
     out << endl;
-    out << "#include <x2boost/serializer.hpp>" << endl;
     out << "#include <x2boost/event_factory.hpp>" << endl;
     out << "#include <x2boost/deserializer.hpp>" << endl;
+    out << "#include <x2boost/serializer.hpp>" << endl;
+    out << "#include <x2boost/util/string.hpp>" << endl;
     out << endl;
 
     if (!context.doc->ns.empty())
@@ -586,7 +587,7 @@ void boost_source_formatter::format_consts(consts* def)
 
     BOOST_FOREACH(consts::constant* constant, def->constants)
     {
-        indent(0); *out << def->native_type << " " << def->native_name << "::"
+        indent(0); *out << "const " << def->native_type << " " << def->native_name << "::"
             << constant->native_name << " = ";
         if (def->type == "string") { *out << "\""; }
         *out << constant->value;

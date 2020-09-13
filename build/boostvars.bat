@@ -1,3 +1,3 @@
-set BOOST_ROOT=D:\Libraries\boost_1_65_1
-set BOOST_INCLUDEDIR=D:\Libraries\boost_1_65_1
-set BOOST_LIBRARYDIR=D:\Libraries\boost_1_65_1\stage\lib
+set BOOST_ROOT=%BOOST_HOME%
+set BOOST_INCLUDEDIR=%BOOST_HOME%
+set BOOST_LIBRARYDIR=%BOOST_HOME%\stage\lib

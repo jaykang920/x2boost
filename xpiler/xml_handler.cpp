@@ -99,7 +99,7 @@ bool xml_handler::handle(const string& path, document** doc)
                             if (v3.first == "<xmlattr>")
                             {
                                 def->name = v3.second.get<string>("name");
-                                def->base = v3.second.get("base", "");
+                                def->base = v3.second.get<string>("base", "");
                                 if (is_event)
                                 {
                                     ((event*)def)->id = v3.second.get<string>("id");

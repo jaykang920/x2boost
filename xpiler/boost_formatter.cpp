@@ -288,9 +288,9 @@ void boost_header_formatter::format_cell(cell* def)
     *out << endl;
 
     // serialize/deserialize
-    indent(1); *out << "virtual void _deserialize(deserializer& deserializer);" << endl;
+    indent(1); *out << "virtual void _deserialize(x2boost::deserializer& deserializer);" << endl;
     indent(1); *out << "virtual int _get_encoded_length() const;" << endl;
-    indent(1); *out << "virtual void _serialize(serializer& serializer) const;" << endl;
+    indent(1); *out << "virtual void _serialize(x2boost::serializer& serializer) const;" << endl;
     *out << endl;
 
     indent(0); *out << "protected:" << endl;
@@ -339,7 +339,7 @@ void boost_header_formatter::format_consts(consts* def)
         *out << ";" << endl;
     }
 
-    indent(0); *out << "}" << endl;
+    indent(0); *out << "};" << endl;
 }
 
 void boost_header_formatter::format_reference(reference* def)
@@ -538,7 +538,7 @@ void boost_source_formatter::format_cell(cell* def)
             cell::property* prop = def->properties[i];
             indent(1); *out << "if (touched[" << i << "])" << endl;
             indent(1); *out << "{" << endl;
-            indent(2); *out << "length += serializer::get_encoded_length(" << prop->native_name << ");" << endl;
+            indent(2); *out << "length += x2boost::serializer::get_encoded_length(" << prop->native_name << ");" << endl;
             indent(1); *out << "}" << endl;
         }
     }
@@ -593,7 +593,7 @@ namespace
         const string& type = type_spec.type;
         if (!types::is_builtin(type))
         {
-            return type;  // custom type
+            return MixedCase2lower_case(type);  // custom type
         }
         return types::is_primitive(type) ? types::native_type(type)
             : format_collection_type(type_spec);
@@ -611,6 +611,7 @@ namespace
                 if (i != 0) { oss << ", "; }
                 oss << format_type_spec(type_spec.details[i]);
             }
+            oss << '>';
         }
         return oss.str();
     }
@@ -631,7 +632,13 @@ namespace
         def->native_name = MixedCase2lower_case(def->name);
         def->base_class = (def->base.empty() ?
             (def->is_event() ? "x2boost::event" : "x2boost::cell") :
-            MixedCase2lower_case(def->base_class));
+            MixedCase2lower_case(def->base));
+
+        if (def->is_event())
+        {
+            event* event_def = (event*)def;
+            event_def->id = MixedCase2lower_case(event_def->id);
+        }
 
         int index = 0;
         BOOST_FOREACH(cell::property* prop, def->properties)

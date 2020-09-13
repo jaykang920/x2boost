@@ -22,6 +22,7 @@
 #include <vector>
 
 #include <boost/cstdint.hpp>
+#include <boost/cstdfloat.hpp>
 #include <boost/date_time.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/noncopyable.hpp>

@@ -117,7 +117,7 @@ void types::native_type(const std::string& type, const char* native_type)
 const char* types::default_value(const std::string& type)
 {
     map_type::iterator it = types_.find(type);
-    return (it == types_.end() ? NULL : it->second.default_value.c_str());
+    return (it == types_.end() ? "NULL" : it->second.default_value.c_str());
 }
 
 void types::default_value(const std::string& type, const char* default_value)

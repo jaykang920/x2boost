@@ -40,6 +40,7 @@ Follows an example case building Boost on Windows:
   * Visual Studio 12 2013: msvc-12.0
   * Visual Studio 14 2015: msvc-14.0
   * Visual Studio 15 2017: msvc-14.1
+  * Visual Studio 16 2019: msvs-14.2
 
 ```
 rem your toolset spec here

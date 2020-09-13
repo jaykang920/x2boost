@@ -25,6 +25,7 @@ namespace xpiler
         std::string out_dir;
         bool recursive;
         std::string spec;
+        std::string precompiled_header;
 
     private:
         static const char* default_spec;

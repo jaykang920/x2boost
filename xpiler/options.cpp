@@ -27,7 +27,8 @@ bool options::parse(int argc, char* argv[])
         ("out-dir", po::value<string>(), "output root directory")
         ("recursive", "process subdirectories recursively")
         ("path", po::value<vector<string> >(), "input path specifications")
-        ("spec", po::value<string>(), "specifies the target formatter");
+        ("spec", po::value<string>(), "specifies the target formatter")
+        ("pch", po::value<string>(), "specifies pre-compiled header file name");
 
     po::positional_options_description positional;
     positional.add("path", -1);
@@ -92,6 +93,10 @@ bool options::parse(int argc, char* argv[])
                     << spec << endl;
                 return false;
             }
+        }
+        if (variables.count("pch"))
+        {
+            precompiled_header = variables["pch"].as<string>();
         }
 
         po::notify(variables);

@@ -148,8 +148,8 @@ namespace x2boost
 
             int marker = buffer_.pos() + length;
 
-            value.reset(new T());
-            value->deserialize(*this);
+            value = T::_new();
+            value->_deserialize(*this);
 
             if (buffer_.pos() != marker)
             {

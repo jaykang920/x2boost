@@ -487,7 +487,7 @@ void boost_source_formatter::format_cell(cell* def)
     indent(0); *out << "{" << endl;
     BOOST_FOREACH(cell::property* prop, def->properties)
     {
-        if (types::is_builtin(prop->type.type))
+        if (types::is_builtin(prop->type.type) && types::is_primitive(prop->type.type))
         {
             indent(1); *out << prop->native_name << " = " << prop->default_value << ";" << endl;
         }

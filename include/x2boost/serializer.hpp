@@ -203,7 +203,7 @@ namespace x2boost
         template<class T>  // T : cell
         static int get_encoded_length(boost::intrusive_ptr<T> value)
         {
-            boost::int32_t length = value ? value->get_encoded_length() : 0;
+            boost::int32_t length = value ? value->_get_encoded_length() : 0;
             return get_encoded_length_nonnegative(length) + length;
         }
         template<class T>  // T : cell
@@ -216,11 +216,11 @@ namespace x2boost
         template<class T>  // T : cell
         void write(boost::intrusive_ptr<T> value)
         {
-            boost::int32_t length = value ? value->get_encoded_length() : 0;
+            boost::int32_t length = value ? value->_get_encoded_length() : 0;
             write_nonnegative(length);
             if (value)
             {
-                value->serialize(*this);;
+                value->_serialize(*this);;
             }
         }
         template<class T>  // T : cell

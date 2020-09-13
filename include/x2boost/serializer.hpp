@@ -201,12 +201,28 @@ namespace x2boost
         // Gets the number of bytes required to encode the specified
         // Cell-derived object.
         template<class T>  // T : cell
+        static int get_encoded_length(boost::intrusive_ptr<T> value)
+        {
+            boost::int32_t length = value ? value->get_encoded_length() : 0;
+            return get_encoded_length_nonnegative(length) + length;
+        }
+        template<class T>  // T : cell
         static int get_encoded_length(T** value)
         {
             boost::int32_t length = *value == 0 ? 0 : (*value)->get_encoded_length();
             return get_encoded_length_nonnegative(length) + length;
         }
         // Encodes a Cell-derived objects into the underlying buffer.
+        template<class T>  // T : cell
+        void write(boost::intrusive_ptr<T> value)
+        {
+            boost::int32_t length = value ? value->get_encoded_length() : 0;
+            write_nonnegative(length);
+            if (value)
+            {
+                value->serialize(*this);;
+            }
+        }
         template<class T>  // T : cell
         void write(T** value)
         {

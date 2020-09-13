@@ -129,7 +129,7 @@ namespace xpiler
 		}
 
 		std::string basename;
-		std::string ns;
+		std::string ns;         // namespace specified in the definition file
 
 		std::vector<reference*> references;
 		std::vector<definition*> definitions;

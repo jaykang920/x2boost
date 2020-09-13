@@ -139,6 +139,24 @@ namespace x2boost
 
         // Decodes a Cell-derived objects out of the underlying buffer.
         template<class T>  // T : cell
+        void read(boost::intrusive_ptr<T> value)
+        {
+            value.reset();
+            int length;
+            read_nonnegative(length);
+            if (length == 0) { return; }
+
+            int marker = buffer_.pos() + length;
+
+            value.reset(new T());
+            value->deserialize(*this);
+
+            if (buffer_.pos() != marker)
+            {
+                buffer_.pos(marker);
+            }
+        }
+        template<class T>  // T : cell
         void read(T** value)
         {
             *value = NULL;

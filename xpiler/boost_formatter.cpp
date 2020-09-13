@@ -22,6 +22,8 @@ const char* boost_formatter_context::tab_ = "    ";
 
 namespace
 {
+    std::string native_namespace;
+
     string format_type_spec(const type_spec& type_spec);
     string format_collection_type(const type_spec& type_spec);
 
@@ -39,6 +41,8 @@ bool boost_formatter::format(document* doc, const string& out_dir)
     try
     {
         doc->basename = MixedCase2lower_case(doc->basename);
+        native_namespace = doc->ns;
+        boost::replace_all(native_namespace, "/", "::");
 
         fs::path basename = out_dir;
         basename /= doc->basename;
@@ -339,7 +343,7 @@ void boost_header_formatter::format_consts(consts* def)
     
     BOOST_FOREACH(consts::constant* constant, def->constants)
     {
-        indent(1); *out << "const " << def->native_type << " " << constant->native_name;
+        indent(1); *out << "static const " << def->native_type << " " << constant->native_name;
         if (types::is_integer(def->type))
         {
             *out << " = " << constant->value;
@@ -483,7 +487,10 @@ void boost_source_formatter::format_cell(cell* def)
     indent(0); *out << "{" << endl;
     BOOST_FOREACH(cell::property* prop, def->properties)
     {
-        indent(1); *out << prop->native_name << " = " << prop->default_value << ";" << endl;
+        if (types::is_builtin(prop->type.type))
+        {
+            indent(1); *out << prop->native_name << " = " << prop->default_value << ";" << endl;
+        }
     }
     indent(0); *out << "}" << endl;
     *out << endl;
@@ -601,7 +608,8 @@ namespace
         const string& type = type_spec.type;
         if (!types::is_builtin(type))
         {
-            return MixedCase2lower_case(type);  // custom type
+            // Custom cell type
+            return /*native_namespace + "::" + */MixedCase2lower_case(type) + "_ptr";
         }
         return types::is_primitive(type) ? types::native_type(type)
             : format_collection_type(type_spec);
@@ -631,7 +639,7 @@ namespace
 
         BOOST_FOREACH(consts::constant* constant, def->constants)
         {
-            constant->native_name = MixedCase2lower_case(constant->name);
+            constant->native_name = MixedCase2UPPER_CASE(constant->name);
         }
     }
 
@@ -645,7 +653,18 @@ namespace
         if (def->is_event())
         {
             event* event_def = (event*)def;
-            event_def->id = MixedCase2lower_case(event_def->id);
+            std::size_t index = event_def->id.find_last_of('.');
+            if (index != string::npos)
+            {
+                string type_name = event_def->id.substr(0, index);
+                string const_name = event_def->id.substr(index + 1);
+
+                boost::replace_all(type_name, "/", "::");
+                type_name = MixedCase2lower_case(type_name);
+                const_name = MixedCase2UPPER_CASE(const_name);
+
+                event_def->id = type_name + "::" + const_name;
+            }
         }
 
         int index = 0;

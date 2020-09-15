@@ -22,7 +22,7 @@ namespace xpiler
     {
         virtual bool format(document* doc, const std::string& out_dir) = 0;
 
-        virtual bool is_up_to_date(const boost::filesystem::path& path) = 0;
+        virtual bool is_up_to_date(const boost::filesystem::path& path, const boost::filesystem::path& out_dir) = 0;
 
         virtual void setup() = 0;
 

@@ -98,7 +98,7 @@ namespace xpiler
         boost::algorithm::to_lower(extension);
         handler_map_type::iterator it = handlers_.find(extension);
         if (it == handlers_.end() ||
-            (!opts.forced && formatter_->is_up_to_date(path)))
+            (!opts.forced && formatter_->is_up_to_date(path, out_dir)))
         {
             return;
         }

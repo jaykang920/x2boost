@@ -67,14 +67,14 @@ bool boost_formatter::format(document* doc, const string& out_dir)
     }
 }
 
-bool boost_formatter::is_up_to_date(const boost::filesystem::path& path)
+bool boost_formatter::is_up_to_date(const boost::filesystem::path& path, const boost::filesystem::path& out_dir)
 {
     fs::path dirname = path.parent_path();
     fs::path basename = path.filename().stem();
     fs::path header_path = MixedCase2lower_case(basename.string()) + ".hpp";
     fs::path source_path = MixedCase2lower_case(basename.string()) + ".cpp";
-    header_path = dirname / header_path;
-    source_path = dirname / source_path;
+    header_path = out_dir / header_path;
+    source_path = out_dir / source_path;
 
     time_t source_write_time = fs::last_write_time(path);
     return (fs::exists(header_path) && fs::exists(source_path) &&

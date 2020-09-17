@@ -36,9 +36,9 @@ namespace hello_world {
         static const tag* _tag();
         virtual const x2boost::cell::tag* _type_tag() const;
 
-        virtual void _deserialize(deserializer& deserializer);
+        virtual void _deserialize(x2boost::deserializer& deserializer);
         virtual int _get_encoded_length() const;
-        virtual void _serialize(serializer& serializer) const;
+        virtual void _serialize(x2boost::serializer& serializer) const;
 
     protected:
         hello_req(std::size_t length)
@@ -84,9 +84,9 @@ namespace hello_world {
         static const tag* _tag();
         virtual const x2boost::cell::tag* _type_tag() const;
 
-        virtual void _deserialize(deserializer& deserializer);
+        virtual void _deserialize(x2boost::deserializer& deserializer);
         virtual int _get_encoded_length() const;
-        virtual void _serialize(serializer& serializer) const;
+        virtual void _serialize(x2boost::serializer& serializer) const;
 
     protected:
         hello_resp(std::size_t length)

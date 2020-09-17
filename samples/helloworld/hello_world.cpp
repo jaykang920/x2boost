@@ -5,9 +5,10 @@
 #include <boost/functional/hash.hpp>
 #include <boost/thread/once.hpp>
 
-#include <x2boost/serializer.hpp>
 #include <x2boost/event_factory.hpp>
 #include <x2boost/deserializer.hpp>
+#include <x2boost/serializer.hpp>
+#include <x2boost/util/string.hpp>
 
 using namespace x2boost::samples::hello_world;
 
@@ -73,7 +74,6 @@ std::size_t hello_req::_hash_code(const x2boost::fingerprint& fp) const
 
 void hello_req::_initialize()
 {
-    name_ = "";
 }
 
 const x2boost::event::tag* hello_req::_tag()
@@ -109,7 +109,7 @@ int hello_req::_get_encoded_length() const
     x2boost::capo touched(fingerprint_, _tag()->offset());
     if (touched[0])
     {
-        length += serializer::get_encoded_length(name_);
+        length += x2boost::serializer::get_encoded_length(name_);
     }
     return length;
 }
@@ -186,7 +186,6 @@ std::size_t hello_resp::_hash_code(const x2boost::fingerprint& fp) const
 
 void hello_resp::_initialize()
 {
-    message_ = "";
 }
 
 const x2boost::event::tag* hello_resp::_tag()
@@ -222,7 +221,7 @@ int hello_resp::_get_encoded_length() const
     x2boost::capo touched(fingerprint_, _tag()->offset());
     if (touched[0])
     {
-        length += serializer::get_encoded_length(message_);
+        length += x2boost::serializer::get_encoded_length(message_);
     }
     return length;
 }

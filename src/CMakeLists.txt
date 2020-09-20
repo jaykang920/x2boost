@@ -29,6 +29,7 @@ set(x2boost_INC_FLOWS
   "${x2boost_INC_DIR}/flows/event_based_flow.hpp"
   "${x2boost_INC_DIR}/flows/multi_threaded_flow.hpp"
   "${x2boost_INC_DIR}/flows/single_threaded_flow.hpp"
+  "${x2boost_INC_DIR}/flows/threadless_flow.hpp"
 )
 set(x2boost_INC_LINKS
   "${x2boost_INC_DIR}/links/asio_link.hpp"

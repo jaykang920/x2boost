@@ -177,7 +177,7 @@ namespace x2boost
         template<typename T>
         static int get_encoded_length(const std::vector<T>& value)
         {
-            boost::int32_t count = value.size();
+            boost::int32_t count = (boost::int32_t)value.size();
             int length = get_encoded_length_nonnegative(count);
             for (int i = 0; i < count; ++i)
             {
@@ -190,7 +190,7 @@ namespace x2boost
         template<typename T>
         void write(const std::vector<T>& value)
         {
-            boost::int32_t count = value.size();
+            boost::int32_t count = (boost::int32_t)value.size();
             write_nonnegative(count);
             for (int i = 0; i < count; ++i)
             {
